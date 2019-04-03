@@ -58,6 +58,12 @@ namespace SpacePlanetsClient
             _loginWindow.CenterWithinParent();
         }
 
+        /// <summary>
+        /// Attempt to log in to the game server (could be lan or other)
+        /// </summary>
+        /// <param name="username">An account name</param>
+        /// <param name="password">A password which should be transmitted using TLS. The server will receive the password and calculate its hash.</param>
+        /// <returns>TRUE if authentication is successful.</returns>
         public static bool DoLogin(string username, string password)
         {
             _gameStatus = GameStatus.LoggingIn;
@@ -71,9 +77,7 @@ namespace SpacePlanetsClient
                 errorWindow.CanDrag = true;
                 errorWindow.IsVisible = true;
                 errorWindow.UseKeyboard = true;
-
-                errorWindow.CenterWithinParent();
-                
+                errorWindow.CenterWithinParent();                
                 return false;
             }
             else
