@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SpLib</name>
+    </assembly>
+    <members>
+        <member name="P:SpLib.DataTransfer.ClientToServer.LoginInformation.U">
+            <summary>
+            Represents a username.
+            </summary>
+        </member>
+        <member name="P:SpLib.DataTransfer.ClientToServer.LoginInformation.P">
+            <summary>
+            Represents a password.
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.SpaceObject.ObjectType">
+            <summary>
+            Should be one of: Star, Planet, Moon, Asteroid, Comet
+            </summary>
+        </member>
+    </members>
+</doc>
