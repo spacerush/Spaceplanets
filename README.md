@@ -2,8 +2,8 @@
 Space planets is a space exploration game inside what looks like a console. Meant to provide a persistent world over a WAN or LAN, SpacePlanets is an Open API for open exploration.
 
 # Builds
-We use azure devops for our build pipelines.
-See https://dev.azure.com/Spacerush/Spaceplanets/_build/
+## devel :: master
+[![Build Status](https://dev.azure.com/Spacerush/Spaceplanets/_apis/build/status/Spaceplanets-ASP.NET%20Core%20(Development)?branchName=development)](https://dev.azure.com/Spacerush/Spaceplanets/_build/latest?definitionId=1&branchName=development) :: [![Build Status](https://dev.azure.com/Spacerush/Spaceplanets/_apis/build/status/Spaceplanets-ASP.NET%20Core-CI%20(Master)?branchName=master)](https://dev.azure.com/Spacerush/Spaceplanets/_build/latest?definitionId=2&branchName=master)
 
 # License
 
