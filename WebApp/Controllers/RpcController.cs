@@ -47,5 +47,31 @@ namespace WebApp.Controllers
                 return result;
             }
         }
+
+        /// <summary>
+        /// Given a certain username and password, return a token that is good for an hour.
+        /// </summary>
+        /// <param name="u">Username</param>
+        /// <param name="p">Password</param>
+        /// <returns>A JSON access token.</returns>
+        [Route("Rpc/GetTokenUsingRefreshToken")]
+        [HttpPost]
+        public JsonResult GetTokenUsingRefreshToken([FromBody] RefreshTokenContainer refreshTokenContainer)
+        {
+            if (refreshTokenContainer != null)
+            {
+                var accessToken = _authenticationService.CreateAccessTokenFromRefreshToken(refreshTokenContainer.Content);
+                if (accessToken != null)
+                {
+                    var accessTokenResult = new JsonResult(accessToken);
+                    accessTokenResult.StatusCode = 200;
+                    return accessTokenResult;
+                }
+            }
+            var result = new JsonResult(new ErrorFromServer("An incorrect refresh token was supplied."));
+            result.StatusCode = 403;
+            return result;
+        }
+        
     }
 }

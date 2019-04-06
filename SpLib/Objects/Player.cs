@@ -11,12 +11,10 @@ namespace SpLib.Objects
         public string PasswordHash { get; set; }
         public string DisplayName { get; set; }
         public List<Character> Characters { get; set; }
-        public List<AccessToken> AccessTokens { get; set; }
         public bool IsAdmin { get; set; }
         public Player()
         {
             Characters = new List<Character>();
-            AccessTokens = new List<AccessToken>();
             IsAdmin = false;
             Version = 1;
         }
