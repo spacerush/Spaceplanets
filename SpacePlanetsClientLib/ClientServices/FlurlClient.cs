@@ -45,22 +45,25 @@ namespace SpacePlanetsClientLib.ClientServices
             else
             {
                 output.Success = false;
-                output.Error = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorFromServer>(result.Content.ReadAsStringAsync().Result);
+                string content = result.Content.ReadAsStringAsync().Result;
+                output.Error = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorFromServer>(content);
                 output.Token = null;
             }
             return output;
         }
 
-        public GetAccessTokenResult GetAccessToken(string refreshToken)
+        public GetAccessTokenResult GetAccessToken(RefreshToken refreshToken)
         {
             var output = new GetAccessTokenResult();
+            var dto = new RefreshTokenContainer();
+            dto.Content = refreshToken.Content;
             var result = _endpoint
                 .AllowAnyHttpStatus()
                 .WithHeader("Accept-Version", "1.0")
                 .AppendPathSegment("api")
                 .AppendPathSegment("Rpc")
                 .AppendPathSegment("GetTokenUsingRefreshToken")
-                .PostJsonAsync(refreshToken).Result;
+                .PostJsonAsync(dto).Result;
             if (result.IsSuccessStatusCode)
             {
                 output.Success = true;

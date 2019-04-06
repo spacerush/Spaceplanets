@@ -12,13 +12,13 @@ namespace SpacePlanetsClientLib.ClientServices
 
         GetAccessTokenResult GetAccessToken(string username, string password);
 
-
-        GetAccessTokenResult GetAccessToken(string refreshToken);
-
         /// <summary>
         /// Change the URL to which this client is communicating for API calls.
         /// </summary>
         /// <param name="newEndpoint">The URL of the api server</param>
         void ChangeEndpoint(string newEndpoint);
+
+
+        GetAccessTokenResult GetAccessToken(RefreshToken refreshToken);
     }
 }
