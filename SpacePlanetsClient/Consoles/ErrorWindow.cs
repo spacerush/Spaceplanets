@@ -3,20 +3,22 @@ using Microsoft.Xna.Framework;
 using SadConsole.Controls;
 using System;
 using SpacePlanetsClient.Extensions;
+using Console = SadConsole.Console;
 
 namespace SpacePlanetsClient.Consoles
 {
     public class ErrorWindow : Window
     {
-        private readonly ErrorConsole _errorConsole;
+        private readonly ErrorConsole errorConsole;
+        private readonly Console console;
 
-        public ErrorWindow(int width, int height, string errorMessage, string errorId) : base(width, height)
+        public ErrorWindow(int width, int height, string errorMessage, string errorId, Console toReturnTo) : base(width, height)
         {
-            _errorConsole = new ErrorConsole(this.Width - 4, this.Height - 4, errorMessage, errorId);
-            this.Children.Add(_errorConsole);
-            _errorConsole.IsVisible = true;
-            _errorConsole.IsFocused = true;
-            _errorConsole.CenterWithinParent();
+            this.errorConsole = new ErrorConsole(this.Width - 4, this.Height - 4, errorMessage, errorId, toReturnTo);
+            this.Children.Add(this.errorConsole);
+            this.errorConsole.IsVisible = true;
+            this.errorConsole.IsFocused = true;
+            this.errorConsole.CenterWithinParent();
         }
 
         public override void Update(TimeSpan timeElapsed)
@@ -27,7 +29,7 @@ namespace SpacePlanetsClient.Consoles
         protected override void OnFocused()
         {
             IsFocused = false;
-            _errorConsole.IsFocused = true;
+            this.errorConsole.IsFocused = true;
             base.OnFocused();
         }
 

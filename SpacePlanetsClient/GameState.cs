@@ -8,12 +8,16 @@ using SpacePlanetsClient.Consoles;
 using SpacePlanetsClientLib.ClientServices;
 using SpLib.Objects;
 using SpLib.DataTransfer.ServerToClient;
+using SpacePlanetsClientLib.Results;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace SpacePlanetsClient
 {
     public static class GameState
     {
-        private static IFlurlClient _client;
+        internal static CancellationToken CancelHeartbeat;
 
         public static void SetClient(IFlurlClient client)
         {
@@ -30,15 +34,16 @@ namespace SpacePlanetsClient
         {
             Startup,
             LoggingIn,
-            LoggedIn,
-            DisplayingMap
+            LoggedIn
         }
 
         private static Console _mainConsole;
         private static LoginWindow _loginWindow;
         private static GameStatus _gameStatus;
-
+        private static MessageLogConsole _messageLogConsole;
         private static AccessToken _accessToken;
+        private static IFlurlClient _client;
+
 
         /// <summary>
         /// This is the first method in this static class that will be called by Initiation
@@ -58,35 +63,88 @@ namespace SpacePlanetsClient
             _loginWindow.CenterWithinParent();
         }
 
+        /// <summary>
+        /// Attempt to log in to the game server (could be lan or other)
+        /// </summary>
+        /// <param name="username">An account name</param>
+        /// <param name="password">A password which should be transmitted using TLS. The server will receive the password and calculate its hash.</param>
+        /// <returns>TRUE if authentication is successful.</returns>
         public static bool DoLogin(string username, string password)
         {
             _gameStatus = GameStatus.LoggingIn;
-            bool result = _client.GetAccessToken(username, password, out AccessToken accessToken, out ErrorFromServer error);
-            if (!result)
+            GetAccessTokenResult result = _client.GetAccessToken(username, password);
+            if (!result.Success)
             {
                 _gameStatus = GameStatus.Startup;
-                ErrorWindow errorWindow = new ErrorWindow(60, 14, error.Message, error.ErrorId.ToString());
-                errorWindow.TitleAlignment = HorizontalAlignment.Center;
-                errorWindow.Title = "Server Error";
-                errorWindow.CanDrag = true;
-                errorWindow.IsVisible = true;
-                errorWindow.UseKeyboard = true;
-
-                errorWindow.CenterWithinParent();
-                
+                CreateErrorWindow(result.Error, _loginWindow.Children.First());
                 return false;
             }
             else
             {
-                _accessToken = accessToken;
+                _accessToken = result.Token;
+                _messageLogConsole = new MessageLogConsole(_mainConsole.Width, _mainConsole.Height / 4);
+                _messageLogConsole.Position = new Point(0, 0);
+                _messageLogConsole.IsVisible = true;
+                _mainConsole.Children.Add(_messageLogConsole);
                 _gameStatus = GameStatus.LoggedIn;
                 _loginWindow.IsVisible = false;
                 _loginWindow.Controls.RemoveAll();
                 _loginWindow.Clear();
+                StartHeartbeat(TimeSpan.FromSeconds(10), CancelHeartbeat);
                 return true;
             }
         }
 
+        private static async Task StartHeartbeat(TimeSpan interval, CancellationToken cancellationToken)
+        {
+            while (true)
+            {
+                Heartbeat();
+                RefreshTokenIfNeeded();
+                await Task.Delay(interval, cancellationToken);
+            }
+        }
+
+        private static void Heartbeat()
+        {
+            _messageLogConsole.Write("Heartbeat", true);
+        }
+        private static void RefreshTokenIfNeeded()
+        {
+            _messageLogConsole.Write("Token expires in " + TimeSpan.FromTicks(_accessToken.Expiry.Ticks - DateTime.UtcNow.Ticks) + " ticks", true);
+            // Check for expiration within the next 2 minutes
+            if (DateTime.Compare(DateTime.UtcNow.AddMinutes(2), _accessToken.Expiry.ToUniversalTime()) > 0)
+            {
+                if (_accessToken.RefreshToken.Expiry.ToUniversalTime() > DateTime.UtcNow)
+                {
+                    _messageLogConsole.Write("Requesting access token refresh using the refresh token.", true);
+                    GetAccessTokenResult getAccessTokenResult = _client.GetAccessToken(_accessToken.RefreshToken);
+                    if (getAccessTokenResult.Success)
+                    {
+                        _accessToken = getAccessTokenResult.Token;
+                    }
+                    else
+                    {
+                        CreateErrorWindow(getAccessTokenResult.Error, _mainConsole);
+                    }
+                }
+                else
+                {
+                    _messageLogConsole.Write("We need a new access token but the refresh token is expired.", true);
+                }
+            }
+        }
+
+        private static void CreateErrorWindow(ErrorFromServer errorFromServer, Console windowToReturnFocusTo)
+        {
+            ErrorWindow errorWindow = new ErrorWindow(60, 14, errorFromServer.Message, errorFromServer.ErrorId.ToString(), windowToReturnFocusTo);
+            errorWindow.TitleAlignment = HorizontalAlignment.Center;
+            errorWindow.Title = "Server Error";
+            errorWindow.CanDrag = true;
+            errorWindow.IsVisible = true;
+            errorWindow.UseKeyboard = true;
+            errorWindow.CenterWithinParent();
+        }
 
     }
 }

@@ -16,6 +16,8 @@ namespace SpacePlanetsDAL.Services
 
         bool TryLoginCredentials(string username, string password);
 
+        AccessToken CreateAccessTokenFromRefreshToken(string refreshToken);
+
 
     }
 }

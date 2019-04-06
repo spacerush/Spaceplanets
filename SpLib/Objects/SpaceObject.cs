@@ -15,8 +15,10 @@ namespace SpLib.Objects
         public int Y { get; set; }
         public int Z { get; set;  }
         public string Name { get; set; }
-        public SpaceObject(string objectType, string name = "Unnamed")
+        public Guid StarSystemId { get; set; }
+        public SpaceObject(Guid starSystemId, string objectType, string name = "Unnamed")
         {
+            this.StarSystemId = starSystemId;
             ObjectType = objectType;
             Version = 1;
             Name = name;

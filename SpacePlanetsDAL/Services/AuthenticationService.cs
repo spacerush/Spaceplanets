@@ -3,6 +3,7 @@ using SpLib.Helpers;
 using SpLib.Objects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -52,13 +53,13 @@ namespace SpacePlanetsDAL.Services
         {
             AccessToken accessToken = new AccessToken();
             accessToken.Content = GenerationHelper.CreateRandomString(true, true, false, 20);
-            accessToken.Expiry = DateTime.UtcNow.AddMinutes(60);
+            accessToken.Expiry = DateTime.UtcNow.AddMinutes(5);
             accessToken.RefreshToken = new RefreshToken();
             accessToken.RefreshToken.Content = GenerationHelper.CreateRandomString(true, true, false, 20);
-            accessToken.RefreshToken.Expiry = DateTime.UtcNow.AddMinutes(90);
+            accessToken.RefreshToken.Expiry = DateTime.UtcNow.AddMinutes(10);
             Player player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Username == username);
-            player.AccessTokens.Add(accessToken);
-            _wrapper.PlayerRepository.UpdateOne<Player>(player);
+            accessToken.PlayerId = player.Id;
+            _wrapper.AccessTokenRepository.AddOne<AccessToken>(accessToken);
             return accessToken;
         }
 
@@ -78,6 +79,20 @@ namespace SpacePlanetsDAL.Services
             }
             return false;
 
+        }
+
+        public AccessToken CreateAccessTokenFromRefreshToken(string refreshToken)
+        {
+            AccessToken token = _wrapper.AccessTokenRepository.GetOne<AccessToken>(f => f.RefreshToken.Content == refreshToken);
+            if (token != null)
+            {
+                if (token.Expiry > DateTime.UtcNow)
+                {
+                    Player player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Id == token.PlayerId);
+                    return CreateGameplayToken(player.Username);
+                }
+            }
+            return null;
         }
 
     }
