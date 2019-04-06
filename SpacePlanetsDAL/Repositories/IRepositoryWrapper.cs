@@ -10,5 +10,7 @@ namespace SpacePlanetsDAL.Repositories
         IRepositoryBase<Galaxy> GalaxyRepository { get; }
         IRepositoryBase<Player> PlayerRepository { get; }
 
+        IRepositoryBase<AccessToken> AccessTokenRepository { get; }
+
     }
 }
