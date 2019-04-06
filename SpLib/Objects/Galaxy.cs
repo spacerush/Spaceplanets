@@ -11,12 +11,10 @@ namespace SpLib.Objects
         public int SizeX { get; set; }
         public int SizeY { get; set; }
         public int SizeZ { get; set; }
-        public List<StarSystem> StarSystems { get; set; }
 
         public Galaxy()
         {
             Version = 1;
-            StarSystems = new List<StarSystem>();
         }
 
     }
