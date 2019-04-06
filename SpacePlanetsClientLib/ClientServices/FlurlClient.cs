@@ -4,6 +4,7 @@ using System.Text;
 using Flurl;
 using Flurl.Http;
 using Flurl.Http.Configuration;
+using SpacePlanetsClientLib.Results;
 using SpLib.DataTransfer.ClientToServer;
 using SpLib.DataTransfer.ServerToClient;
 using SpLib.Objects;
@@ -24,10 +25,9 @@ namespace SpacePlanetsClientLib.ClientServices
             _endpoint = newEndpoint;
         }
 
-        public bool GetAccessToken(string username, string password, out AccessToken token, out ErrorFromServer error)
+        public GetAccessTokenResult GetAccessToken(string username, string password)
         {
-            token = null;
-            error = null;
+            var output = new GetAccessTokenResult();
             LoginInformation loginInformation = new LoginInformation(username, password);
             var result = _endpoint
                 .AllowAnyHttpStatus()
@@ -38,20 +38,22 @@ namespace SpacePlanetsClientLib.ClientServices
                 .PostJsonAsync(loginInformation).Result;
             if (result.IsSuccessStatusCode)
             {
-                token = Newtonsoft.Json.JsonConvert.DeserializeObject<AccessToken>(result.Content.ReadAsStringAsync().Result);
-                return true;
+                output.Success = true;
+                output.Token = Newtonsoft.Json.JsonConvert.DeserializeObject<AccessToken>(result.Content.ReadAsStringAsync().Result);
+                output.Error = null;
             }
             else
             {
-                error = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorFromServer>(result.Content.ReadAsStringAsync().Result);
-                return false;
+                output.Success = false;
+                output.Error = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorFromServer>(result.Content.ReadAsStringAsync().Result);
+                output.Token = null;
             }
+            return output;
         }
 
-        public bool GetAccessToken(string refreshToken, out AccessToken token, out ErrorFromServer error)
+        public GetAccessTokenResult GetAccessToken(string refreshToken)
         {
-            token = null;
-            error = null;
+            var output = new GetAccessTokenResult();
             var result = _endpoint
                 .AllowAnyHttpStatus()
                 .WithHeader("Accept-Version", "1.0")
@@ -61,14 +63,17 @@ namespace SpacePlanetsClientLib.ClientServices
                 .PostJsonAsync(refreshToken).Result;
             if (result.IsSuccessStatusCode)
             {
-                token = Newtonsoft.Json.JsonConvert.DeserializeObject<AccessToken>(result.Content.ReadAsStringAsync().Result);
-                return true; 
+                output.Success = true;
+                output.Token = Newtonsoft.Json.JsonConvert.DeserializeObject<AccessToken>(result.Content.ReadAsStringAsync().Result);
+                output.Error = null;
             }
             else
             {
-                error = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorFromServer>(result.Content.ReadAsStringAsync().Result);
-                return false;
+                output.Success = false;
+                output.Error = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorFromServer>(result.Content.ReadAsStringAsync().Result);
+                output.Token = null;
             }
+            return output;
         }
 
     }
