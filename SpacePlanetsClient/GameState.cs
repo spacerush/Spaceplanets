@@ -8,6 +8,7 @@ using SpacePlanetsClient.Consoles;
 using SpacePlanetsClientLib.ClientServices;
 using SpLib.Objects;
 using SpLib.DataTransfer.ServerToClient;
+using SpacePlanetsClientLib.Results;
 
 namespace SpacePlanetsClient
 {
@@ -67,11 +68,11 @@ namespace SpacePlanetsClient
         public static bool DoLogin(string username, string password)
         {
             _gameStatus = GameStatus.LoggingIn;
-            bool result = _client.GetAccessToken(username, password, out AccessToken accessToken, out ErrorFromServer error);
-            if (!result)
+            GetAccessTokenResult result = _client.GetAccessToken(username, password);
+            if (!result.Success)
             {
                 _gameStatus = GameStatus.Startup;
-                ErrorWindow errorWindow = new ErrorWindow(60, 14, error.Message, error.ErrorId.ToString());
+                ErrorWindow errorWindow = new ErrorWindow(60, 14, result.Error.Message, result.Error.ErrorId.ToString());
                 errorWindow.TitleAlignment = HorizontalAlignment.Center;
                 errorWindow.Title = "Server Error";
                 errorWindow.CanDrag = true;
@@ -82,7 +83,7 @@ namespace SpacePlanetsClient
             }
             else
             {
-                _accessToken = accessToken;
+                _accessToken = result.Token;
                 _gameStatus = GameStatus.LoggedIn;
                 _loginWindow.IsVisible = false;
                 _loginWindow.Controls.RemoveAll();
