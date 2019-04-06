@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using Sentry;
 using SpacePlanetsDAL.Services;
 using Swashbuckle.AspNetCore.Swagger;
 using WebApp.Filters;
@@ -59,7 +60,6 @@ namespace WebApp
                 c.IncludeXmlComments(@"SpLib.xml");
                 c.OperationFilter<SwaggerAuthorizationHeaderFilter>();
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

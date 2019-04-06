@@ -1,4 +1,5 @@
-﻿using SpLib.DataTransfer.ServerToClient;
+﻿using SpacePlanetsClientLib.Results;
+using SpLib.DataTransfer.ServerToClient;
 using SpLib.Objects;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,15 @@ namespace SpacePlanetsClientLib.ClientServices
     public interface IFlurlClient
     {
 
-        bool GetAccessToken(string username, string password, out AccessToken token, out ErrorFromServer error);
-
-
-        bool GetAccessToken(string refreshToken, out AccessToken token, out ErrorFromServer error);
+        GetAccessTokenResult GetAccessToken(string username, string password);
 
         /// <summary>
         /// Change the URL to which this client is communicating for API calls.
         /// </summary>
         /// <param name="newEndpoint">The URL of the api server</param>
         void ChangeEndpoint(string newEndpoint);
+
+
+        GetAccessTokenResult GetAccessToken(RefreshToken refreshToken);
     }
 }

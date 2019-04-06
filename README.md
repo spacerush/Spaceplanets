@@ -1,3 +1,6 @@
+# Notice
+This is a work in progress. There are no released versions yet, and the code in the master branch is just getting started!
+
 # Introduction 
 Space planets is a space exploration game inside what looks like a console. Meant to provide a persistent world over a WAN or LAN, SpacePlanets is an Open API for open exploration.
 
@@ -22,10 +25,13 @@ Space planets is a space exploration game inside what looks like a console. Mean
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 	
-# Getting Started
-1.	We use visual studio community or professional 2017 or 2019.
+# Contributing
+1.	You can likely make good use visual studio community or professional 2017 or 2019.
 2.	Make sure to have .net core 2.2 SDK and Monogame 3.7 installed.
-3.	Clone the git repository, pull requests with significant changes will likely be accepted against the development branch. Small fixes once the software is released should be against master branch.
+3.	For the git repository
+4.  Pull requests with significant changes or additional features will be considered only against the development branch.
+5.  Small fixes once the software is released should be against master branch.
 
-# Contribute
-TODO: Explanation of how other users and developers can contribute to make the project better is coming soon. 
+# Playing
+
+I can't recommend you attempt to play the game right now.

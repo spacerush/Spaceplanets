@@ -12,6 +12,7 @@ namespace SpacePlanetsDAL.Repositories
 
         private IRepositoryBase<Galaxy> _galaxyRepository;
         private IRepositoryBase<Player> _playerRepository;
+        private IRepositoryBase<AccessToken> _accessTokenRepository;
 
         public RepositoryWrapper(IMongoClient mongoClient)
         {
@@ -39,6 +40,18 @@ namespace SpacePlanetsDAL.Repositories
                     _playerRepository = new RepositoryBase<Player>(_mongoClient);
                 }
                 return _playerRepository;
+            }
+        }
+
+        public IRepositoryBase<AccessToken> AccessTokenRepository
+        {
+            get
+            {
+                if (_accessTokenRepository == null)
+                {
+                    _accessTokenRepository = new RepositoryBase<AccessToken>(_mongoClient);
+                }
+                return _accessTokenRepository;
             }
         }
 

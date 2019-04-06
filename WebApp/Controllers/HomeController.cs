@@ -15,6 +15,19 @@ namespace WebApp.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Allows users to request a Calculation be performed.
+        /// </summary>
+        /// <param name="x">Dividend</param>
+        /// <param name="y">Divisor</param>
+        /// <returns>A ViewResult</returns>
+        public IActionResult Calculate(int x, int y)
+        {
+            var viewModel = new CalculateViewModel(x, y);
+
+            return View(viewModel);
+        }
+
         public IActionResult Privacy()
         {
             return View();
