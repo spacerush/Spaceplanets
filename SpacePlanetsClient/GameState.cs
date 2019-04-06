@@ -9,6 +9,7 @@ using SpacePlanetsClientLib.ClientServices;
 using SpLib.Objects;
 using SpLib.DataTransfer.ServerToClient;
 using SpacePlanetsClientLib.Results;
+using System.Linq;
 
 namespace SpacePlanetsClient
 {
@@ -72,7 +73,7 @@ namespace SpacePlanetsClient
             if (!result.Success)
             {
                 _gameStatus = GameStatus.Startup;
-                ErrorWindow errorWindow = new ErrorWindow(60, 14, result.Error.Message, result.Error.ErrorId.ToString());
+                ErrorWindow errorWindow = new ErrorWindow(60, 14, result.Error.Message, result.Error.ErrorId.ToString(), _loginWindow.Children.First());
                 errorWindow.TitleAlignment = HorizontalAlignment.Center;
                 errorWindow.Title = "Server Error";
                 errorWindow.CanDrag = true;

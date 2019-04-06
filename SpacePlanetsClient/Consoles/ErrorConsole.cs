@@ -14,7 +14,7 @@ namespace SpacePlanetsClient.Consoles
             base.Update(timeElapsed);
         }
 
-        public ErrorConsole(int width, int height, string errorMessage, string errorId) : base(width, height)
+        public ErrorConsole(int width, int height, string errorMessage, string errorId, SadConsole.Console toReturnTo) : base(width, height)
         {
             this.Fill(Color.Black, Color.Black, 255);
             this.Print(1, 1, "Error received:", Color.WhiteSmoke, Color.Black);
@@ -27,6 +27,7 @@ namespace SpacePlanetsClient.Consoles
             btnOk.Position = new Point(width - 20, height -2);
             btnOk.Click += (s, a) =>
             {
+                toReturnTo.IsFocused = true;
                 this.Parent.Parent.Children.Remove(this.Parent);
             };
             this.Add(btnOk);
