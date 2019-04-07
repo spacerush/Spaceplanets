@@ -12,10 +12,10 @@ namespace MyProject
     class Program
     {
 
-        public const int Width = 80;
-        public const int Height = 25;
+        public const int Width = 110;
+        public const int Height = 40;
 
-        static void Main(string[] args)
+        static void Main()
         {
             // Setup the engine and create the main window.
             SadConsole.Game.Create("fonts/curses_vector_16x24.font", Width, Height);

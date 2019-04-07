@@ -34,6 +34,7 @@ namespace SpacePlanetsDAL.Services
             {
                 galaxy.Name = "Galaxy " + GenerationHelper.CreateRandomString(true, true, false, 5);
             }
+            _wrapper.GalaxyRepository.AddOne<Galaxy>(galaxy);
             int volume = galaxy.SizeX * galaxy.SizeY * galaxy.SizeZ;
             int lowerBoundX = (galaxy.SizeX / 2) * -1;
             int lowerBoundY = (galaxy.SizeY / 2) * -1;
@@ -52,15 +53,14 @@ namespace SpacePlanetsDAL.Services
                         if (starChance <= 2)
                         {
                             // create star
-                            StarSystem starSystem = new StarSystem();
+                            StarSystem starSystem = new StarSystem(galaxy.Id);
                             starSystem.Name = "System " + GenerationHelper.CreateRandomString(true, false, false, 6) + " " + GenerationHelper.CreateRandomString(false, true, false, 2);
-                            starSystem.CreateRandomizedSpaceObjects(_random);
-                            galaxy.StarSystems.Add(starSystem);
+                            _wrapper.StarSystemRepository.AddOne<StarSystem>(starSystem);
                         }
                     }
                 }
             }
-            _wrapper.GalaxyRepository.AddOne<Galaxy>(galaxy);
+            
         }
 
         public Galaxy RetrieveGalaxyByName(string galaxyName)

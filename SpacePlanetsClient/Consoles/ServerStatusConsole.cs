@@ -7,20 +7,18 @@ using System.Text;
 
 namespace SpacePlanetsClient.Consoles
 {
-    class MessageLogConsole : Console
+    class ServerStatusConsole : Console
     {
         Color _semiTransparentBlack;
 
         public enum MessageTypes
         {
-            Warning,
-            Status,
-            Problem,
-            Battle,
-            AdminOnlyMessage
+            Ok,
+            Danger,
+            Other
         }
 
-        public MessageLogConsole(int width, int height) : base(width, height)
+        public ServerStatusConsole(int width, int height) : base(width, height)
         {
             this.Font = SadConsole.Global.FontDefault.Master.GetFont(Font.FontSizes.One);
             IsCursorDisabled = true;
@@ -38,7 +36,7 @@ namespace SpacePlanetsClient.Consoles
 
         public void Write(string text)
         {
-            this.Print(DateTime.UtcNow.ToShortTimeString() + " UTC: " + text, MessageTypes.Status);
+            this.Print(DateTime.UtcNow.ToShortTimeString() + " UTC: " + text, MessageTypes.Other);
         }
 
         public void Write(string text, MessageTypes messageType)
@@ -52,27 +50,21 @@ namespace SpacePlanetsClient.Consoles
 
             switch (type)
             {
-                case MessageTypes.Warning:
-                    color = Color.PaleVioletRed;
+                case MessageTypes.Ok:
+                    color = Color.LightGreen;
                     break;
-                case MessageTypes.Problem:
-                    color = Color.Orange;
+                case MessageTypes.Danger:
+                    color = Color.Red;
                     break;
-                case MessageTypes.Battle:
-                    color = Color.LawnGreen;
-                    break;
-                case MessageTypes.Status:
+                case MessageTypes.Other:
                     color = Color.White;
                     break;
-                case MessageTypes.AdminOnlyMessage:
-                    color = Color.HotPink;
-                    break;
                 default:
-                    color = Color.LightGray;
+                    color = Color.White;
                     break;
             }
 
-            Cursor.NewLine().Print(new ColoredString("* " + text, color, Color.Transparent) { IgnoreBackground = true });
+            Cursor.NewLine().Print(new ColoredString(text, color, Color.Transparent) { IgnoreBackground = true });
         }
 
         public void Reset()

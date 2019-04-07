@@ -1,4 +1,5 @@
-﻿using SpLib.Objects;
+﻿using SpacePlanetsDAL.ServiceResponses;
+using SpLib.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,9 @@ namespace SpacePlanetsDAL.Services
         bool TryLoginCredentials(string username, string password);
 
         AccessToken CreateAccessTokenFromRefreshToken(string refreshToken);
+
+
+        GetPlayerByAccessTokenResponse GetPlayerByAccessToken(string accessToken);
 
 
     }

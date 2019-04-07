@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using SpacePlanetsDAL.ServiceResponses;
 using SpLib.Helpers;
 using SpLib.Objects;
 using System;
@@ -49,6 +50,11 @@ namespace SpacePlanetsDAL.Services
             return false;
         }
 
+        /// <summary>
+        /// Adds a new access token for a given user with a default lifetime.
+        /// </summary>
+        /// <param name="username">The user in question.</param>
+        /// <returns>Resulting AccessToken</returns>
         public AccessToken CreateGameplayToken(string username)
         {
             AccessToken accessToken = new AccessToken();
@@ -81,18 +87,50 @@ namespace SpacePlanetsDAL.Services
 
         }
 
+        /// <summary>
+        /// Generate a new access token using a longer-lived token issued to clients. Expires the refresh token used.
+        /// </summary>
+        /// <param name="refreshToken">The refresh token to use to locate the access token in the database.</param>
         public AccessToken CreateAccessTokenFromRefreshToken(string refreshToken)
         {
-            AccessToken token = _wrapper.AccessTokenRepository.GetOne<AccessToken>(f => f.RefreshToken.Content == refreshToken);
+            AccessToken token = _wrapper.AccessTokenRepository.GetOne<AccessToken>(f => f.RefreshToken.Content == refreshToken && f.RefreshToken.Used == false);
             if (token != null)
             {
                 if (token.Expiry > DateTime.UtcNow)
                 {
                     Player player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Id == token.PlayerId);
+                    token.RefreshToken.Used = true;
+                    _wrapper.AccessTokenRepository.UpdateOne<AccessToken>(token);
                     return CreateGameplayToken(player.Username);
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Check the database for something in the access token collection that is valid, then retrieve the matching player.
+        /// </summary>
+        /// <param name="accessToken">An access token usually issued to players on logging in.</param>
+        public GetPlayerByAccessTokenResponse GetPlayerByAccessToken(string accessToken)
+        {
+            GetPlayerByAccessTokenResponse result = new GetPlayerByAccessTokenResponse();
+            AccessToken token = _wrapper.AccessTokenRepository.GetOne<AccessToken>(f => f.Content == accessToken);
+            if (token.Expiry > DateTime.UtcNow)
+            {
+                result.Player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Id == token.PlayerId);
+                result.Success = true;
+            }
+            else
+            {
+                result.Player = new Player();
+                result.Success = false;
+            }
+            return result;
+        }
+
+        public void GetShipsByPlayerId(Guid playerId)
+        {
+
         }
 
     }

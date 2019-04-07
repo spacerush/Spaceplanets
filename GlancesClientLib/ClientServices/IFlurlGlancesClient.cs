@@ -7,10 +7,9 @@ using System.Text;
 
 namespace SpacePlanetsClientLib.ClientServices
 {
-    public interface IFlurlClient
+    public interface IFlurlGlancesClient
     {
 
-        GetAccessTokenResult GetAccessToken(string username, string password);
 
         /// <summary>
         /// Change the URL to which this client is communicating for API calls.
@@ -18,16 +17,8 @@ namespace SpacePlanetsClientLib.ClientServices
         /// <param name="newEndpoint">The URL of the api server</param>
         void ChangeEndpoint(string newEndpoint);
 
-
-        GetAccessTokenResult GetAccessToken(RefreshToken refreshToken);
-
         GetCpuUseResult GetCpuUse();
-        GetMemUseResult GetMemoryUse();
 
-        PingResponse GetPingResponse();
-
-        GetCharactersForMenuResult GetCharactersForManagementMenu(string authorizationToken);
-
-        GetShipsForMenuResult GetShipsForManagementMenu(string authorizationToken);
+        GetMemUseResult GetMemUse();
     }
 }
