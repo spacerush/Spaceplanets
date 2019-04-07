@@ -6,7 +6,7 @@ Space planets is a space exploration game inside what looks like a console. Mean
 
 # Builds
 ## devel :: master
-[![Build Status](https://dev.azure.com/Spacerush/Spaceplanets/_apis/build/status/Spaceplanets-ASP.NET%20Core%20(Development)[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fspacerush%2FSpaceplanets.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fspacerush%2FSpaceplanets?ref=badge_shield)
+[![Build Status](https://dev.azure.com/Spacerush/Spaceplanets/_apis/build/status/Spaceplanets-ASP.NET%20Core%20(Development)
 ?branchName=development)](https://dev.azure.com/Spacerush/Spaceplanets/_build/latest?definitionId=1&branchName=development) :: [![Build Status](https://dev.azure.com/Spacerush/Spaceplanets/_apis/build/status/Spaceplanets-ASP.NET%20Core-CI%20(Master)?branchName=master)](https://dev.azure.com/Spacerush/Spaceplanets/_build/latest?definitionId=2&branchName=master)
 
 # License
