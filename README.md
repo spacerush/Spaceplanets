@@ -5,9 +5,8 @@ This is a work in progress. There are no released versions yet, and the code in 
 Space planets is a space exploration game inside what looks like a console. Meant to provide a persistent world over a WAN or LAN, SpacePlanets is an Open API for open exploration.
 
 # Builds
-## devel :: master
-[![Build Status](https://dev.azure.com/Spacerush/Spaceplanets/_apis/build/status/Spaceplanets-ASP.NET%20Core%20(Development)
-?branchName=development)](https://dev.azure.com/Spacerush/Spaceplanets/_build/latest?definitionId=1&branchName=development) :: [![Build Status](https://dev.azure.com/Spacerush/Spaceplanets/_apis/build/status/Spaceplanets-ASP.NET%20Core-CI%20(Master)?branchName=master)](https://dev.azure.com/Spacerush/Spaceplanets/_build/latest?definitionId=2&branchName=master)
+## master
+## development
 
 # License
 
@@ -26,9 +25,6 @@ Space planets is a space exploration game inside what looks like a console. Mean
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 	
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fspacerush%2FSpaceplanets.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fspacerush%2FSpaceplanets?ref=badge_large)
-
 # Contributing
 1.	You can likely make good use visual studio community or professional 2017 or 2019.
 2.	Make sure to have .net core 2.2 SDK and Monogame 3.7 installed.
