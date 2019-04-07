@@ -69,8 +69,8 @@ namespace SpacePlanetsClient.Consoles
         {
             var s = sender as Button;
             // the button should be named for the type of entity that is being clicked on.
-            // for example, if this is a character menu the button name will be : Character [number], where
-            // [number] is a unique identifier for a character.
+            // for example, if this is a character menu the button name will be : Character [Guid], where
+            // [Guid] is a unique identifier for a character.
             var buttonNameParts = s.Name.Split(" ");
 
             GameState.WriteGeneralMessageToLog(s.Name + " clicked.");
