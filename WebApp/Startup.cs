@@ -37,8 +37,6 @@ namespace WebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
-
 
             var client = new MongoClient("mongodb://localhost:27017/SpacePlanetsDev");
 
@@ -46,6 +44,14 @@ namespace WebApp
             services.AddScoped<IGameService, GameService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
 
+            services.AddCookieManager(options =>
+                {
+                    options.AllowEncryption = false;
+                    options.ThrowForPartialCookies = true;
+                    options.ChunkSize = null;
+                    options.DefaultExpireTimeInDays = 7;
+                }
+            );
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSwaggerGen(c =>
@@ -83,8 +89,6 @@ namespace WebApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
-            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

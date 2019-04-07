@@ -14,6 +14,7 @@ namespace SpacePlanetsDAL.Repositories
         #endregion
 
         #region Accounts
+        IRepositoryBase<WebSession> WebSessionRepository { get; }
         IRepositoryBase<Player> PlayerRepository { get; }
         IRepositoryBase<AccessToken> AccessTokenRepository { get; }
         #endregion

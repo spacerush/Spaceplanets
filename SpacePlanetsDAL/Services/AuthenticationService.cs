@@ -69,6 +69,23 @@ namespace SpacePlanetsDAL.Services
             return accessToken;
         }
 
+        /// <summary>
+        /// Creates a new web session and return it for a given user.
+        /// </summary>
+        /// <param name="username">The username for which the session is for.</param>
+        /// <returns>A WebSession</returns>
+        public WebSession CreateWebSession(string username)
+        {
+            Player player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Username == username);
+            WebSession webSession = new WebSession();
+            webSession.Expiry = DateTime.UtcNow.AddDays(14);
+            webSession.UserId = player.Id;
+            webSession.ForUsername = username;
+            webSession.SessionCookie = GenerationHelper.CreateRandomString(true, true, false, 32);
+            _wrapper.WebSessionRepository.AddOne<WebSession>(webSession);
+            return webSession;
+        }
+        
         public bool TryLoginCredentials(string username, string password)
         {
             Player player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Username == username);
