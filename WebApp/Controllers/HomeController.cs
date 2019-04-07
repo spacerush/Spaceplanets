@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
 
@@ -15,6 +16,11 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [Authorize]
+        public IActionResult Account()
+        {
+            return View();
+        }
         /// <summary>
         /// Allows users to request a Calculation be performed.
         /// </summary>
