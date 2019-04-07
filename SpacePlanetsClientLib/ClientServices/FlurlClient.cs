@@ -4,9 +4,11 @@ using System.Text;
 using Flurl;
 using Flurl.Http;
 using Flurl.Http.Configuration;
+using Newtonsoft.Json;
 using SpacePlanetsClientLib.Results;
 using SpLib.DataTransfer.ClientToServer;
 using SpLib.DataTransfer.ServerToClient;
+using SpLib.Glances;
 using SpLib.Objects;
 
 namespace SpacePlanetsClientLib.ClientServices
@@ -76,6 +78,109 @@ namespace SpacePlanetsClientLib.ClientServices
                 output.Error = Newtonsoft.Json.JsonConvert.DeserializeObject<ErrorFromServer>(result.Content.ReadAsStringAsync().Result);
                 output.Token = null;
             }
+            return output;
+        }
+
+        public GetMemUseResult GetMemoryUse()
+        {
+            var output = new GetMemUseResult();
+            try
+            {
+                var result = _endpoint
+                    .AllowAnyHttpStatus()
+                    .WithHeader("Accept-Version", "1.0")
+                    .AppendPathSegment("api")
+                    .AppendPathSegment("Rpc")
+                    .AppendPathSegment("GetMemUse")
+                    .GetJsonAsync<GetMemUseResult>().Result;
+                if (result != null)
+                {
+                    output = result;
+                }
+            }
+            catch (Exception ex)
+            {
+                output.Success = false;
+                output.MemoryInformation = null;
+                output.Error = new ErrorFromServer("Could not retrieve server memory use");
+                output.Error.ErrorId = "ClientGenerated";
+            }
+            return output;
+       }
+
+        public GetCpuUseResult GetCpuUse()
+        {
+            var output = new GetCpuUseResult();
+            try
+            {
+                var result = _endpoint
+                    .AllowAnyHttpStatus()
+                    .WithHeader("Accept-Version", "1.0")
+                    .AppendPathSegment("api")
+                    .AppendPathSegment("Rpc")
+                    .AppendPathSegment("GetCpuUse")
+                    .GetJsonAsync<GetCpuUseResult>().Result;
+                if (result != null)
+                {
+                    output = result;
+                }
+            }
+            catch (Exception ex)
+            {
+                output.Success = false;
+                output.CpuInformation = null;
+                output.Error = new ErrorFromServer("Could not retrieve server cpu use");
+                output.Error.ErrorId = "ClientGenerated";
+            }
+            return output;
+        }
+
+        public PingResponse GetPingResponse()
+        {
+            var input = new PingRequest();
+            input.DateTime = DateTime.Now;
+            var output = new PingResponse();
+            var result = _endpoint
+                .AllowAnyHttpStatus()
+                .WithHeader("Accept-Version", "1.0")
+                .AppendPathSegment("api")
+                .AppendPathSegment("Rpc")
+                .AppendPathSegment("Ping")
+                .PostJsonAsync(input).Result;
+            return output;
+        }
+
+        public GetCharactersForMenuResult GetCharactersForManagementMenu(string authorizationToken)
+        {
+            List<GenericItemForPicklist> genericItemsForPicklist = new List<GenericItemForPicklist>();
+            var input = new AuthorizationTokenContainer();
+            input.Content = authorizationToken;
+            var output = new GetCharactersForMenuResult();
+            var result = _endpoint
+                .AllowAnyHttpStatus()
+                .WithHeader("Accept-Version", "1.0")
+                .AppendPathSegment("api")
+                .AppendPathSegment("Rpc")
+                .AppendPathSegment("GetCharactersForMenu")
+                .PostJsonAsync(input).Result;
+                output = JsonConvert.DeserializeObject<GetCharactersForMenuResult>(result.Content.ReadAsStringAsync().Result);
+            return output;
+        }
+
+        public GetShipsForMenuResult GetShipsForManagementMenu(string authorizationToken)
+        {
+            List<GenericItemForPicklist> genericItemsForPicklist = new List<GenericItemForPicklist>();
+            var input = new AuthorizationTokenContainer();
+            input.Content = authorizationToken;
+            var output = new GetShipsForMenuResult();
+            var result = _endpoint
+                .AllowAnyHttpStatus()
+                .WithHeader("Accept-Version", "1.0")
+                .AppendPathSegment("api")
+                .AppendPathSegment("Rpc")
+                .AppendPathSegment("GetShipsForMenu")
+                .PostJsonAsync(input).Result;
+            output = JsonConvert.DeserializeObject<GetShipsForMenuResult>(result.Content.ReadAsStringAsync().Result);
             return output;
         }
 

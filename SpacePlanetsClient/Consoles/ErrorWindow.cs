@@ -10,7 +10,6 @@ namespace SpacePlanetsClient.Consoles
     public class ErrorWindow : Window
     {
         private readonly ErrorConsole errorConsole;
-        private readonly Console console;
 
         public ErrorWindow(int width, int height, string errorMessage, string errorId, Console toReturnTo) : base(width, height)
         {

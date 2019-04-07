@@ -4,6 +4,16 @@
         <name>SpLib</name>
     </assembly>
     <members>
+        <member name="T:SpLib.DataTransfer.ClientToServer.AuthorizationTokenContainer">
+            <summary>
+            Represents a bearer token for json encoding.
+            </summary>
+        </member>
+        <member name="P:SpLib.DataTransfer.ClientToServer.AuthorizationTokenContainer.Content">
+            <summary>
+            Represents the content of the token.
+            </summary>
+        </member>
         <member name="P:SpLib.DataTransfer.ClientToServer.LoginInformation.U">
             <summary>
             Represents a username.

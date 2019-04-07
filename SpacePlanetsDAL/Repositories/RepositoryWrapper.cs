@@ -11,6 +11,9 @@ namespace SpacePlanetsDAL.Repositories
         private readonly IMongoClient _mongoClient;
 
         private IRepositoryBase<Galaxy> _galaxyRepository;
+        private IRepositoryBase<StarSystem> _starSystemRepository;
+        private IRepositoryBase<SpaceObject> _spaceObjectRepository;
+
         private IRepositoryBase<Player> _playerRepository;
         private IRepositoryBase<AccessToken> _accessTokenRepository;
 
@@ -30,6 +33,32 @@ namespace SpacePlanetsDAL.Repositories
                 return _galaxyRepository;
             }
         }
+
+        public IRepositoryBase<StarSystem> StarSystemRepository
+        {
+            get
+            {
+                if (_starSystemRepository == null)
+                {
+                    _starSystemRepository = new RepositoryBase<StarSystem>(_mongoClient);
+                }
+                return _starSystemRepository;
+            }
+        }
+
+        public IRepositoryBase<SpaceObject> SpaceObjectRepository
+        {
+            get
+            {
+                if (_spaceObjectRepository == null)
+                {
+                    _spaceObjectRepository = new RepositoryBase<SpaceObject>(_mongoClient);
+                }
+                return _spaceObjectRepository;
+            }
+        }
+
+
 
         public IRepositoryBase<Player> PlayerRepository
         {
