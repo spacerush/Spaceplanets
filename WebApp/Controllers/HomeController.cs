@@ -16,11 +16,6 @@ namespace WebApp.Controllers
             return View();
         }
 
-        [Authorize]
-        public IActionResult Account()
-        {
-            return View();
-        }
         /// <summary>
         /// Allows users to request a Calculation be performed.
         /// </summary>

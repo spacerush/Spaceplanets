@@ -10,31 +10,31 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Fonts\curses_vector_12x18.font" />
-    <None Remove="Fonts\curses_vector_12x18.png" />
-    <None Remove="Fonts\curses_vector_16x24.font" />
-    <None Remove="Fonts\curses_vector_16x24.png" />
-    <None Remove="Fonts\curses_vector_24x36.font" />
-    <None Remove="Fonts\curses_vector_24x36.png" />
+    <None Remove="fonts\curses_vector_12x18.font" />
+    <None Remove="fonts\curses_vector_12x18.png" />
+    <None Remove="fonts\curses_vector_16x24.font" />
+    <None Remove="fonts\curses_vector_16x24.png" />
+    <None Remove="fonts\curses_vector_24x36.font" />
+    <None Remove="fonts\curses_vector_24x36.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Fonts\curses_vector_12x18.font">
+    <Content Include="fonts\curses_vector_12x18.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Fonts\curses_vector_12x18.png">
+    <Content Include="fonts\curses_vector_12x18.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Fonts\curses_vector_16x24.font">
+    <Content Include="fonts\curses_vector_16x24.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Fonts\curses_vector_16x24.png">
+    <Content Include="fonts\curses_vector_16x24.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Fonts\curses_vector_24x36.font">
+    <Content Include="fonts\curses_vector_24x36.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Fonts\curses_vector_24x36.png">
+    <Content Include="fonts\curses_vector_24x36.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
