@@ -22,5 +22,7 @@ namespace SpacePlanetsDAL.Services
         /// </summary>
         /// <returns>A list of ShipTemplate wrapped in a container object.</returns>
         GetAllShipTemplatesResponse GetAllShipTemplates();
+
+        GetAllShipModulesResponse GetAllShipModules();
     }
 }

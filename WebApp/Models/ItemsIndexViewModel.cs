@@ -14,6 +14,7 @@ namespace WebApp.Models
         private readonly IObjectService _objectService;
         private readonly Player _player;
         private readonly List<ShipTemplate> _shipTemplates;
+        private readonly List<ShipModule> _shipModules;
         
         public Player player
         {
@@ -24,13 +25,20 @@ namespace WebApp.Models
         {
             get { return _shipTemplates; }
         }
+        
+        public List<ShipModule> ShipModules
+        {
+            get { return _shipModules; }
+        }
 
         public ItemsIndexViewModel(IAuthenticationService authenticationService, IObjectService objectService, string cookie = "")
         {
             _authenticationService = authenticationService;
             _objectService = objectService;
             _shipTemplates = new List<ShipTemplate>();
+            _shipModules = new List<ShipModule>();
             GetAllShipTemplatesResponse templatesResponse = _objectService.GetAllShipTemplates();
+            GetAllShipModulesResponse modulesResponse = _objectService.GetAllShipModules();
             if (templatesResponse.Success == true)
             {
                 _shipTemplates = templatesResponse.ShipTemplates;
@@ -40,6 +48,15 @@ namespace WebApp.Models
                 _shipTemplates = new List<ShipTemplate>();
             }
 
+            if (modulesResponse.Success == true)
+            {
+                _shipModules = modulesResponse.ShipModules;
+            }
+            else
+            {
+                _shipModules = new List<ShipModule>();
+            }
+            
             // For personalization, load in some player details.
             if (!string.IsNullOrEmpty(cookie))
             {

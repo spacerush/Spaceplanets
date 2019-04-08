@@ -170,5 +170,16 @@ namespace SpacePlanetsDAL.Services
             }
             return result;
         }
+        
+        public GetAllShipModulesResponse GetAllShipModules()
+        {
+            var result = new GetAllShipModulesResponse();
+            result.ShipModules = _wrapper.ShipModuleRepository.GetAll<ShipModule>(f => f.Id != null);
+            if (result.ShipModules.Count > 0)
+            {
+                result.Success = true;
+            }
+            return result;
+        }
     }
 }
