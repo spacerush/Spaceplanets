@@ -44,6 +44,11 @@
             List of ship modules, should be the same as this ship type template.
             </summary>
         </member>
+        <member name="P:SpLib.Objects.Ship.ShipModules">
+            <summary>
+            List of installed ship modules
+            </summary>
+        </member>
         <member name="M:SpLib.Objects.Ship.#ctor(System.String,System.String)">
             <summary>
             Create a ship with the given name and type.

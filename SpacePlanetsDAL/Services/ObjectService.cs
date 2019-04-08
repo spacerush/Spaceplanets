@@ -3,6 +3,7 @@ using SpLib.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SpacePlanetsDAL.ServiceResponses;
 
 namespace SpacePlanetsDAL.Services
 {
@@ -27,7 +28,7 @@ namespace SpacePlanetsDAL.Services
         /// <inheritdoc />
         public void CreateDefaultShipTemplatesIfNecessary()
         {
-            long count = _wrapper.ShipTemplateRepository.Count<Ship>(f => f.Id != null);
+            long count = _wrapper.ShipTemplateRepository.Count<ShipTemplate>(f => f.Id != null);
             if (count == 0)
             {
                 // Create a list to hold the new Bson documents.
@@ -159,5 +160,15 @@ namespace SpacePlanetsDAL.Services
             }
         }
 
+        public GetAllShipTemplatesResponse GetAllShipTemplates()
+        {
+            var result = new GetAllShipTemplatesResponse();
+            result.ShipTemplates = _wrapper.ShipTemplateRepository.GetAll<ShipTemplate>(f => f.Id != null);
+            if (result.ShipTemplates.Count > 0)
+            {
+                result.Success = true;
+            }
+            return result;
+        }
     }
 }
