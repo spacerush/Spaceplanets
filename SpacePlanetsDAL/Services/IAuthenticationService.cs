@@ -23,6 +23,8 @@ namespace SpacePlanetsDAL.Services
         
         GetPlayerByAccessTokenResponse GetPlayerByAccessToken(string accessToken);
 
+        GetPlayerByCookieResponse GetPlayerByWebCookie(string cookie);
+
 
     }
 }

@@ -4,6 +4,7 @@ using CookieManager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SpacePlanetsDAL.ServiceResponses;
 using SpacePlanetsDAL.Services;
 using SpLib.Objects;
 using WebApp.Models;
@@ -30,11 +31,28 @@ namespace WebApp.Controllers
         public IActionResult Index()
         {
             var viewModel = new AccountIndexViewModel();
-            viewModel.Message = "Cookie is : " + _cookie.Get("SpaceRushSession");
+            string sessionId = _cookie.Get("SpaceRushSession");
+            if (string.IsNullOrEmpty(sessionId)) {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                GetPlayerByCookieResponse playerByCookie = _authenticationService.GetPlayerByWebCookie(sessionId);
+                if (playerByCookie.Success == true)
+                {
+                    viewModel.Message = "Welcome, " + playerByCookie.Player.Username;
+                    viewModel.GetCharactersByPlayerIdResponse = _gameService.GetCharactersByPlayerId(playerByCookie.Player.Id);
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+            }
             return View(viewModel);
         }
         public IActionResult Login()
         {
+            _cookie.Remove("SpaceRushSession");
             return View();
         }
 
@@ -52,13 +70,12 @@ namespace WebApp.Controllers
             if (_authenticationService.TryLoginCredentials(spusername, sppassword))
             {
                 WebSession session = _authenticationService.CreateWebSession(spusername);
-                viewModel.Message = "Created new web session: " + session.SessionCookie;
+                viewModel.Message = "Created new web session valid until " + session.Expiry.ToShortDateString();
                 _cookie.Set("SpaceRushSession", session.SessionCookie, new CookieOptions() { HttpOnly = true, Expires = DateTime.Now.AddDays(1) });
             }
             else
             {
-                viewModel.Message = "Login was bad.";
-                _cookie.Remove("SpaceRushSession");
+                return RedirectToAction("Login", "Account");
             }
             return View(viewModel);
         }

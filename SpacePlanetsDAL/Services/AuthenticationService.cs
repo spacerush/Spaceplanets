@@ -148,6 +148,27 @@ namespace SpacePlanetsDAL.Services
             return result;
         }
 
+        /// <summary>
+        /// Check the database for something in the cookie collection that is valid, then retrieve the matching player.
+        /// </summary>
+        /// <param name="cookie">A long-lived session token usually issued to players on logging on the website.</param>
+        public GetPlayerByCookieResponse GetPlayerByWebCookie(string cookie)
+        {
+            GetPlayerByCookieResponse result = new GetPlayerByCookieResponse();
+            WebSession webSession = _wrapper.WebSessionRepository.GetOne<WebSession>(f => f.SessionCookie == cookie);
+            if (webSession != null && webSession.Expiry > DateTime.UtcNow)
+            {
+                result.Player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Id == webSession.UserId);
+                result.Success = true;
+            }
+            else
+            {
+                result.Player = new Player();
+                result.Success = false;
+            }
+            return result;
+        }
+
 
 
     }
