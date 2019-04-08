@@ -21,6 +21,12 @@ namespace SpacePlanetsDAL.Repositories
 
         #region OtherObjects
         IRepositoryBase<Character> CharacterRepository { get; }
+        IRepositoryBase<Ship> ShipRepository { get; }
+        #endregion
+
+        #region Defaults Or Templates
+        IRepositoryBase<ShipTemplate> ShipTemplateRepository { get; }
+        IRepositoryBase<ShipModule> ShipModuleRepository { get; }
         #endregion
     }
 }

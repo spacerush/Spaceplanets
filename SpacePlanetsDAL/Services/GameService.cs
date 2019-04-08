@@ -21,9 +21,21 @@ namespace SpacePlanetsDAL.Services
             _random = new Random();
         }
 
-        public void GetShipsByPlayerId(Guid playerId)
+        public GetShipsByPlayerIdResponse GetShipsByPlayerId(Guid playerId)
         {
-
+            var result = new GetShipsByPlayerIdResponse();
+            result.Ships = new List<Ship>();
+            result.Ships.AddRange(_wrapper.ShipRepository.GetAll<Ship>(f => f.PlayerId == playerId));
+            if (result.Ships.Count > 0)
+            {
+                result.Success = true;
+            }
+            else
+            {
+                result.Success = false;
+            }
+            result.PlayerId = playerId;
+            return result;
         }
 
         public GetCharactersByPlayerIdResponse GetCharactersByPlayerId(Guid playerId)

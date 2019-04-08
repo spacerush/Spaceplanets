@@ -42,6 +42,7 @@ namespace WebApp
 
             services.AddScoped<IMongoClient>(c => client);
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IObjectService, ObjectService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddCookieManager(options =>
@@ -71,6 +72,12 @@ namespace WebApp
                 c.IncludeXmlComments(@"SpLib.xml");
                 c.OperationFilter<SwaggerAuthorizationHeaderFilter>();
             });
+
+            IServiceProvider provider = services.BuildServiceProvider();
+
+            IObjectService objectService = provider.GetRequiredService<IObjectService>();
+            objectService.CreateDefaultShipTemplatesIfNecessary();
+            objectService.CreateDefaultModuleTypesIfNecessary();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

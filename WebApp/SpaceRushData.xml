@@ -24,6 +24,56 @@
             Represents a password.
             </summary>
         </member>
+        <member name="P:SpLib.Objects.Ship.AngularTurnSpeed">
+            <summary>
+            Should be in degrees per second. Valid values 0 to 360.
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.Ship.Type">
+            <summary>
+            See available ShipTemplates for type validation.
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.Ship.PlayerId">
+            <summary>
+            The player a ship belongs to if any.
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.Ship.ModuleSlots">
+            <summary>
+            List of ship modules, should be the same as this ship type template.
+            </summary>
+        </member>
+        <member name="M:SpLib.Objects.Ship.#ctor(System.String,System.String)">
+            <summary>
+            Create a ship with the given name and type.
+            </summary>
+            <param name="name">The name of the ship</param>
+            <param name="type">The type of the ship (fighter, freighter, etc)</param>
+        </member>
+        <member name="P:SpLib.Objects.ShipModuleSlot.SlotType">
+            <summary>
+            Denotes power plant, gun, etc. See ShipTemplates for valid values.
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.ShipModuleSlot.MaxLevel">
+            <summary>
+            The maximum level of a module
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.ShipModuleSlot.MinLevel">
+            <summary>
+            The minimum level a module can be. Often 1.
+            </summary>
+        </member>
+        <member name="M:SpLib.Objects.ShipModuleSlot.#ctor(System.Int32,System.Int32,System.String)">
+            <summary>
+            Creates a record of a given module able to be populated on a ship or template.
+            </summary>
+            <param name="minLevel">Desired minimum module level.</param>
+            <param name="maxLevel">Desired maximum module level.</param>
+            <param name="slotType">Desired type of slot</param>
+        </member>
         <member name="P:SpLib.Objects.SpaceObject.ObjectType">
             <summary>
             Should be one of: Star, Planet, Moon, Asteroid, Comet
