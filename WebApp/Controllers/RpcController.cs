@@ -118,7 +118,14 @@ namespace WebApp.Controllers
                 if (getPlayerByAccessTokenResponse.Success)
                 {
                     List<GenericItemForPicklist> characters = new List<GenericItemForPicklist>();
-                    characters.Add(new GenericItemForPicklist(Guid.NewGuid(), "testing"));
+                    GetCharactersByPlayerIdResponse getCharactersByPlayerIdResponse = _gameService.GetCharactersByPlayerId(getPlayerByAccessTokenResponse.Player.Id);
+                    if (getCharactersByPlayerIdResponse.Success == true)
+                    {
+                        foreach (var item in getCharactersByPlayerIdResponse.Characters)
+                        {
+                            characters.Add(new GenericItemForPicklist(item.Id, item.Name + ", level " + item.Level + " " + item.Profession));
+                        }
+                    }
                     getCharactersForMenuResult.Characters = characters;
                     getCharactersForMenuResult.Error = null;
                     getCharactersForMenuResult.Success = true;

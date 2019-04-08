@@ -96,6 +96,9 @@ namespace SpacePlanetsDAL.Services
                 newPlayer.Username = username;
                 _wrapper.PlayerRepository.AddOne<Player>(newPlayer);
                 player = newPlayer;
+                Character character = new Character("Nameless Explorer", 1, "Explorer");
+                character.PlayerId = player.Id;
+                _wrapper.CharacterRepository.AddOne<Character>(character);
             }
             if (VerifyPassword(password, player.PasswordHash)) {
                 return true;
@@ -145,10 +148,7 @@ namespace SpacePlanetsDAL.Services
             return result;
         }
 
-        public void GetShipsByPlayerId(Guid playerId)
-        {
 
-        }
 
     }
 }

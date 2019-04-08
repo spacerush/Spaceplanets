@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using SpLib.Helpers;
 using SpLib.Objects;
+using SpacePlanetsDAL.ServiceResponses;
 
 namespace SpacePlanetsDAL.Services
 {
@@ -18,6 +19,28 @@ namespace SpacePlanetsDAL.Services
             _mongoClient = client;
             _wrapper = new Repositories.RepositoryWrapper(_mongoClient);
             _random = new Random();
+        }
+
+        public void GetShipsByPlayerId(Guid playerId)
+        {
+
+        }
+
+        public GetCharactersByPlayerIdResponse GetCharactersByPlayerId(Guid playerId)
+        {
+            var result = new GetCharactersByPlayerIdResponse();
+            result.Characters = new List<Character>();
+            result.Characters.AddRange(_wrapper.CharacterRepository.GetAll<Character>(f => f.PlayerId == playerId));
+            if (result.Characters.Count > 0)
+            {
+                result.Success = true;
+            }
+            else
+            {
+                result.Success = false;
+            }
+            result.PlayerId = playerId;
+            return result;
         }
 
         public void GenerateGalaxy(string galaxyName)

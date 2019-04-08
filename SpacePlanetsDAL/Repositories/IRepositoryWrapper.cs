@@ -19,5 +19,8 @@ namespace SpacePlanetsDAL.Repositories
         IRepositoryBase<AccessToken> AccessTokenRepository { get; }
         #endregion
 
+        #region OtherObjects
+        IRepositoryBase<Character> CharacterRepository { get; }
+        #endregion
     }
 }
