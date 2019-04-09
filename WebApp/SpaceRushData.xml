@@ -4,6 +4,78 @@
         <name>SpLib</name>
     </assembly>
     <members>
+        <member name="P:CasualGodComplex.Galaxies.Spiral.Size">
+            <summary>
+            Approximate physical size of the galaxy
+            </summary>
+        </member>
+        <member name="P:CasualGodComplex.Galaxies.Spiral.Spacing">
+            <summary>
+            Approximate spacing between clusters
+            </summary>
+        </member>
+        <member name="P:CasualGodComplex.Galaxies.Spiral.MinimumArms">
+            <summary>
+            Minimum number of arms
+            </summary>
+        </member>
+        <member name="P:CasualGodComplex.Galaxies.Spiral.MaximumArms">
+            <summary>
+            Maximum number of arms
+            </summary>
+        </member>
+        <member name="M:CasualGodComplex.RandomExtensions.NormallyDistributedSingles(System.Random,System.Single,System.Single)">
+            <summary>
+            Generates a sequence of values from a normal distribution, using Box-Muller
+            https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+            </summary>
+            <param name="random">A (uniform) random number generator</param>
+            <param name="standardDeviation">The standard deviation of the distribution</param>
+            <param name="mean">The mean of the distribution</param>
+            <returns>A normally distributed value</returns>
+        </member>
+        <member name="M:CasualGodComplex.RandomExtensions.NormallyDistributedSingle(System.Random,System.Single,System.Single)">
+            <summary>
+            Generates a single value from a normal distribution, using Box-Muller
+            https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+            </summary>
+            <param name="random">A (uniform) random number generator</param>
+            <param name="standardDeviation">The standard deviation of the distribution</param>
+            <param name="mean">The mean of the distribution</param>
+            <returns>A normally distributed value</returns>
+        </member>
+        <member name="M:CasualGodComplex.RandomExtensions.NormallyDistributedSingles(System.Random,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Generates a sequence of normal values clamped within min and max
+            </summary>
+            <remarks>
+            Originally used inverse phi method, but this method, found here:
+            http://arxiv.org/pdf/0907.4010.pdf
+            is significantly faster
+            </remarks>
+            <param name="random">A (uniform) random number generator</param>
+            <param name="standardDeviation">The standard deviation of the distribution</param>
+            <param name="mean">The mean of the distribution</param>
+            <param name="min">The minimum allowed value (does not bias)</param>
+            <param name="max">The max allowed value (does not bias)</param>
+            <returns>A sequence of samples from a normal distribution, clamped to within min and max in an unbiased manner.</returns>
+        </member>
+        <member name="M:CasualGodComplex.RandomExtensions.NormallyDistributedSingle(System.Random,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Generates a single normal value clamped within min and max
+            </summary>
+            <remarks>
+            Originally used inverse phi method, but this method, found here:
+            http://arxiv.org/pdf/0907.4010.pdf
+            is significantly faster
+            </remarks>
+            <param name="random">A (uniform) random number generator</param>
+            <param name="standardDeviation">The standard deviation of the distribution</param>
+            <param name="mean">The mean of the distribution</param>
+            <param name="min">The minimum allowed value (does not bias)</param>
+            <param name="max">The max allowed value (does not bias)</param>
+            <returns>A single sample from a normal distribution, clamped to within min and max in an unbiased manner.</returns>
+        </member>
         <member name="T:SpLib.DataTransfer.ClientToServer.AuthorizationTokenContainer">
             <summary>
             Represents a bearer token for json encoding.
