@@ -40,7 +40,7 @@ namespace SpacePlanetsClient.Consoles
 
         private void Organization_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void Character_Click(object sender, EventArgs e)

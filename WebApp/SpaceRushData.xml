@@ -156,5 +156,747 @@
             Should be one of: Star, Planet, Moon, Asteroid, Comet
             </summary>
         </member>
+        <member name="M:StarformCore.Accrete.GetPlanetaryBodies(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,StarformCore.Data.PlanetSeed,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="stellarMassRatio"></param>
+            <param name="stellarLumRatio"></param>
+            <param name="innerDust"></param>
+            <param name="outerDust"></param>
+            <param name="outerPlanetLimit"></param>
+            <param name="dustDensityCoeff"></param>
+            <param name="seedSystem"></param>
+            <param name="doMoons"></param>
+            <returns></returns>
+        </member>
+        <member name="P:StarformCore.Data.Planet.SemiMajorAxisAU">
+            <summary>
+            Semi-major axis of the body's orbit in astronomical units (au).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.Eccentricity">
+            <summary>
+            Eccentricity of the body's orbit.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.AxialTiltDegrees">
+            <summary>
+            Axial tilt of the planet expressed in degrees.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.OrbitZone">
+            <summary>
+            Orbital zone the planet is located in. Value is 1, 2, or 3. Used in
+            radius and volatile inventory calculations.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.OrbitalPeriodDays">
+            <summary>
+            The length of the planet's year in days.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.AngularVelocityRadSec">
+            <summary>
+            Angular velocity about the planet's axis in radians/sec.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.DayLengthHours">
+            <summary>
+            The length of the planet's day in hours.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.HillSphereKM">
+            <summary>
+            The Hill sphere of the planet expressed in km.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.MassSM">
+            <summary>
+            The mass of the planet in units of Solar mass.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.DustMassSM">
+            <summary>
+            The mass of dust retained by the planet (ie, the mass of the planet
+            sans atmosphere). Given in units of Solar mass.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.GasMassSM">
+            <summary>
+            The mass of gas retained by the planet (ie, the mass of its
+            atmosphere). Given in units of Solar mass.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.EscapeVelocityCMSec">
+            <summary>
+            The velocity required to escape from the body given in cm/sec.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.SurfaceAccelerationCMSec2">
+            <summary>
+            The gravitational acceleration felt at the surface of the planet. Given in cm/sec^2
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.SurfaceGravityG">
+            <summary>
+            The gravitational acceleration felt at the surface of the planet. Given as a fraction of Earth gravity (Gs).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.CoreRadiusKM">
+            <summary>
+            The radius of the planet's core in km.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.RadiusKM">
+            <summary>
+            The radius of the planet's surface in km.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.DensityGCC">
+            <summary>
+            The density of the planet given in g/cc. 
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.RMSVelocityCMSec">
+            <summary>
+            The root-mean-square velocity of N2 at the planet's exosphere given
+            in cm/sec. Used to determine where or not a planet is capable of
+            retaining an atmosphere.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.MolecularWeightRetained">
+            <summary>
+            The smallest molecular weight the planet is capable of retaining.
+            I believe this is in g/mol.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.VolatileGasInventory">
+            <summary>
+            Unitless value for the inventory of volatile gases that result from
+            outgassing. Used in the calculation of surface pressure. See Fogg
+            eq. 16. 
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.BoilingPointWaterKelvin">
+            <summary>
+            Boiling point of water on the planet given in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.Albedo">
+            <summary>
+            Planetary albedo. Unitless value between 0 (no reflection) and 1 
+            (completely reflective).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.Illumination">
+            <summary>
+            Illumination received by the body at at the farthest point of its
+            orbit. 1.0 is the amount of illumination received by an object 1 au
+            from the Sun.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.ExosphereTempKelvin">
+            <summary>
+            Temperature at the body's exosphere given in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.SurfaceTempKelvin">
+            <summary>
+            Temperature at the body's surface given in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.GreenhouseRiseKelvin">
+            <summary>
+            Amount (in Kelvin) that the planet's surface temperature is being
+            increased by a runaway greenhouse effect.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.DaytimeTempKelvin">
+            <summary>
+            Average daytime temperature in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.NighttimeTempKelvin">
+            <summary>
+            Average nighttime temperature in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.MaxTempKelvin">
+            <summary>
+            Maximum (summer/day) temperature in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.MinTempKelvin">
+            <summary>
+            Minimum (winter/night) temperature in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.WaterCoverFraction">
+            <summary>
+            Amount of the body's surface that is covered in water. Given as a
+            value between 0 (no water) and 1 (completely covered).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.CloudCoverFraction">
+            <summary>
+            Amount of the body's surface that is obscured by cloud cover. Given
+            as a value between 0 (no cloud coverage) and 1 (surface not visible
+            at all).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.IceCoverFraction">
+            <summary>
+            Amount of the body's surface that is covered in ice. Given as a 
+            value between 0 (no ice) and 1 (completely covered).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.AgeYears">
+            <summary>
+            Age of the star in years.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.Life">
+            <summary>
+            The maximum lifetime of the star in years.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.EcosphereRadiusAU">
+            <summary>
+            The distance that the star's "ecosphere" (as far as I can tell,
+            ye olden science speak for circumstellar habitable zone) is
+            centered on. Given in AU. 
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.Luminosity">
+            <summary>
+            Luminosity of the star in solar luminosity units (L<sub>☉</sub>).
+            The luminosity of the sun is 1.0.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.Mass">
+            <summary>
+            Mass of the star in solar mass units (M<sub>☉</sub>). The mass of
+            the sun is 1.0.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.BinaryMass">
+            <summary>
+            The mass of this star's companion star (if any) in solar mass
+            units (M<sub>☉</sub>). 
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.SemiMajorAxisAU">
+            <summary>
+            The semi-major axis of the companion star in au.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.Eccentricity">
+            <summary>
+            The eccentricity of the companion star's orbit.
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.MinimumIllumination(System.Double,System.Double)">
+            <summary>
+            Returns the illumination of a body at its farthest point from a
+            star.
+            </summary>
+            <param name="a">Semi-major axis of the body in au</param>
+            <param name="l">Luminance of the star in solar luminance units</param>
+            <returns>Illumination where 1.0 is equal to the light received by
+            the Earth from the Sun.</returns>
+        </member>
+        <member name="M:StarformCore.Environment.StarEcosphereRadiusAU(System.Double)">
+            <summary>
+            Returns the radius (center?) of a star's ecosphere in au.
+            </summary>
+            <param name="luminosity">Luminosity of the star in solar luminosity
+            units.</param>
+            <returns>Star's ecosphere radius in au.</returns>
+        </member>
+        <member name="M:StarformCore.Environment.SimplifiedHillSphereKM(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the hill sphere of object m orbiting object M with a semi-
+            major axis a. Ignores eccentricity.
+            </summary>
+            <param name="M">The mass of the larger body</param>
+            <param name="m">The mass of the smaller body</param>
+            <param name="a">Semi-major axis in AU</param>
+            <returns>Hill sphere in KM</returns>
+        </member>
+        <member name="M:StarformCore.Environment.SimplifiedHillSphereAU(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the hill sphere of object m orbiting object M with a semi-
+            major axis a. Ignores eccentricity.
+            </summary>
+            <param name="M">The mass of the larger body</param>
+            <param name="m">The mass of the smaller body</param>
+            <param name="a">Semi-major axis in AU</param>
+            <returns>Hill sphere in AU</returns>
+        </member>
+        <member name="M:StarformCore.Environment.RocheLimitKM(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the Roche limit of an object in KM
+            </summary>
+            <param name="bodyRadius">Radius of the body in km</param>
+            <param name="bodyDensity">Density of the body in g/cc</param>
+            <param name="satelliteDensity">Density of the orbiting satellite
+            in g/cc </param>
+            <returns>Roche limit for the satellite in KM</returns>
+        </member>
+        <member name="M:StarformCore.Environment.RocheLimitAU(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the Roche limit of an object in AU
+            </summary>
+            <param name="bodyRadius">Radius of the body in km</param>
+            <param name="bodyDensity">Density of the body in g/cc</param>
+            <param name="satelliteDensity">Density of the orbiting satellite
+            in g/cc </param>
+            <returns>Roche limit for the satellite in AU</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Luminosity(System.Double)">
+            <summary>
+            Returns the luminosity of a star using the Mass-Luminosity relationship.
+            </summary>
+            <param name="massRatio">Mass of the star</param>
+            <returns>Luminosity</returns>
+        </member>
+        <member name="M:StarformCore.Environment.IsTidallyLocked(StarformCore.Data.Planet)">
+            <summary>
+            Returns true if the planet is tidally locked to its parent body.
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.IsHabitable(StarformCore.Data.Planet)">
+            <summary>
+            Returns true if the planet's conditions can support human life
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.IsEarthlike(StarformCore.Data.Planet)">
+            <summary>
+            Returns true if the planet's conditions are similar to Earth
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.OrbitalZone(System.Double,System.Double)">
+            <summary>
+            This function, given the orbital radius of a planet in AU, returns
+            the orbital 'zone' of the planet.
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.VolumeRadius(System.Double,System.Double)">
+            <summary>
+            Calculates the radius of a planet.
+            </summary>
+            <param name="mass">Mass in units of solar masses</param>
+            <param name="density">Density in units of grams/cc</param>
+            <returns>Radius in units of km</returns>
+        </member>
+        <member name="M:StarformCore.Environment.KothariRadius(System.Double,System.Boolean,System.Int32)">
+            <summary>
+            Returns the radius of the planet in kilometers.        
+            </summary>
+            <param name="mass">Mass in units of solar mass</param>
+            <param name="giant">Is the planet a gas giant?</param>
+            <param name="zone">Orbital zone</param>
+            <returns>Radius in km</returns>
+        </member>
+        <member name="M:StarformCore.Environment.EmpiricalDensity(System.Double,System.Double,System.Double,System.Boolean)">
+            <summary>
+            Returns the the empirical density in grams/cc
+            </summary>
+            <param name="mass">Mass in units of solar masses</param>
+            <param name="orbRadius">Radius in units of AU</param>
+            <param name="rEcosphere"></param>
+            <param name="isGasGiant"></param>
+            <returns>Density in grams/cc</returns>
+        </member>
+        <member name="M:StarformCore.Environment.VolumeDensity(System.Double,System.Double)">
+            <summary>
+            Density returned in units of grams/cc
+            </summary>
+            <param name="mass">Mass in units of solar masses</param>
+            <param name="equatRadius">Equatorial radius in km</param>
+            <returns>Units of grams/cc</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Period(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns a planet's period in Earth days
+            </summary>
+            <param name="separation">Separation in units of AU</param>
+            <param name="smallMass">Units of solar masses</param>
+            <param name="largeMass">Units of solar masses</param>
+            <returns>Period in Earth days</returns>
+        </member>
+        <member name="M:StarformCore.Environment.BaseAngularVelocity(System.Double,System.Double,System.Boolean)">
+            <summary>
+            Provides an approximation of angular velocity for non-tidally decelerated
+            planets.
+            </summary>
+            <param name="massSM">Mass of the body in solar masses</param>
+            <param name="radiusKM">Radius of the body in km</param>
+            <param name="isGasGiant">Is the body a gas giant?</param>
+            <returns>Angular velocity in rad/sec</returns>
+        </member>
+        <member name="M:StarformCore.Environment.ChangeInAngularVelocity(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Provides an approximation of braking due to tidal forces as a ratio to the
+            effect on Earth.
+            </summary>
+            <param name="densityGCC">Density of the body in grams/cm3</param>
+            <param name="massSM">Mass of the body in solar masses</param>
+            <param name="radiusKM">Radius of the body in KM</param>
+            <param name="semiMajorAxisAU">Semi-major axis of the body's orbit in AU</param>
+            <param name="starMassSM">Mass of the parent star in solar masses</param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.AngularVelocity(System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Double,System.Double)">
+            <summary>
+            Returns an approximation of a planet's angular velocity in radians/sec
+            </summary>
+            <param name="massSM">Mass of the planet in solar masses</param>
+            <param name="radiusKM">Radius of the planet in km</param>
+            <param name="densityGCC">Density of the planet in grams/cm3</param>
+            <param name="semiMajorAxisAU">Semi-major axis of the planet's orbit
+            in AU</param>
+            <param name="isGasGiant">Is the planet a gas giant?</param>
+            <param name="starMassSM">Mass of the parent star in solar
+            masses</param>
+            <param name="starAgeYears">Age of the parent star in years</param>
+            <returns>Angular velocity in radians/sec</returns>
+        </member>
+        <member name="M:StarformCore.Environment.AngularVelocity(StarformCore.Data.Planet)">
+            <summary>
+            Returns an approximation of a planet's angular velocity in radians/sec
+            </summary>
+            <param name="planet">The planet to calculate angular velocity
+            for</param>
+            <returns>Angular velocity in radians/sec</returns>
+        </member>
+        <member name="M:StarformCore.Environment.DayLength(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the length of a planet's day in hours.
+            </summary>
+            <param name="angularVelocity">The planet's angular velocity in radians/sec</param>
+            <param name="orbitalPeriodDays">The planet's orbital period in days</param>
+            <param name="ecc">The eccentricity of the planet's orbit</param>
+            <returns>Length of day in hours</returns>
+        </member>
+        <member name="M:StarformCore.Environment.HasResonantPeriod(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Checks if a planet's rotation is in resonance with its orbit
+            </summary>
+            <param name="angularVelocity">The planet's angular velocity in
+            radians/sec</param>
+            <param name="dayInHours">The length of the planet's day in
+            hours</param>
+            <param name="orbitalPeriodDays">The orbital period of the planet
+            in days</param>
+            <param name="ecc">The eccentricity of the planet's orbit</param>
+            <returns>True if the planet is in a resonant orbit</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Inclination(System.Double)">
+            <summary>
+            Returns a randomized inclination in units of degrees
+            </summary>
+            <param name="semiMajorAxisAU">Orbital radius in units of AU</param>
+        </member>
+        <member name="M:StarformCore.Environment.EscapeVelocity(System.Double,System.Double)">
+            <summary>
+            Returns escape velocity in cm/sec
+            </summary>
+            <param name="mass">Mass in units of solar mass</param>
+            <param name="radius">Radius in km</param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.RMSVelocity(System.Double,System.Double)">
+            <summary>
+            Calculates the root-mean-square velocity of particles in a gas.
+            </summary>
+            <param name="molecularWeight">Mass of gas in g/mol</param>
+            <param name="exosphericTemp">Temperature in K</param>
+            <returns>Returns RMS velocity in m/sec</returns>
+        </member>
+        <member name="M:StarformCore.Environment.MoleculeLimit(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the smallest molecular weight retained by the body, which is useful
+            for determining atmospheric composition.
+            </summary>
+            <param name="mass">Mass in solar masses</param>
+            <param name="equatorialRadius">Equatorial radius in units of kilometers</param>
+            <param name="exosphericTemp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.Acceleration(System.Double,System.Double)">
+            <summary>
+            Calculates the surface acceleration of the planet.
+            </summary>
+            <param name="mass">Mass of the planet in solar masses</param>
+            <param name="radius">Radius of the planet in km</param>
+            <returns>Acceleration returned in units of cm/sec2</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Gravity(System.Double)">
+            <summary>
+            Calculates the surface gravity of a planet.
+            </summary>
+            <param name="acceleration">Acceleration in units of cm/sec2</param>
+            <returns>Gravity in units of Earth gravities</returns>
+        </member>
+        <member name="M:StarformCore.Environment.VolatileInventory(System.Double,System.Double,System.Double,System.Double,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            Calculates the inventory of volatiles in a planet's atmosphere
+            as a result of outgassing. This value is used to calculate 
+            the planet's surface pressure. Implements Fogg's eq. 17.
+            </summary>
+            <param name="mass">Planet mass in solar masses</param>
+            <param name="escapeVelocity">Planet escape velocity in cm/sec</param>
+            <param name="rmsVelocity">Planet RMS velocity in cm/sec</param>
+            <param name="stellarMass">Mass of the planet's star in solar masses</param>
+            <param name="zone">Planet's "zone" in the system</param>
+            <param name="hasGreenhouseEffect">True if the planet is experiencing
+            a runaway greenhouse effect</param>
+            <param name="hasAccretedGas">True if the planet has accreted any
+            gas</param>
+        </member>
+        <member name="M:StarformCore.Environment.Pressure(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns pressure in units of millibars. This implements Fogg's eq.18.
+            </summary>
+            <param name="volatileGasInventory"></param>
+            <param name="equatorialRadius">Radius in km</param>
+            <param name="gravity">Gravity in units of Earth gravities</param>
+            <returns>Pressure in millibars (mb)</returns>
+        </member>
+        <member name="M:StarformCore.Environment.BoilingPoint(System.Double)">
+            <summary>
+            Returns the boiling point of water using Fogg's eq.21.
+            </summary>
+            <param name="surfacePressure">Atmospheric pressure in millibars (mb)</param>
+            <returns>Boiling point of water in Kelvin.</returns>
+        </member>
+        <member name="M:StarformCore.Environment.HydroFraction(System.Double,System.Double)">
+            <summary>
+            This function is Fogg's eq.22.	 Given the volatile gas inventory and
+            planetary radius of a planet (in Km), this function returns the
+            fraction of the planet covered with water.	
+            </summary>
+            <param name="volatileGasInventory"></param>
+            <param name="planetRadius">Radius in km</param>
+            <returns>Fraction of the planet covered in water</returns>
+        </member>
+        <member name="M:StarformCore.Environment.CloudFraction(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the fraction of cloud cover available.
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.IceFraction(System.Double,System.Double)">
+            <summary>
+            Given the surface temperature of a planet (in Kelvin), this function
+            returns the fraction of the planet's surface covered by ice.
+            </summary>
+            <returns>Fraction of the planet's surface covered in ice</returns>
+        </member>
+        <member name="M:StarformCore.Environment.EffTemp(System.Double,System.Double,System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="ecosphereRadius">Ecosphere radius in AU</param>
+            <param name="orbitalRadius">Orbital radius in AU</param>
+            <param name="albedo"></param>
+            <returns>Temperature in Kelvin</returns>
+        </member>
+        <member name="M:StarformCore.Environment.EstTemp(System.Double,System.Double,System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="ecosphereRadius"></param>
+            <param name="orbitalRadius"></param>
+            <param name="albedo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.Greenhouse(System.Double,System.Double)">
+            <summary>
+            Calculates whether or not a planet is suffering from a runaway greenhouse
+            effect.
+            </summary>
+            <param name="ecosphereRadius">Radius of the star's ecosphere in AU</param>
+            <param name="orbitalRadius">Orbital radius of the planet in AU</param>
+            <returns>True if the planet is suffering a runaway greenhouse effect.</returns>
+        </member>
+        <member name="M:StarformCore.Environment.GreenRise(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the rise in temperature produced by the greenhouse effect.
+            </summary>
+            <param name="opticalDepth"></param>
+            <param name="effectiveTemp">Effective temperature in units of Kelvin</param>
+            <param name="surfPressure"></param>
+            <returns>Rise in temperature in Kelvin</returns>
+        </member>
+        <member name="M:StarformCore.Environment.PlanetAlbedo(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates the albedo of a planetary body.
+            </summary>
+            <param name="waterFraction">Fraction of surface covered by water.</param>
+            <param name="cloudFraction">Fraction of planet covered by clouds.</param>
+            <param name="iceFraction">Fraction of planet covered by ice.</param>
+            <param name="surfPressure">Surface pressure in mb.</param>
+            <returns>Average overall albedo of the body.</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Opacity(System.Double,System.Double)">
+            <summary>
+            Returns the dimensionless quantity of optical depth, which is useful in determing the amount
+            of greenhouse effect on a planet.
+            </summary>
+            <param name="molecularWeight"></param>
+            <param name="surfPressure"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.GasLife(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates the number of years it takes for 1/e of a gas to escape from a
+            planet's atmosphere
+            </summary>
+            <param name="molecularWeight">Molecular weight of the gas</param>
+            <param name="exoTempKelvin">Exosphere temperature of the planet in Kelvin</param>
+            <param name="surfGravG">Surface gravity of the planet in G</param>
+            <param name="radiusKM">Radius of the planet in km</param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.MinMolecularWeight(StarformCore.Data.Planet)">
+            <summary>
+            Calculates the minimum molecular weight retained by a planet
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.CalculateSurfaceTemperature(StarformCore.Data.Planet@,System.Boolean,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            The temperature of the planet calculated in degrees Kelvin
+            </summary>
+            <param name="planet"></param>
+            <param name="first"></param>
+            <param name="last_water"></param>
+            <param name="last_clouds"></param>
+            <param name="last_ice"></param>
+            <param name="last_temp"></param>
+            <param name="last_albedo"></param>
+        </member>
+        <member name="M:StarformCore.Environment.InspiredPartialPressure(System.Double,System.Double)">
+            <summary>
+            Inspired partial pressure, taking into account humidification of the air in the nasal
+            passage and throat.
+            </summary>
+            <param name="surf_pressure">Total atmospheric surface pressure in millibars</param>
+            <param name="gas_pressure">Partial gas pressure in millibars</param>
+            <returns>Inspired partial pressure in millibars</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Breathability(StarformCore.Data.Planet)">
+            <summary>
+            Returns the breathability state of the planet's atmosphere.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.IterateSurfaceTemp(StarformCore.Data.Planet@)">
+            <summary>
+            
+            </summary>
+            <param name="planet"></param>
+        </member>
+        <member name="T:StarformCore.UnitConversions">
+            <summary>
+            Simple helper methods for converting between different unit types.
+            </summary>
+        </member>
+        <member name="M:StarformCore.UnitConversions.KelvinToFahrenheit(System.Double)">
+            <summary>
+            Converts temperature from Kelvin to Fahrenheit degrees.
+            </summary>
+            <param name="tempK">Temperature in Kelvin</param>
+            <returns>Temperature in Fahrenheit degrees</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.MMHGToMillibars(System.Double)">
+            <summary>
+            Converts pressure from mmHg to millibars
+            </summary>
+            <param name="presmmHg">Pressure in mmHg</param>
+            <returns>Pressure in millibars</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.CMToKM(System.Double)">
+            <summary>
+            Converts cm to km
+            </summary>
+            <param name="cm">Units cm</param>
+            <returns>Units km</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.EarthRadiusToCentimeters(System.Double)">
+            <summary>
+            Converts from units of Earth radius (R⊕) to centimeters.
+            </summary>
+            <param name="r">Distance in Earth radius units.</param>
+            <returns>Distance in centimeters</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.EarthRadiusToKilometers(System.Double)">
+            <summary>
+            Converts from units of Earth radius (R⊕) to kilometers.
+            </summary>
+            <param name="r">Distance in Earth radius units.</param>
+            <returns>Distance in kilometers</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.CentimetersToEarthRadius(System.Double)">
+            <summary>
+            Converts from centimeters to Earth radius units (R⊕).
+            </summary>
+            <param name="cm">Distance in centimeters</param>
+            <returns>Distance in Earth radius (1.0 = Radius of Earth)</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.KilometersToEarthRadius(System.Double)">
+            <summary>
+            Converts from kilometers to Earth radius units (R⊕).
+            </summary>
+            <param name="km"></param>
+            <returns>Distance in Earth radius (1.0 = radius of Earth)</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.SolarMassesToEarthMasses(System.Double)">
+            <summary>
+            Converts from solar masses to units of Earth mass (M⊕).
+            </summary>
+            <param name="sm">Mass in solar masses</param>
+            <returns>Mass in Earth masses (1.0 = mass of Earth)</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.SolarMassesToKilograms(System.Double)">
+            <summary>
+            Converts from units of solar mass (M☉) to kilograms.
+            </summary>
+            <param name="sm">Mass in solar masses</param>
+            <returns>Mass in kilograms</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.SolarMassesToGrams(System.Double)">
+            <summary>
+            Converts from units of solar mass (M☉) to grams.
+            </summary>
+            <param name="sm">Mass in solar masses</param>
+            <returns>Mass in grams</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.MillibarsToAtm(System.Double)">
+            <summary>
+            Converts pressure from millibars to atm
+            </summary>
+            <param name="mb">Pressure in millibars</param>
+            <returns>Pressure in atm</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.PPMToMillibars(System.Double,System.Double)">
+            <summary>
+            Calculates the partial pressure of an atmospheric gas in millibars
+            from the concentration given in parts-per-million.
+            </summary>
+            <param name="ppm">Concentration in parts-per-million.</param>
+            <param name="atm">Total pressure of the gas in atm (default=1)</param>
+            <returns>Partial pressure in millibars</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.MillibarsToPPM(System.Double,System.Double)">
+            <summary>
+            Converts partial pressure in millibars to PPM at a specific
+            atmospheric pressure.
+            </summary>
+            <param name="mb">Gas partial pressure in millibars</param>
+            <param name="atm">Atmospheric pressure in atm</param>
+            <returns>Pressure in PPM</returns>
+        </member>
     </members>
 </doc>

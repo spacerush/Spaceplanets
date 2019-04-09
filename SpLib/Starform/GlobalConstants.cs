@@ -2,7 +2,7 @@ namespace StarformCore
 {
     using System;
 
-    // TODO destroy this motherfucker
+    // TODO get rid of this. side note: last author had a potty mouth.
     public static class GlobalConstants
     {
         public static double RADIANS_PER_ROTATION         = (2.0 * Math.PI);

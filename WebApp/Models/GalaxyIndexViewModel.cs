@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SpacePlanetsDAL.ServiceResponses;
 using SpacePlanetsDAL.Services;
 using SpLib.Objects;
+using StarformCore.Data;
 
 namespace WebApp.Models
 {
@@ -16,6 +17,15 @@ namespace WebApp.Models
         private readonly Player _player;
         private readonly CasualGodComplex.Galaxy _galaxy;
         public CasualGodComplex.Galaxy Galaxy { get { return _galaxy; } }
+        private readonly List<StellarSystem> _stellarSystems;
+        public List<StellarSystem> StellarSystems
+        {
+            get
+            {
+                return _stellarSystems;
+            }
+        }
+
         public Player player
         {
             get { return _player; }
@@ -27,7 +37,11 @@ namespace WebApp.Models
             _objectService = objectService;
             _galaxy = CasualGodComplex.Galaxy.Generate(new CasualGodComplex.Galaxies.Spiral(), new Random()).Result;
 
+            foreach (var item in _galaxy.Stars)
+            {
+                StellarSystem stellarSystem = StarformCore.Generator.GenerateStellarSystem(item.Name);
 
+            }
             // For personalization, load in some player details.
             if (!string.IsNullOrEmpty(cookie))
             {
