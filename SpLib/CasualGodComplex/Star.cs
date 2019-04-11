@@ -1,4 +1,6 @@
 ﻿
+using StarformCore.Data;
+using System;
 using System.Numerics;
 
 namespace CasualGodComplex
@@ -17,6 +19,8 @@ namespace CasualGodComplex
             Name = name;
             Position = position;
             Temperature = temp;
+            Id = Guid.NewGuid();
         }
+        public Guid Id { get; private set; }
     }
 }

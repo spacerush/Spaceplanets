@@ -8,8 +8,13 @@ namespace SpacePlanetsClient.Consoles
 {
     public class MenuBarConsole : SadConsole.ControlsConsole
     {
+        private int R;
+        TextBox txtR;
+
+
         public MenuBarConsole(int width, int height) : base(width, height)
         {
+            R = 0;
             // Button for choosing character.
             Button character = new Button(12, 1);
             character.Text = "Characters";
@@ -28,7 +33,7 @@ namespace SpacePlanetsClient.Consoles
             ships.CanFocus = false;
             this.Add(ships);
 
-            // Button for choosing ship.
+            // Button for choosing organization.
             Button organization = new Button(14, 1);
             organization.Text = "Organization";
             organization.Position = new Point(18, 0);
@@ -36,11 +41,25 @@ namespace SpacePlanetsClient.Consoles
             organization.IsVisible = true;
             organization.CanFocus = false;
             this.Add(organization);
+
+            Button plot = new Button(10, 1);
+            plot.Text = "Plot";
+            plot.Position = new Point(this.Width - 12, 0);
+            plot.Click += Plot_Click;
+            plot.IsVisible = true;
+            plot.CanFocus = true;
+            this.Add(plot);
+
+        }
+
+        private void Plot_Click(object sender, EventArgs e)
+        {
+            
         }
 
         private void Organization_Click(object sender, EventArgs e)
         {
-
+            GameState.WriteGeneralMessageToLog("Organization click.");
         }
 
         private void Character_Click(object sender, EventArgs e)
