@@ -23,16 +23,19 @@ namespace WebApp.Controllers
     public class RpcController : ControllerBase
     {
         private readonly IGameService _gameService;
+        private readonly IObjectService _objectService;
+
         private readonly IAuthenticationService _authenticationService;
         private static HttpClient Client = new HttpClient(new HttpClientHandler()
         {
             AutomaticDecompression = DecompressionMethods.None
         });
 
-        public RpcController(IGameService gameService, IAuthenticationService authenticationService)
+        public RpcController(IGameService gameService, IAuthenticationService authenticationService, IObjectService objectService)
         {
             _gameService = gameService;
             _authenticationService = authenticationService;
+            _objectService = objectService;
         }
 
 
@@ -149,6 +152,27 @@ namespace WebApp.Controllers
             return serviceResponse;
         }
 
+
+        [Route("Rpc/GetGalaxyByName")]
+        [HttpPost]
+        public JsonResult GetGalaxyByName([FromBody] AuthorizationTokenContainer authorizationTokenContainer, [FromQuery] string galaxyName)
+        {
+            JsonResult result;
+
+            if (authorizationTokenContainer != null)
+            {
+                GetPlayerByAccessTokenResponse getPlayerByAccessTokenResponse = _authenticationService.GetPlayerByAccessToken(authorizationTokenContainer.Content);
+                if (getPlayerByAccessTokenResponse.Success)
+                {
+                    result = new JsonResult(_objectService.GetGalaxyContainer(galaxyName));
+                    result.StatusCode = 200;
+                    return result;
+                }
+            }
+            result = new JsonResult(new ErrorFromServer("Could not retrieve galaxy."));
+            result.StatusCode = 501;
+            return result;
+        }
 
         [Route("Rpc/GetShipsForMenu")]
         [HttpPost]

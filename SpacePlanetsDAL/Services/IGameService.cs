@@ -25,6 +25,6 @@ namespace SpacePlanetsDAL.Services
         /// </summary>
         /// <param name="galaxyName">The name of the galaxy.</param>
         /// <returns>A galaxy</returns>
-        Galaxy RetrieveGalaxyByName(string galaxyName);
+        GalaxyContainer RetrieveGalaxyContainerByName(string galaxyName);
     }
 }

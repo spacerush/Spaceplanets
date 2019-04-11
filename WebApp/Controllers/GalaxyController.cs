@@ -30,14 +30,14 @@ namespace WebApp.Controllers
             _objectService = objectService;
         }
         
-        public IActionResult Index(int? seedno)
+        public IActionResult Index(int? seedno, bool saveSeed)
         {
             string sessionId = _cookie.Get("SpaceRushSession");
             if (seedno == null)
             {
                 seedno = 0;
             }
-            var viewModel = new GalaxyIndexViewModel(_authenticationService, _objectService, seedno.Value, sessionId);
+            var viewModel = new GalaxyIndexViewModel(_authenticationService, _objectService, seedno.Value, saveSeed, sessionId);
             return View(viewModel);
         }
         

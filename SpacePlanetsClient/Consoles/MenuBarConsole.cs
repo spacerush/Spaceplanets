@@ -54,7 +54,7 @@ namespace SpacePlanetsClient.Consoles
 
         private void Plot_Click(object sender, EventArgs e)
         {
-            
+            GameState.RetrieveGalaxyAndDisplay();
         }
 
         private void Organization_Click(object sender, EventArgs e)

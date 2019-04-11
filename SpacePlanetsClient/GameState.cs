@@ -265,6 +265,15 @@ namespace SpacePlanetsClient
             errorWindow.CenterWithinParent();
         }
 
+        internal static void RetrieveGalaxyAndDisplay()
+        {
+            var result = _client.GetGalaxyByName(_accessToken.Content, "Seed 0");
+            if (result.Success)
+            {
+                MainConsole.Print(3, 3, result.GalaxyContainer.Galaxy.Stars.Count() + " stars in galaxy");
+            }
+        }
+
 
         internal static void RetrieveCharactersForCharacterMenu()
         {

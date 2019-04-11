@@ -8,7 +8,7 @@ namespace SpacePlanetsDAL.Repositories
     public interface IRepositoryWrapper
     {
         #region Map
-        IRepositoryBase<Galaxy> GalaxyRepository { get; }
+        IRepositoryBase<GalaxyContainer> GalaxyContainerRepository { get; }
         IRepositoryBase<StarSystem> StarSystemRepository { get; }
         IRepositoryBase<SpaceObject> SpaceObjectRepository { get; }
         #endregion

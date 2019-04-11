@@ -7,6 +7,14 @@
 <div class="row">
     <div class="col-md-12">
         <h1 class="display-4">Galaxy</h1>
+        @if (Model.Success)
+        {
+            <h2>Successfully saved this seed to database.</h2>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", "Galaxy", new { seed = Model.Seed, saveSeed = true })">Save this galaxy</a>
+            }
         <table>
             <thead>
             <tr>

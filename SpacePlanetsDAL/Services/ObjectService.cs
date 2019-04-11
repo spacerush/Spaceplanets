@@ -181,5 +181,22 @@ namespace SpacePlanetsDAL.Services
             }
             return result;
         }
+
+        public SaveGalaxyResponse SaveGalaxyContainer(GalaxyContainer container)
+        {
+            var result = new SaveGalaxyResponse();
+            _wrapper.GalaxyContainerRepository.AddOne<GalaxyContainer>(container);
+            result.GalaxyContainerId = container.Id;
+            result.Success = true;
+            return result;
+        }
+
+        public GetGalaxyResponse GetGalaxyContainer(string galaxyName)
+        {
+            var result = new GetGalaxyResponse();
+            result.GalaxyContainer = _wrapper.GalaxyContainerRepository.GetOne<GalaxyContainer>(o => o.Name == galaxyName);
+            result.Success = true;
+            return result;
+        }
     }
 }

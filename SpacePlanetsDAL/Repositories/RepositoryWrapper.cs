@@ -10,7 +10,7 @@ namespace SpacePlanetsDAL.Repositories
     {
         private readonly IMongoClient _mongoClient;
 
-        private IRepositoryBase<Galaxy> _galaxyRepository;
+        private IRepositoryBase<GalaxyContainer> _galaxyContainerRepository;
         private IRepositoryBase<StarSystem> _starSystemRepository;
         private IRepositoryBase<SpaceObject> _spaceObjectRepository;
         private IRepositoryBase<WebSession> _webSessionRepository;
@@ -26,15 +26,15 @@ namespace SpacePlanetsDAL.Repositories
             _mongoClient = mongoClient;
         }
 
-        public IRepositoryBase<Galaxy> GalaxyRepository
+        public IRepositoryBase<GalaxyContainer> GalaxyContainerRepository
         {
             get
             {
-                if (_galaxyRepository == null)
+                if (_galaxyContainerRepository == null)
                 {
-                    _galaxyRepository = new RepositoryBase<Galaxy>(_mongoClient);
+                    _galaxyContainerRepository = new RepositoryBase<GalaxyContainer>(_mongoClient);
                 }
-                return _galaxyRepository;
+                return _galaxyContainerRepository;
             }
         }
 
