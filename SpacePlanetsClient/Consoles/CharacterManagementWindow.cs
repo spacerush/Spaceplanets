@@ -14,7 +14,7 @@ namespace SpacePlanetsClient.Consoles
         public CharacterManagementWindow(int width, int height, Console toReturnTo) : base(width, height)
         {
             this.CanDrag = true;
-            _characterConsole = new CharacterManagementConsole(this.Width - 8, this.Height - 8, toReturnTo);
+            _characterConsole = new CharacterManagementConsole(this.Width - 2, this.Height - 2, toReturnTo);
             this.Children.Add(_characterConsole);
             _characterConsole.IsVisible = true;
             _characterConsole.IsFocused = true;
