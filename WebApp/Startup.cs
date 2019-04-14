@@ -40,7 +40,7 @@ namespace WebApp
 
             var client = new MongoClient("mongodb://localhost:27017/SpacePlanetsDev");
 
-            services.AddScoped<IMongoClient>(c => client);
+            services.AddSingleton<IMongoClient>(c => client);
             services.AddScoped<IGameService, GameService>();
             services.AddScoped<IObjectService, ObjectService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
