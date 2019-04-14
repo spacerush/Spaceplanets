@@ -179,9 +179,8 @@ namespace SpacePlanetsClientLib.ClientServices
                 .AppendPathSegment("Character")
                 .AppendPathSegment(characterId)
                 .WithHeader("authorization", authorizationToken)
-                .GetJsonAsync().Result;
-            output = JsonConvert.DeserializeObject<GetCharacterForManagementResult>(result.Content.ReadAsStringAsync().Result);
-            return output;
+                .GetJsonAsync<GetCharacterForManagementResult>().Result;
+            return result;
         }
 
         public GetGalaxyByNameResult GetGalaxyByName(string authorizationToken, string galaxyName)
