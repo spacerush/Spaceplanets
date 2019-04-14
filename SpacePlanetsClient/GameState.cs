@@ -265,6 +265,18 @@ namespace SpacePlanetsClient
             errorWindow.CenterWithinParent();
         }
 
+        private static void CreateCharacterWindow(Character character)
+        {
+            var characterWindow = new CharacterManagementWindow(MainConsole.Width / 2, MainConsole.Height / 2, MainConsole);
+            MainConsole.Children.Add(characterWindow);
+            characterWindow.TitleAlignment = HorizontalAlignment.Center;
+            characterWindow.Title = character.Name + ", the level " + character.Level.ToString() + " " + character.Profession;
+            characterWindow.CanDrag = true;
+            characterWindow.IsVisible = true;
+            characterWindow.UseKeyboard = true;
+            characterWindow.CenterWithinParent();
+        }
+
         internal static void RetrieveGalaxyAndDisplay()
         {
             var result = _client.GetGalaxyByName(_accessToken.Content, "Seed 0");
@@ -284,7 +296,7 @@ namespace SpacePlanetsClient
                 List<MenuButtonMetadataItem> characters = new List<MenuButtonMetadataItem>();
                 foreach (var item in result.Characters)
                 {
-                    characters.Add(new MenuButtonMetadataItem(Guid.NewGuid(), item.Name, "Character"));
+                    characters.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Character"));
                 }
                 CharacterMenu.SetElements(characters);
                 _mainConsole.Children.Add(CharacterMenu);
@@ -309,7 +321,7 @@ namespace SpacePlanetsClient
             GetCharacterForManagementResult result = _client.GetCharacterForManagementWindow(_accessToken.Content, characterId);
             if (result.Success)
             {
-                var characterWindow = new CharacterManagementWindow(MainConsole.Width / 2, MainConsole.Height / 2, MainConsole);
+                CreateCharacterWindow(result.Character);
             }
         }
 
