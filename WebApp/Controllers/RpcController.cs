@@ -211,7 +211,7 @@ namespace WebApp.Controllers
         }
 
 
-        [Route("Character")]
+        [Route("Character/{id}")]
         [HttpGet]
         public JsonResult Character([FromHeader] string authorization, Guid id)
         {
