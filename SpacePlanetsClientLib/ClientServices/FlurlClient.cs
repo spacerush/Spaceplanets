@@ -167,6 +167,23 @@ namespace SpacePlanetsClientLib.ClientServices
             return output;
         }
 
+        public GetCharacterForManagementResult GetCharacterForManagementWindow(string authorizationToken, Guid characterId)
+        {
+            var input = new AuthorizationTokenContainer();
+            input.Content = authorizationToken;
+            var output = new GetCharacterForManagementResult();
+            var result = _endpoint
+                .AllowAnyHttpStatus()
+                .WithHeader("Accept-Version", "1.0")
+                .AppendPathSegment("api")
+                .AppendPathSegment("Character")
+                .AppendPathSegment(characterId)
+                .WithHeader("authorization", authorizationToken)
+                .GetJsonAsync().Result;
+            output = JsonConvert.DeserializeObject<GetCharacterForManagementResult>(result.Content.ReadAsStringAsync().Result);
+            return output;
+        }
+
         public GetGalaxyByNameResult GetGalaxyByName(string authorizationToken, string galaxyName)
         {
             var input = new AuthorizationTokenContainer();

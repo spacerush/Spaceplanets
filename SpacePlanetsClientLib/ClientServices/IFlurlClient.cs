@@ -30,5 +30,7 @@ namespace SpacePlanetsClientLib.ClientServices
         GetCharactersForMenuResult GetCharactersForManagementMenu(string authorizationToken);
 
         GetShipsForMenuResult GetShipsForManagementMenu(string authorizationToken);
+
+        GetCharacterForManagementResult GetCharacterForManagementWindow(string authorizationToken, Guid characterId);
     }
 }

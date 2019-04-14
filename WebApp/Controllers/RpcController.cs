@@ -211,6 +211,52 @@ namespace WebApp.Controllers
         }
 
 
+        [Route("Character")]
+        [HttpGet]
+        public JsonResult Character([FromHeader] string authorization, Guid id)
+        {
+            GetCharacterForManagementResult getCharacterForManagementResult = new GetCharacterForManagementResult();
+            var serviceResponse = new JsonResult(getCharacterForManagementResult);
+
+            if (!string.IsNullOrEmpty(authorization))
+            {
+                GetPlayerByAccessTokenResponse getPlayerByAccessTokenResponse = _authenticationService.GetPlayerByAccessToken(authorization);
+                if (getPlayerByAccessTokenResponse.Success)
+                {
+                    GetCharacterByPlayerIdAndCharacterIdResponse getCharacterByPlayerIdAndCharacterIdResponse = _gameService.GetCharacterByPlayerIdAndCharacter(getPlayerByAccessTokenResponse.Player.Id, id);
+                    if (getCharacterByPlayerIdAndCharacterIdResponse.Success == true)
+                    {
+                        getCharacterForManagementResult.Success = true;
+                        getCharacterForManagementResult.Error = null;
+                        getCharacterForManagementResult.Character = getCharacterByPlayerIdAndCharacterIdResponse.Character;
+
+                    }
+                    else
+                    {
+                        getCharacterForManagementResult.Success = false;
+                        getCharacterForManagementResult.Character = null;
+                        getCharacterForManagementResult.Error = new ErrorFromServer("You cannot retrieve the requested character.");
+                    }
+                }
+                if (getCharacterForManagementResult.Success)
+                {
+                    serviceResponse.StatusCode = 200;
+                }
+                else
+                {
+                    serviceResponse.StatusCode = 403;
+                }
+            }
+            else
+            {
+                serviceResponse.StatusCode = 404;
+                getCharacterForManagementResult.Success = false;
+                getCharacterForManagementResult.Character = null;
+                getCharacterForManagementResult.Error = new ErrorFromServer("You cannot retrieve a list of characters.");
+            }
+            return serviceResponse;
+        }
+
 
         /// <summary>
         /// Gets memory use on the server using the glances api (if installed)

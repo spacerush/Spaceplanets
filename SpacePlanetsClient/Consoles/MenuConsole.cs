@@ -76,7 +76,7 @@ namespace SpacePlanetsClient.Consoles
             GameState.WriteGeneralMessageToLog(s.Name + " clicked.");
             if (buttonNameParts.First() == "Character")
             {
-                //GameState.DownloadCharacterForManagement(int.Parse(buttonNameParts.Last()));
+                GameState.DownloadCharacterForManagement(Guid.Parse(buttonNameParts.Last()));
             }
             GameState.SetMenusHidden();
         }

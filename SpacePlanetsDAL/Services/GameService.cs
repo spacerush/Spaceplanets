@@ -55,6 +55,24 @@ namespace SpacePlanetsDAL.Services
             return result;
         }
 
+        public GetCharacterByPlayerIdAndCharacterIdResponse GetCharacterByPlayerIdAndCharacter(Guid playerId, Guid characterId)
+        {
+            var result = new GetCharacterByPlayerIdAndCharacterIdResponse();
+            Character character = _wrapper.CharacterRepository.GetOne<Character>(f => f.Id == characterId && f.PlayerId == playerId);
+            if (character != null)
+            {
+                result.Character = character;
+                result.Success = true;
+                result.CharacterId = character.Id;
+                result.PlayerId = character.PlayerId;
+            }
+            else
+            {
+                result.Success = false;
+            }
+            return result;
+        }
+
         public void GenerateGalaxy(string galaxyName)
         {
             

@@ -304,6 +304,15 @@ namespace SpacePlanetsClient
             }
         }
 
+        internal static void DownloadCharacterForManagement(Guid characterId)
+        {
+            GetCharacterForManagementResult result = _client.GetCharacterForManagementWindow(_accessToken.Content, characterId);
+            if (result.Success)
+            {
+                var characterWindow = new CharacterManagementWindow(MainConsole.Width / 2, MainConsole.Height / 2, MainConsole);
+            }
+        }
+
         internal static void RetrieveShipsForShipMenu()
         {
             GetShipsForMenuResult result = _client.GetShipsForManagementMenu(_accessToken.Content);
