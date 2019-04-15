@@ -27,6 +27,9 @@ namespace SpacePlanetsDAL.Repositories
         #region Defaults Or Templates
         IRepositoryBase<ShipTemplate> ShipTemplateRepository { get; }
         IRepositoryBase<ShipModule> ShipModuleRepository { get; }
+        IRepositoryBase<ImplantTemplate> ImplantTemplateRepository { get; }
+        IRepositoryBase<MicroclusterTemplate> MicroclusterTemplateRepository { get; }
+
         #endregion
     }
 }

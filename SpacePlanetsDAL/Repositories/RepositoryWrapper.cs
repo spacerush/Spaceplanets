@@ -17,9 +17,15 @@ namespace SpacePlanetsDAL.Repositories
         private IRepositoryBase<Player> _playerRepository;
         private IRepositoryBase<AccessToken> _accessTokenRepository;
         private IRepositoryBase<Character> _characterRepository;
+
         private IRepositoryBase<Ship> _shipRepository;
         private IRepositoryBase<ShipTemplate> _shipTemplateRepository;
         private IRepositoryBase<ShipModule> _shipModuleRepository;
+
+        #region character augmentation
+        private IRepositoryBase<ImplantTemplate> _implantTemplateRepository;
+        private IRepositoryBase<MicroclusterTemplate> _microclusterTemplateRepository;
+        #endregion
 
         public RepositoryWrapper(IMongoClient mongoClient)
         {
@@ -143,6 +149,30 @@ namespace SpacePlanetsDAL.Repositories
                     _shipModuleRepository = new RepositoryBase<ShipModule>(_mongoClient);
                 }
                 return _shipModuleRepository;
+            }
+        }
+
+        public IRepositoryBase<ImplantTemplate> ImplantTemplateRepository
+        {
+            get
+            {
+                if (_implantTemplateRepository == null)
+                {
+                    _implantTemplateRepository = new RepositoryBase<ImplantTemplate>(_mongoClient);
+                }
+                return _implantTemplateRepository;
+            }
+        }
+
+        public IRepositoryBase<MicroclusterTemplate> MicroclusterTemplateRepository
+        {
+            get
+            {
+                if (_microclusterTemplateRepository == null)
+                {
+                    _microclusterTemplateRepository = new RepositoryBase<MicroclusterTemplate>(_mongoClient);
+                }
+                return _microclusterTemplateRepository;
             }
         }
 
