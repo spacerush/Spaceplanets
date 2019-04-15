@@ -37,7 +37,8 @@ namespace SpacePlanetsClient
         {
             Startup,
             LoggingIn,
-            LoggedIn
+            LoggedIn,
+            Animating
         }
 
         internal static SadConsole.Effects.Fade DefaultFade
@@ -334,7 +335,7 @@ namespace SpacePlanetsClient
                 List<MenuButtonMetadataItem> ships = new List<MenuButtonMetadataItem>();
                 foreach (var item in result.Ships)
                 {
-                    ships.Add(new MenuButtonMetadataItem(Guid.NewGuid(), item.Name, "Ship"));
+                    ships.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Ship"));
                 }
                 ShipMenu.SetElements(ships);
                 _mainConsole.Children.Add(ShipMenu);
