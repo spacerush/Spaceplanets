@@ -37,7 +37,8 @@ namespace SpacePlanetsClient
         {
             Startup,
             LoggingIn,
-            LoggedIn
+            LoggedIn,
+            Animating
         }
 
         internal static SadConsole.Effects.Fade DefaultFade
@@ -265,6 +266,27 @@ namespace SpacePlanetsClient
             errorWindow.CenterWithinParent();
         }
 
+        private static void CreateCharacterWindow(Character character)
+        {
+            var characterWindow = new CharacterManagementWindow(MainConsole.Width / 2, MainConsole.Height / 2, MainConsole);
+            MainConsole.Children.Add(characterWindow);
+            characterWindow.TitleAlignment = HorizontalAlignment.Center;
+            characterWindow.Title = character.Name + ", the level " + character.Level.ToString() + " " + character.Profession;
+            characterWindow.CanDrag = true;
+            characterWindow.IsVisible = true;
+            characterWindow.UseKeyboard = true;
+            characterWindow.CenterWithinParent();
+        }
+
+        internal static void RetrieveGalaxyAndDisplay()
+        {
+            var result = _client.GetGalaxyByName(_accessToken.Content, "Seed 0");
+            if (result.Success)
+            {
+                MainConsole.Print(3, 3, result.GalaxyContainer.Galaxy.Stars.Count() + " stars in galaxy");
+            }
+        }
+
 
         internal static void RetrieveCharactersForCharacterMenu()
         {
@@ -275,7 +297,7 @@ namespace SpacePlanetsClient
                 List<MenuButtonMetadataItem> characters = new List<MenuButtonMetadataItem>();
                 foreach (var item in result.Characters)
                 {
-                    characters.Add(new MenuButtonMetadataItem(Guid.NewGuid(), item.Name, "Character"));
+                    characters.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Character"));
                 }
                 CharacterMenu.SetElements(characters);
                 _mainConsole.Children.Add(CharacterMenu);
@@ -295,6 +317,15 @@ namespace SpacePlanetsClient
             }
         }
 
+        internal static void DownloadCharacterForManagement(Guid characterId)
+        {
+            GetCharacterForManagementResult result = _client.GetCharacterForManagementWindow(_accessToken.Content, characterId);
+            if (result.Success)
+            {
+                CreateCharacterWindow(result.Character);
+            }
+        }
+
         internal static void RetrieveShipsForShipMenu()
         {
             GetShipsForMenuResult result = _client.GetShipsForManagementMenu(_accessToken.Content);
@@ -304,7 +335,7 @@ namespace SpacePlanetsClient
                 List<MenuButtonMetadataItem> ships = new List<MenuButtonMetadataItem>();
                 foreach (var item in result.Ships)
                 {
-                    ships.Add(new MenuButtonMetadataItem(Guid.NewGuid(), item.Name, "Ship"));
+                    ships.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Ship"));
                 }
                 ShipMenu.SetElements(ships);
                 _mainConsole.Children.Add(ShipMenu);

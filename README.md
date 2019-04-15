@@ -26,11 +26,13 @@ Space planets is a space exploration game inside what looks like a console. Mean
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 	
 # Contributing
-1.	You can likely make good use visual studio community or professional 2017 or 2019.
+## In order to contribute you'll need to be able to debug:
+1.	You can likely make good use visual studio community or professional 2017 or 2019. Rider 2019 EAP is also an option.
 2.	Make sure to have .net core 2.2 SDK and Monogame 3.7 installed.
-3.	For the git repository
-4.  Pull requests with significant changes or additional features will be considered only against the development branch.
-5.  Small fixes once the software is released should be against master branch.
+3.	Fork the git repository
+4.  Bring up a mongoDB instance on localhost and adjust connection string(s)
+5.  Pull requests with significant changes or additional features will be considered only against the development branch. Try not to make them too difficult to merge.
+6.  Small fixes once the software is released should be against master branch.
 
 # Playing
 

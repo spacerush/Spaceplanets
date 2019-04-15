@@ -8,15 +8,20 @@ namespace SpLib.Objects
     public class Character : Document
     {
         public string Name { get; set; }
-        public Character(string characterName)
+        public int Level { get; set; }
+        public string Profession { get; set; }
+        public List<string> Perks { get; set; }
+        public List<ImprovementExpenditure> ImprovementExpenditures { get; set; }
+        public Guid ShipId { get; set; }
+        public Guid SpaceObjectId { get; set; }
+        public Guid PlayerId { get; set; }
+        public Character(string characterName, int level, string profession)
         {
             Name = characterName;
+            Level = level;
+            Profession = profession;
             Version = 1;
         }
 
-        public Character()
-        {
-            Version = 1;
-        }
     }
 }

@@ -69,6 +69,23 @@ namespace SpacePlanetsDAL.Services
             return accessToken;
         }
 
+        /// <summary>
+        /// Creates a new web session and return it for a given user.
+        /// </summary>
+        /// <param name="username">The username for which the session is for.</param>
+        /// <returns>A WebSession</returns>
+        public WebSession CreateWebSession(string username)
+        {
+            Player player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Username == username);
+            WebSession webSession = new WebSession();
+            webSession.Expiry = DateTime.UtcNow.AddDays(14);
+            webSession.UserId = player.Id;
+            webSession.ForUsername = username;
+            webSession.SessionCookie = GenerationHelper.CreateRandomString(true, true, false, 32);
+            _wrapper.WebSessionRepository.AddOne<WebSession>(webSession);
+            return webSession;
+        }
+        
         public bool TryLoginCredentials(string username, string password)
         {
             Player player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Username == username);
@@ -79,6 +96,9 @@ namespace SpacePlanetsDAL.Services
                 newPlayer.Username = username;
                 _wrapper.PlayerRepository.AddOne<Player>(newPlayer);
                 player = newPlayer;
+                Character character = new Character("Nameless Explorer", 1, "Explorer");
+                character.PlayerId = player.Id;
+                _wrapper.CharacterRepository.AddOne<Character>(character);
             }
             if (VerifyPassword(password, player.PasswordHash)) {
                 return true;
@@ -128,10 +148,28 @@ namespace SpacePlanetsDAL.Services
             return result;
         }
 
-        public void GetShipsByPlayerId(Guid playerId)
+        /// <summary>
+        /// Check the database for something in the cookie collection that is valid, then retrieve the matching player.
+        /// </summary>
+        /// <param name="cookie">A long-lived session token usually issued to players on logging on the website.</param>
+        public GetPlayerByCookieResponse GetPlayerByWebCookie(string cookie)
         {
-
+            GetPlayerByCookieResponse result = new GetPlayerByCookieResponse();
+            WebSession webSession = _wrapper.WebSessionRepository.GetOne<WebSession>(f => f.SessionCookie == cookie);
+            if (webSession != null && webSession.Expiry > DateTime.UtcNow)
+            {
+                result.Player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Id == webSession.UserId);
+                result.Success = true;
+            }
+            else
+            {
+                result.Player = new Player();
+                result.Success = false;
+            }
+            return result;
         }
+
+
 
     }
 }

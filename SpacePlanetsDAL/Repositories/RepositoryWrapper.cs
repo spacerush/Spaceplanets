@@ -10,27 +10,37 @@ namespace SpacePlanetsDAL.Repositories
     {
         private readonly IMongoClient _mongoClient;
 
-        private IRepositoryBase<Galaxy> _galaxyRepository;
+        private IRepositoryBase<GalaxyContainer> _galaxyContainerRepository;
         private IRepositoryBase<StarSystem> _starSystemRepository;
         private IRepositoryBase<SpaceObject> _spaceObjectRepository;
-
+        private IRepositoryBase<WebSession> _webSessionRepository;
         private IRepositoryBase<Player> _playerRepository;
         private IRepositoryBase<AccessToken> _accessTokenRepository;
+        private IRepositoryBase<Character> _characterRepository;
+
+        private IRepositoryBase<Ship> _shipRepository;
+        private IRepositoryBase<ShipTemplate> _shipTemplateRepository;
+        private IRepositoryBase<ShipModule> _shipModuleRepository;
+
+        #region character augmentation
+        private IRepositoryBase<ImplantTemplate> _implantTemplateRepository;
+        private IRepositoryBase<MicroclusterTemplate> _microclusterTemplateRepository;
+        #endregion
 
         public RepositoryWrapper(IMongoClient mongoClient)
         {
             _mongoClient = mongoClient;
         }
 
-        public IRepositoryBase<Galaxy> GalaxyRepository
+        public IRepositoryBase<GalaxyContainer> GalaxyContainerRepository
         {
             get
             {
-                if (_galaxyRepository == null)
+                if (_galaxyContainerRepository == null)
                 {
-                    _galaxyRepository = new RepositoryBase<Galaxy>(_mongoClient);
+                    _galaxyContainerRepository = new RepositoryBase<GalaxyContainer>(_mongoClient);
                 }
-                return _galaxyRepository;
+                return _galaxyContainerRepository;
             }
         }
 
@@ -58,6 +68,17 @@ namespace SpacePlanetsDAL.Repositories
             }
         }
 
+        public IRepositoryBase<WebSession> WebSessionRepository
+        {
+            get
+            {
+                if (_webSessionRepository == null)
+                {
+                    _webSessionRepository = new RepositoryBase<WebSession>(_mongoClient);
+                }
+                return _webSessionRepository;
+            }
+        }
 
 
         public IRepositoryBase<Player> PlayerRepository
@@ -81,6 +102,77 @@ namespace SpacePlanetsDAL.Repositories
                     _accessTokenRepository = new RepositoryBase<AccessToken>(_mongoClient);
                 }
                 return _accessTokenRepository;
+            }
+        }
+
+        public IRepositoryBase<Character> CharacterRepository
+        {
+            get
+            {
+                if (_characterRepository == null)
+                {
+                    _characterRepository = new RepositoryBase<Character>(_mongoClient);
+                }
+                return _characterRepository;
+            }
+        }
+        public IRepositoryBase<Ship> ShipRepository
+        {
+            get
+            {
+                if (_shipRepository == null)
+                {
+                    _shipRepository = new RepositoryBase<Ship>(_mongoClient);
+                }
+                return _shipRepository;
+            }
+        }
+
+        public IRepositoryBase<ShipTemplate> ShipTemplateRepository
+        {
+            get
+            {
+                if (_shipTemplateRepository == null)
+                {
+                    _shipTemplateRepository = new RepositoryBase<ShipTemplate>(_mongoClient);
+                }
+                return _shipTemplateRepository;
+            }
+        }
+
+        public IRepositoryBase<ShipModule> ShipModuleRepository
+        {
+            get
+            {
+                if (_shipModuleRepository == null)
+                {
+                    _shipModuleRepository = new RepositoryBase<ShipModule>(_mongoClient);
+                }
+                return _shipModuleRepository;
+            }
+        }
+
+        public IRepositoryBase<ImplantTemplate> ImplantTemplateRepository
+        {
+            get
+            {
+                if (_implantTemplateRepository == null)
+                {
+                    _implantTemplateRepository = new RepositoryBase<ImplantTemplate>(_mongoClient);
+                }
+                return _implantTemplateRepository;
+            }
+        }
+
+        public IRepositoryBase<MicroclusterTemplate> MicroclusterTemplateRepository
+        {
+            get
+            {
+                if (_microclusterTemplateRepository == null)
+                {
+                    _microclusterTemplateRepository = new RepositoryBase<MicroclusterTemplate>(_mongoClient);
+                }
+                return _microclusterTemplateRepository;
             }
         }
 

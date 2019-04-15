@@ -1,0 +1,64 @@
+﻿@model WebApp.Models.ItemsIndexViewModel
+
+@{
+    ViewData["Title"] = "Items Home";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="display-4">Items</h1>
+        <h2>Ships</h2>
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Ship Type</th>
+                <th>Modules</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var shipTemplate in Model.ShipTemplates.OrderBy(s => s.Type))
+            {
+                <tr>
+                    <td>@shipTemplate.Name</td>
+                    <td>@shipTemplate.Type</td>
+                    <td>
+                    <ul>
+                        @foreach (var item in @shipTemplate.ModuleSlots.OrderBy(o => o.SlotType))
+                        {
+                            <li>@item.SlotType level @item.MinLevel.ToString() to @item.MaxLevel.ToString()</li>
+                        }
+                    </ul>
+                </tr>
+            }
+            </tbody>
+        </table>
+        
+        <h2>Modules</h2>
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Module Name</th>
+                    <th>Level</th>
+                    <th>Effects</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var shipModule in Model.ShipModules.OrderBy(s => s.SlotType))
+                {
+                    <tr>
+                        <td>@shipModule.Name</td>
+                        <td>@shipModule.Level.ToString()</td>
+                        <td>
+                        <ul>
+                            @foreach (var item in @shipModule.ShipStatAlterations.OrderBy(o => o.Stat))
+                            {
+                                <li>@item.Stat @item.AlterationAmount.ToString()</li>
+                            }
+                        </ul>
+                    </tr>
+                }
+                </tbody>
+            </table>
+    </div>
+</div>

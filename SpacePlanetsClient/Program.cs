@@ -54,13 +54,11 @@ namespace MyProject
         private static void Init()
         {
             IServiceCollection services = new ServiceCollection();
-
             // TODO: stop hardcoding this endpoint!
             services.AddSingleton<IFlurlClient>(f => new FlurlClient("https://localhost:5001/"));
             var provider = services.BuildServiceProvider();
             IFlurlClient client = provider.GetRequiredService<IFlurlClient>();
             GameState.SetClient(client);
-            
             var startingConsole = SadConsole.Global.CurrentScreen;
             GameState.InitializeConsole(startingConsole);
         }

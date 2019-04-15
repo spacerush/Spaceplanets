@@ -1,0 +1,32 @@
+﻿@model WebApp.Models.GalaxyIndexViewModel
+
+@{
+    ViewData["Title"] = "Galaxy Home";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="display-4">Galaxy</h1>
+        @if (Model.Success)
+        {
+            <h2>Successfully saved this seed to database.</h2>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", "Galaxy", new { seed = Model.Seed, saveSeed = true })">Save this galaxy</a>
+            }
+        <table>
+            <thead>
+            <tr>
+                <td>Name</td><td>X</td><td>Y</td><td>Z</td><td>Temperature</td>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Galaxy.Stars)
+                {
+                    <tr><td>@item.Name</td><td>@item.Position.X</td><td>@item.Position.Y</td><td>@item.Position.Z</td><td>@item.Temperature</td></tr>
+                }
+                </tbody>
+            </table>
+    </div>
+</div>

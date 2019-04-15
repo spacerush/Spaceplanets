@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -32,15 +33,26 @@ namespace WebApp
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+
             var client = new MongoClient("mongodb://localhost:27017/SpacePlanetsDev");
 
-            services.AddScoped<IMongoClient>(c => client);
+            services.AddSingleton<IMongoClient>(c => client);
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IObjectService, ObjectService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            services.AddCookieManager(options =>
+                {
+                    options.AllowEncryption = false;
+                    options.ThrowForPartialCookies = true;
+                    options.ChunkSize = null;
+                    options.DefaultExpireTimeInDays = 7;
+                }
+            );
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -60,6 +72,14 @@ namespace WebApp
                 c.IncludeXmlComments(@"SpLib.xml");
                 c.OperationFilter<SwaggerAuthorizationHeaderFilter>();
             });
+
+            IServiceProvider provider = services.BuildServiceProvider();
+
+            IObjectService objectService = provider.GetRequiredService<IObjectService>();
+            objectService.CreateDefaultShipTemplatesIfNecessary();
+            objectService.CreateDefaultModuleTypesIfNecessary();
+            objectService.CreateDefaultImplantTemplatesIfNecessary();
+            objectService.CreateDefaultMicroclusterTemplatesIfNecessary();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,7 +98,6 @@ namespace WebApp
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
 
             app.UseMvc(routes =>
             {

@@ -23,16 +23,19 @@ namespace WebApp.Controllers
     public class RpcController : ControllerBase
     {
         private readonly IGameService _gameService;
+        private readonly IObjectService _objectService;
+
         private readonly IAuthenticationService _authenticationService;
         private static HttpClient Client = new HttpClient(new HttpClientHandler()
         {
             AutomaticDecompression = DecompressionMethods.None
         });
 
-        public RpcController(IGameService gameService, IAuthenticationService authenticationService)
+        public RpcController(IGameService gameService, IAuthenticationService authenticationService, IObjectService objectService)
         {
             _gameService = gameService;
             _authenticationService = authenticationService;
+            _objectService = objectService;
         }
 
 
@@ -118,7 +121,14 @@ namespace WebApp.Controllers
                 if (getPlayerByAccessTokenResponse.Success)
                 {
                     List<GenericItemForPicklist> characters = new List<GenericItemForPicklist>();
-                    characters.Add(new GenericItemForPicklist(Guid.NewGuid(), "testing"));
+                    GetCharactersByPlayerIdResponse getCharactersByPlayerIdResponse = _gameService.GetCharactersByPlayerId(getPlayerByAccessTokenResponse.Player.Id);
+                    if (getCharactersByPlayerIdResponse.Success == true)
+                    {
+                        foreach (var item in getCharactersByPlayerIdResponse.Characters)
+                        {
+                            characters.Add(new GenericItemForPicklist(item.Id, item.Name + ", level " + item.Level + " " + item.Profession));
+                        }
+                    }
                     getCharactersForMenuResult.Characters = characters;
                     getCharactersForMenuResult.Error = null;
                     getCharactersForMenuResult.Success = true;
@@ -142,6 +152,27 @@ namespace WebApp.Controllers
             return serviceResponse;
         }
 
+
+        [Route("Rpc/GetGalaxyByName")]
+        [HttpPost]
+        public JsonResult GetGalaxyByName([FromBody] AuthorizationTokenContainer authorizationTokenContainer, [FromQuery] string galaxyName)
+        {
+            JsonResult result;
+
+            if (authorizationTokenContainer != null)
+            {
+                GetPlayerByAccessTokenResponse getPlayerByAccessTokenResponse = _authenticationService.GetPlayerByAccessToken(authorizationTokenContainer.Content);
+                if (getPlayerByAccessTokenResponse.Success)
+                {
+                    result = new JsonResult(_objectService.GetGalaxyContainer(galaxyName));
+                    result.StatusCode = 200;
+                    return result;
+                }
+            }
+            result = new JsonResult(new ErrorFromServer("Could not retrieve galaxy."));
+            result.StatusCode = 501;
+            return result;
+        }
 
         [Route("Rpc/GetShipsForMenu")]
         [HttpPost]
@@ -179,6 +210,52 @@ namespace WebApp.Controllers
             return serviceResponse;
         }
 
+
+        [Route("Character/{id}")]
+        [HttpGet]
+        public JsonResult Character([FromHeader] string authorization, Guid id)
+        {
+            GetCharacterForManagementResult getCharacterForManagementResult = new GetCharacterForManagementResult();
+            var serviceResponse = new JsonResult(getCharacterForManagementResult);
+
+            if (!string.IsNullOrEmpty(authorization))
+            {
+                GetPlayerByAccessTokenResponse getPlayerByAccessTokenResponse = _authenticationService.GetPlayerByAccessToken(authorization);
+                if (getPlayerByAccessTokenResponse.Success)
+                {
+                    GetCharacterByPlayerIdAndCharacterIdResponse getCharacterByPlayerIdAndCharacterIdResponse = _gameService.GetCharacterByPlayerIdAndCharacter(getPlayerByAccessTokenResponse.Player.Id, id);
+                    if (getCharacterByPlayerIdAndCharacterIdResponse.Success == true)
+                    {
+                        getCharacterForManagementResult.Success = true;
+                        getCharacterForManagementResult.Error = null;
+                        getCharacterForManagementResult.Character = getCharacterByPlayerIdAndCharacterIdResponse.Character;
+
+                    }
+                    else
+                    {
+                        getCharacterForManagementResult.Success = false;
+                        getCharacterForManagementResult.Character = null;
+                        getCharacterForManagementResult.Error = new ErrorFromServer("You cannot retrieve the requested character.");
+                    }
+                }
+                if (getCharacterForManagementResult.Success)
+                {
+                    serviceResponse.StatusCode = 200;
+                }
+                else
+                {
+                    serviceResponse.StatusCode = 403;
+                }
+            }
+            else
+            {
+                serviceResponse.StatusCode = 404;
+                getCharacterForManagementResult.Success = false;
+                getCharacterForManagementResult.Character = null;
+                getCharacterForManagementResult.Error = new ErrorFromServer("You cannot retrieve a list of characters.");
+            }
+            return serviceResponse;
+        }
 
 
         /// <summary>

@@ -19,8 +19,11 @@ namespace SpacePlanetsDAL.Services
 
         AccessToken CreateAccessTokenFromRefreshToken(string refreshToken);
 
-
+        WebSession CreateWebSession(string username);
+        
         GetPlayerByAccessTokenResponse GetPlayerByAccessToken(string accessToken);
+
+        GetPlayerByCookieResponse GetPlayerByWebCookie(string cookie);
 
 
     }

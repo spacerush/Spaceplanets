@@ -1,4 +1,5 @@
-﻿using SpLib.Objects;
+﻿using SpacePlanetsDAL.ServiceResponses;
+using SpLib.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +8,12 @@ namespace SpacePlanetsDAL.Services
 {
     public interface IGameService
     {
+        /// <summary>
+        /// Get all the characters owned by a certain player.
+        /// </summary>
+        /// <param name="playerId">The unique identifier of the player.</param>
+        GetCharactersByPlayerIdResponse GetCharactersByPlayerId(Guid playerId);
+
         /// <summary>
         /// Persist a galaxy to the database.
         /// </summary>
@@ -18,6 +25,14 @@ namespace SpacePlanetsDAL.Services
         /// </summary>
         /// <param name="galaxyName">The name of the galaxy.</param>
         /// <returns>A galaxy</returns>
-        Galaxy RetrieveGalaxyByName(string galaxyName);
+        GalaxyContainer RetrieveGalaxyContainerByName(string galaxyName);
+
+        /// <summary>
+        /// Gets a single character as long as it matches the given owner.
+        /// </summary>
+        /// <param name="playerId">The unique identifier of the player (owner)</param>
+        /// <param name="characterId">The unique identifier of the character to retrieve.</param>
+        /// <returns>A container object</returns>
+        GetCharacterByPlayerIdAndCharacterIdResponse GetCharacterByPlayerIdAndCharacter(Guid playerId, Guid characterId);
     }
 }

@@ -8,8 +8,13 @@ namespace SpacePlanetsClient.Consoles
 {
     public class MenuBarConsole : SadConsole.ControlsConsole
     {
+        private int R;
+        TextBox txtR;
+
+
         public MenuBarConsole(int width, int height) : base(width, height)
         {
+            R = 0;
             // Button for choosing character.
             Button character = new Button(12, 1);
             character.Text = "Characters";
@@ -20,13 +25,41 @@ namespace SpacePlanetsClient.Consoles
             this.Add(character);
 
             // Button for choosing ship.
-            Button ship = new Button(6, 1);
-            ship.Text = "Ship";
-            ship.Position = new Point(13, 0);
-            ship.Click += Ship_Click;
-            ship.IsVisible = true;
-            ship.CanFocus = false;
-            this.Add(ship);
+            Button ships = new Button(6, 1);
+            ships.Text = "Ships";
+            ships.Position = new Point(12, 0);
+            ships.Click += Ship_Click;
+            ships.IsVisible = true;
+            ships.CanFocus = false;
+            this.Add(ships);
+
+            // Button for choosing organization.
+            Button organization = new Button(14, 1);
+            organization.Text = "Organization";
+            organization.Position = new Point(18, 0);
+            organization.Click += Organization_Click;
+            organization.IsVisible = true;
+            organization.CanFocus = false;
+            this.Add(organization);
+
+            Button plot = new Button(10, 1);
+            plot.Text = "Plot";
+            plot.Position = new Point(this.Width - 12, 0);
+            plot.Click += Plot_Click;
+            plot.IsVisible = true;
+            plot.CanFocus = true;
+            this.Add(plot);
+
+        }
+
+        private void Plot_Click(object sender, EventArgs e)
+        {
+            GameState.RetrieveGalaxyAndDisplay();
+        }
+
+        private void Organization_Click(object sender, EventArgs e)
+        {
+            GameState.WriteGeneralMessageToLog("Organization click.");
         }
 
         private void Character_Click(object sender, EventArgs e)

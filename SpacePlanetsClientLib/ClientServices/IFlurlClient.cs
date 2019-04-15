@@ -18,6 +18,7 @@ namespace SpacePlanetsClientLib.ClientServices
         /// <param name="newEndpoint">The URL of the api server</param>
         void ChangeEndpoint(string newEndpoint);
 
+        GetGalaxyByNameResult GetGalaxyByName(string authorizationToken, string galaxyName);
 
         GetAccessTokenResult GetAccessToken(RefreshToken refreshToken);
 
@@ -29,5 +30,7 @@ namespace SpacePlanetsClientLib.ClientServices
         GetCharactersForMenuResult GetCharactersForManagementMenu(string authorizationToken);
 
         GetShipsForMenuResult GetShipsForManagementMenu(string authorizationToken);
+
+        GetCharacterForManagementResult GetCharacterForManagementWindow(string authorizationToken, Guid characterId);
     }
 }

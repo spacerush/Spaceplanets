@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using SpLib.Helpers;
 using SpLib.Objects;
+using SpacePlanetsDAL.ServiceResponses;
 
 namespace SpacePlanetsDAL.Services
 {
@@ -20,53 +21,68 @@ namespace SpacePlanetsDAL.Services
             _random = new Random();
         }
 
-        public void GenerateGalaxy(string galaxyName)
+        public GetShipsByPlayerIdResponse GetShipsByPlayerId(Guid playerId)
         {
-            Galaxy galaxy = new Galaxy();
-            galaxy.SizeX = _random.Next(50, 200);
-            galaxy.SizeY = galaxy.SizeX; //_random.Next(200, 350);
-            galaxy.SizeZ = _random.Next(1, 25);
-            if (!string.IsNullOrEmpty(galaxyName))
+            var result = new GetShipsByPlayerIdResponse();
+            result.Ships = new List<Ship>();
+            result.Ships.AddRange(_wrapper.ShipRepository.GetAll<Ship>(f => f.PlayerId == playerId));
+            if (result.Ships.Count > 0)
             {
-                galaxy.Name = galaxyName;
+                result.Success = true;
             }
             else
             {
-                galaxy.Name = "Galaxy " + GenerationHelper.CreateRandomString(true, true, false, 5);
+                result.Success = false;
             }
-            _wrapper.GalaxyRepository.AddOne<Galaxy>(galaxy);
-            int volume = galaxy.SizeX * galaxy.SizeY * galaxy.SizeZ;
-            int lowerBoundX = (galaxy.SizeX / 2) * -1;
-            int lowerBoundY = (galaxy.SizeY / 2) * -1;
-            int lowerBoundZ = (galaxy.SizeZ / 2) * -1;
-            int upperBoundX = lowerBoundX * -1;
-            int upperBoundY = lowerBoundY * -1;
-            int upperBoundZ = lowerBoundZ * -1;
-            for (int Xctr = lowerBoundX; Xctr <= upperBoundX; Xctr++)
+            result.PlayerId = playerId;
+            return result;
+        }
+
+        public GetCharactersByPlayerIdResponse GetCharactersByPlayerId(Guid playerId)
+        {
+            var result = new GetCharactersByPlayerIdResponse();
+            result.Characters = new List<Character>();
+            result.Characters.AddRange(_wrapper.CharacterRepository.GetAll<Character>(f => f.PlayerId == playerId));
+            if (result.Characters.Count > 0)
             {
-                for (int Yctr = lowerBoundY; Yctr <= upperBoundY; Yctr++)
-                {
-                    for (int Zctr = lowerBoundZ; Zctr <= upperBoundZ; Zctr++)
-                    {
-                        // make random number to decide if this is a place a star should go.
-                        int starChance = _random.Next(1, 1000);
-                        if (starChance <= 2)
-                        {
-                            // create star
-                            StarSystem starSystem = new StarSystem(galaxy.Id);
-                            starSystem.Name = "System " + GenerationHelper.CreateRandomString(true, false, false, 6) + " " + GenerationHelper.CreateRandomString(false, true, false, 2);
-                            _wrapper.StarSystemRepository.AddOne<StarSystem>(starSystem);
-                        }
-                    }
-                }
+                result.Success = true;
             }
+            else
+            {
+                result.Success = false;
+            }
+            result.PlayerId = playerId;
+            return result;
+        }
+
+        public GetCharacterByPlayerIdAndCharacterIdResponse GetCharacterByPlayerIdAndCharacter(Guid playerId, Guid characterId)
+        {
+            var result = new GetCharacterByPlayerIdAndCharacterIdResponse();
+            Character character = _wrapper.CharacterRepository.GetOne<Character>(f => f.Id == characterId && f.PlayerId == playerId);
+            if (character != null)
+            {
+                result.Character = character;
+                result.Success = true;
+                result.CharacterId = character.Id;
+                result.PlayerId = character.PlayerId;
+            }
+            else
+            {
+                result.Success = false;
+            }
+            return result;
+        }
+
+        public void GenerateGalaxy(string galaxyName)
+        {
+            
             
         }
 
-        public Galaxy RetrieveGalaxyByName(string galaxyName)
+        public GalaxyContainer RetrieveGalaxyContainerByName(string galaxyContainerName)
         {
-            Galaxy galaxy = _wrapper.GalaxyRepository.GetOne<Galaxy>(f => f.Name == galaxyName);
-            return galaxy;
+            GalaxyContainer galaxyContainer = _wrapper.GalaxyContainerRepository.GetOne<GalaxyContainer>(f => f.Name == galaxyContainerName);
+            return galaxyContainer;
         }
     }
 }

@@ -4,6 +4,851 @@
         <name>SpLib</name>
     </assembly>
     <members>
+        <member name="P:CasualGodComplex.Galaxies.Spiral.Size">
+            <summary>
+            Approximate physical size of the galaxy
+            </summary>
+        </member>
+        <member name="P:CasualGodComplex.Galaxies.Spiral.Spacing">
+            <summary>
+            Approximate spacing between clusters
+            </summary>
+        </member>
+        <member name="P:CasualGodComplex.Galaxies.Spiral.MinimumArms">
+            <summary>
+            Minimum number of arms
+            </summary>
+        </member>
+        <member name="P:CasualGodComplex.Galaxies.Spiral.MaximumArms">
+            <summary>
+            Maximum number of arms
+            </summary>
+        </member>
+        <member name="M:CasualGodComplex.RandomExtensions.NormallyDistributedSingles(System.Random,System.Single,System.Single)">
+            <summary>
+            Generates a sequence of values from a normal distribution, using Box-Muller
+            https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+            </summary>
+            <param name="random">A (uniform) random number generator</param>
+            <param name="standardDeviation">The standard deviation of the distribution</param>
+            <param name="mean">The mean of the distribution</param>
+            <returns>A normally distributed value</returns>
+        </member>
+        <member name="M:CasualGodComplex.RandomExtensions.NormallyDistributedSingle(System.Random,System.Single,System.Single)">
+            <summary>
+            Generates a single value from a normal distribution, using Box-Muller
+            https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+            </summary>
+            <param name="random">A (uniform) random number generator</param>
+            <param name="standardDeviation">The standard deviation of the distribution</param>
+            <param name="mean">The mean of the distribution</param>
+            <returns>A normally distributed value</returns>
+        </member>
+        <member name="M:CasualGodComplex.RandomExtensions.NormallyDistributedSingles(System.Random,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Generates a sequence of normal values clamped within min and max
+            </summary>
+            <remarks>
+            Originally used inverse phi method, but this method, found here:
+            http://arxiv.org/pdf/0907.4010.pdf
+            is significantly faster
+            </remarks>
+            <param name="random">A (uniform) random number generator</param>
+            <param name="standardDeviation">The standard deviation of the distribution</param>
+            <param name="mean">The mean of the distribution</param>
+            <param name="min">The minimum allowed value (does not bias)</param>
+            <param name="max">The max allowed value (does not bias)</param>
+            <returns>A sequence of samples from a normal distribution, clamped to within min and max in an unbiased manner.</returns>
+        </member>
+        <member name="M:CasualGodComplex.RandomExtensions.NormallyDistributedSingle(System.Random,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Generates a single normal value clamped within min and max
+            </summary>
+            <remarks>
+            Originally used inverse phi method, but this method, found here:
+            http://arxiv.org/pdf/0907.4010.pdf
+            is significantly faster
+            </remarks>
+            <param name="random">A (uniform) random number generator</param>
+            <param name="standardDeviation">The standard deviation of the distribution</param>
+            <param name="mean">The mean of the distribution</param>
+            <param name="min">The minimum allowed value (does not bias)</param>
+            <param name="max">The max allowed value (does not bias)</param>
+            <returns>A single sample from a normal distribution, clamped to within min and max in an unbiased manner.</returns>
+        </member>
+        <member name="T:Litipk.ColorSharp.ColorSpaces.AConvertibleColor">
+            
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.DataSource">
+            <value>Original color sample</value>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.#ctor(Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            Boilerplate constructor
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.ConvertTo``1">
+            <see cref="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.ConvertTo(System.Type)"/>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.ConvertTo(System.Type)">
+            <summary>Method that allows conversions passing the type as a parameter.</summary>
+            <remarks>DON'T USE it to implement conversion methods, use the non type-parametric variants.</remarks>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.InnerConvertTo(System.Type)">
+            Helper method used by ConvertTo.
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.IsInsideColorSpace(System.Boolean)">
+            <summary>Tells us if the object represents a valid color sample in current color space.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.GetCCT">
+            <summary>Gives us the Correlated Color Temperature associated to the spectrum or color.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.GetDuv">
+            <summary>
+            Gives us the distance in the UCS color space between our color point and the nearest planckian locus.
+            </summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.ToCIEXYZ">
+            <summary>Converts the color sample to a CIE's 1931 XYZ color sample.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.ToLMS(Litipk.ColorSharp.Strategies.LMSStrategy)">
+            <summary>Converts the color point to an LMS cones stimulous value.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.ToCIExyY">
+            <summary>Converts the color sample to a CIE's 1931 xyY color sample.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.ToCIEUCS">
+            <summary>Converts the color sample to a CIE's 1960 UCS color sample.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.AConvertibleColor.ToSRGB(Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy)">
+            <summary>Converts the color sample to an HP's and Microsoft's 1996 sRGB sample.</summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.ColorSpaces.ASimpleColor">
+            <summary>Abstract class used to distinguish "artificial" and simplified color spaces from spectrums.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.ASimpleColor.WhiteReference">
+            <value>Reference White Point that modifies our perception of chromaticity.</value>
+        </member>
+        <member name="T:Litipk.ColorSharp.ColorSpaces.CIE1960">
+            <summary>CIE's 1960 UCS Color Space. Also named CIE's 1960 Yuv Color Space.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIE1960.u">
+            <value>U / (U + V + W)</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIE1960.v">
+            <value>V / (U + V + W)</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIE1960.U">
+            <value>U component of the CIE's 1960 UCS color space.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIE1960.V">
+            <value>V component of the CIE's 1960 UCS color space (also Y in Yuv).</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIE1960.W">
+            <value>W component of the CIE's 1960 UCS color space.</value>
+        </member>
+        <member name="P:Litipk.ColorSharp.ColorSpaces.CIE1960.Y">
+            <value>Y component of the CIE's 1960 Yuv color space (also V in UCS).</value>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIE1960.#ctor(System.Double,System.Double,System.Double,Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            <summary>Creates a new color sample in the CIE's 1960 UCS color space</summary>
+            <param name="U">CIE's 1960 UCS U coordinate</param>
+            <param name="V">CIE's 1960 UCS V coordinate</param>
+            <param name="W">CIE's 1960 UCS W coordinate</param>
+            <param name="dataSource">If you aren't working with ColorSharp internals, don't use this parameter</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIE1960.#ctor(Litipk.ColorSharp.ColorSpaces.AConvertibleColor,System.Double,System.Double,System.Double)">
+            <summary>Creates a new color sample in the CIE's 1960 UCS color space</summary>
+            <param name="u">CIE's 1960 UCS u coordinate</param>
+            <param name="v">CIE's 1960 UCS v coordinate</param>
+            <param name="W">CIE's 1960 UCS W coordinate</param>
+            <param name="dataSource">If you aren't working with ColorSharp internals, don't use this parameter</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIE1960.#ctor(System.Double,System.Double,System.Double,System.Double,System.Double,Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            <summary>
+              Creates a new color sample in the CIE's 1960 UCS color space. This is a convenience constructor to
+              allow minimum information loss in color space conversions, but not recommeneded to construct colors
+              "by hand".
+            </summary>
+            <param name="U">CIE's 1960 UCS U coordinate</param>
+            <param name="V">CIE's 1960 UCS V coordinate</param>
+            <param name="u">CIE's 1960 UCS u coordinate</param>
+            <param name="v">CIE's 1960 UCS v coordinate</param>
+            <param name="W">CIE's 1960 UCS W coordinate</param>
+            <param name="dataSource">If you aren't working with ColorSharp internals, don't use this parameter</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIE1960.IsInsideColorSpace(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIE1960.GetCCT">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIE1960.GetDuv">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIE1960.ToCIEXYZ">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIE1960.ToCIEUCS">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIE1960.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIE1960.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Litipk.ColorSharp.ColorSpaces.CIExyY">
+            <summary>CIE's 1931 (2º) xyY Color Space.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIExyY.x">
+            <value>x component of the CIE's 1931 xyY color space : X/(X+Y+Z) .</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIExyY.y">
+            <value>y component of the CIE's 1931 xyY color space : Y/(X+Y+Z) .</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIExyY.Y">
+            <value>Y component of the CIE's 1931 xyY color space. The same Y from CIE's 1931 XYZ color space.</value>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.#cctor">
+            Static members initialization
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.computeSharkfin(System.Collections.Generic.IList{System.Double},System.Collections.Generic.IList{System.Double},System.Collections.Generic.IList{System.Double},Litipk.ColorSharp.InternalUtils.xyYPoint[]@,Litipk.ColorSharp.InternalUtils.xyYPoint[]@)">
+            Computes the 'sharkin' points. 
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.#ctor(System.Double,System.Double,System.Double,Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            <summary>Creates a new color sample in the CIE's 1931 xyY color space</summary>
+            <param name="x">CIE's 1931 xyY x coordinate</param>
+            <param name="y">CIE's 1931 xyY y coordinate</param>
+            <param name="Y">Lightness parameter</param>
+            <param name="dataSource">If you aren't working with ColorSharp internals, don't use this parameter</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.IsInsideColorSpace(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.ToCIEXYZ">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.ToCIExyY">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.ToCIEUCS">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.findConvexHull(Litipk.ColorSharp.InternalUtils.xyYPoint[])">
+            Monotone Chain algorithm. See
+            http://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIExyY.cross(Litipk.ColorSharp.InternalUtils.xyYPoint,Litipk.ColorSharp.InternalUtils.xyYPoint,Litipk.ColorSharp.InternalUtils.xyYPoint)">
+            Used inside findConvexHull method.
+        </member>
+        <member name="T:Litipk.ColorSharp.ColorSpaces.CIEXYZ">
+            <summary>CIE's 1931 (2º) XYZ Color Space.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIEXYZ.X">
+            <value>X component of the CIE's 1931 XYZ color space.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIEXYZ.Y">
+            <value>Y component of the CIE's 1931 XYZ color space.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.CIEXYZ.Z">
+            <value>Z component of the CIE's 1931 XYZ color space.</value>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIEXYZ.#ctor(System.Double,System.Double,System.Double,Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            <summary>Creates a new color sample in the CIE's 1931 xyY color space</summary>
+            <param name="X">CIE's 1931 XYZ X coordinate</param>
+            <param name="Y">CIE's 1931 XYZ Y coordinate</param>
+            <param name="Z">CIE's 1931 XYZ Z coordinate</param>
+            <param name="dataSource">If you aren't working with ColorSharp internals, don't use this parameter</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIEXYZ.IsInsideColorSpace(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIEXYZ.ToLMS(Litipk.ColorSharp.Strategies.LMSStrategy)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIEXYZ.ToCIEXYZ">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIEXYZ.ToCIExyY">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIEXYZ.ToCIEUCS">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIEXYZ.ToSRGB(Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIEXYZ.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.CIEXYZ.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Litipk.ColorSharp.ColorSpaces.LMS">
+            <summary></summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.LMS.L">
+            <value>Large wavelength cones stimulous value.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.LMS.M">
+            <value>Medium wavelength cones stimulous value.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.LMS.S">
+            <value>Small wavelength cones stimulous value.</value>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.LMS.IsInsideColorSpace(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.LMS.ToCIEXYZ">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.LMS.ToCIEXYZ(Litipk.ColorSharp.Strategies.LMSStrategy)">
+            <summary>Converter method that allows chosing the conversion strategy.</summary>
+            <param name="strategy">Strategy to choose which conversion matrix we apply.</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.LMS.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.LMS.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Litipk.ColorSharp.ColorSpaces.SRGB">
+            <summary>HP's and Microsoft's 1996 sRGB Color Space.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.SRGB.R">
+            <value>Red component</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.SRGB.G">
+            <value>Green component</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.ColorSpaces.SRGB.B">
+            <value>Blue component</value>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.SRGB.#ctor(System.Double,System.Double,System.Double,Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            <summary>Creates a new color sample in the sRGB color space</summary>
+            <param name="R">Red component (between 0 and 1)</param>
+            <param name="G">Green component (between 0 and 1)</param>
+            <param name="B">Blue component (between 0 and 1)</param>
+            <param name="dataSource">If you aren't working with ColorSharp internals, don't use this parameter</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.SRGB.IsInsideColorSpace(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.SRGB.ToCIEXYZ">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.SRGB.ToSRGB(Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.SRGB.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.ColorSpaces.SRGB.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Litipk.ColorSharp.Illuminants.CIE_A">
+            <summary>
+            CIE standard illuminant A is intended to represent typical, domestic, tungsten-filament lighting.
+            Its relative spectral power distribution is that of a Planckian radiator at a temperature of approximately 2856 K.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Illuminants.CIE_A.XYZ_Sample">
+            <value>'A' expressed as a CIE's 1931 XYZ sample (White Point).</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.Illuminants.CIE_A.xyY_Sample">
+            <value>'A' expressed as a CIE's 1931 xyY sample (White Point).</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.Illuminants.CIE_A.spectrum_Sample">
+            <value>'A' expressed in its 'original form', a light spectrum.</value>
+        </member>
+        <member name="T:Litipk.ColorSharp.Illuminants.CIE_B">
+            <summary>
+            The CIE Illuminant B is a (deprecated) daylight simulator intended to represent direct
+            noon sunlight with a correlated colour temperature of 4874 K.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Illuminants.CIE_B.spectrum_Sample">
+            <value>'B' expressed in its 'original form', a light spectrum.</value>
+        </member>
+        <member name="T:Litipk.ColorSharp.Illuminants.CIE_C">
+            <summary>
+            The CIE illuminant C is a (deprecated) daylight simulator intended to represent
+            average daylight with a correlated colour temperature of 6774 K.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Illuminants.CIE_C.spectrum_Sample">
+            <value>'C' expressed in its 'original form', a light spectrum.</value>
+        </member>
+        <member name="T:Litipk.ColorSharp.Illuminants.CIE_D50">
+            <summary>
+            CIE Standard Illuminant D50. Constructed to represent natural daylight at the horizon. CCT of 5003 K.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Illuminants.CIE_D50.spectrum_Sample">
+            <value>D50 expressed in its 'original form', a light spectrum.</value>
+        </member>
+        <member name="T:Litipk.ColorSharp.Illuminants.CIE_D55">
+            <summary>
+            CIE Standard Illuminant D55. Constructed to represent mid-morning/mid-afternoon daylight. CCT of 5503 K.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Illuminants.CIE_D55.spectrum_Sample">
+            <value>D50 expressed in its 'original form', a light spectrum.</value>
+        </member>
+        <member name="T:Litipk.ColorSharp.Illuminants.CIE_D65">
+            <summary>
+            CIE Standard Illuminant D65. D65 corresponds roughly to a midday sun in Western Europe / Northern Europe,
+            hence it is also called a daylight illuminant.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Illuminants.CIE_D65.XYZ_Sample">
+            <value>D65 expressed as a CIE's 1931 XYZ sample (White Point).</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.Illuminants.CIE_D65.xyY_Sample">
+            <value>D65 expressed as a CIE's 1931 xyY sample (White Point).</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.Illuminants.CIE_D65.spectrum_Sample">
+            <value>D65 expressed in its 'original form', a light spectrum.</value>
+        </member>
+        <member name="M:Litipk.ColorSharp.InternalUtils.IRealFunctionWithFiniteSupport.EvaluateAt(System.Double)">
+            This gives us the wave amplitude at a given wave length, if it's necessary the method will do interpolation.
+        </member>
+        <member name="M:Litipk.ColorSharp.InternalUtils.IRealFunctionWithFiniteSupport.GetSupportMinValue">
+            Analytic aproximations also have their confidence intervals, so there aren't exceptional cases here.
+        </member>
+        <member name="M:Litipk.ColorSharp.InternalUtils.IRealInterpolatedFunctionWithFiniteSupport.GetNumberOfDataPoints">
+            We need to know how many data points we have to make computations using all the information we have.
+            If the concrete implementation is "analytical", then must return -1.
+        </member>
+        <member name="T:Litipk.ColorSharp.LightSpectrums.AInterpolatedLightSpectrum">
+            <summary>Abstract class that provides basic methods to manipulate light spectrums.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.AInterpolatedLightSpectrum.#ctor(Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.AInterpolatedLightSpectrum.GetNumberOfDataPoints">
+            <summary>Gives us the number of data points used to construct the spectrum object.</summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.LightSpectrums.ALightSpectrum">
+            <summary>Abstract class that provides basic methods to manipulate light spectrums.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.ALightSpectrum.#ctor(Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            Boilerplate constructor
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.ALightSpectrum.EvaluateAt(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.ALightSpectrum.GetSupportMinValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.ALightSpectrum.GetSupportMaxValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.ALightSpectrum.GetMaxValueOnSupport">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.ALightSpectrum.ToCIEXYZ">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.ALightSpectrum.ToCIEXYZ(Litipk.ColorSharp.Strategies.Spd2ClrStrategy)">
+            <see cref="!:ToCIEXYZ(ColorStrategy)"/>
+            <param name="strategy">Strategy used to obtain the tristimulous values</param>
+        </member>
+        <member name="T:Litipk.ColorSharp.LightSpectrums.BlackBodySpectrum">
+            <summary>Class to represent black body spectrums at a given temperature.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.LightSpectrums.BlackBodySpectrum.CCT">
+            
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.BlackBodySpectrum.#ctor(System.Double)">
+            <param name="cct">Black body's temperature (in Kelvin degrees).</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.BlackBodySpectrum.EvaluateAt(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.BlackBodySpectrum.GetMaxValueOnSupport">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.BlackBodySpectrum.GetSupportMinValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.BlackBodySpectrum.GetSupportMaxValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.BlackBodySpectrum.IsInsideColorSpace(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.BlackBodySpectrum.GetCCT">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.BlackBodySpectrum.GetDuv">
+            <inheritdoc />
+        </member>
+        <member name="T:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum">
+            Class to handle light spectrum samples with equidistant data points
+        </member>
+        <member name="F:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.NmPerStep">
+            <value>Nanometers between each data point.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.MinWaveLength">
+            <value>Minimum wavelength for which we have information on this spectrum.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.MaxWaveLength">
+            <value>Maximum wavelength for which we have information on this spectrum.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.Amplitudes">
+            <value>Equidistant data points (usually relative values)</value>
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.#ctor(System.Double,System.Double,System.Collections.Generic.IList{System.Double},Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            <param name="minWaveLength">Associated wavelength to the first value of 'amplitudes'.</param>
+            <param name="maxWaveLength">Associated wavelength to the last value of 'amplitudes'.</param>
+            <param name="amplitudes">Equidistant data points.</param>
+            <param name="dataSource">
+                Reference to a AConvertibleColor instance from which this object has been generated.
+            </param>
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.#ctor(System.Double,System.Collections.Generic.IList{System.Double},System.Double,Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            <param name="minWaveLength">Associated wavelength to the first value of 'amplitudes'.</param>
+            <param name="amplitudes">Equidistant data points.</param>
+            <param name="nmPerStep">Nanometers between each data point in 'amplitudes'.</param>
+            <param name="dataSource">
+                Reference to a AConvertibleColor instance from which this object has been generated.
+            </param>
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.#ctor(System.Collections.Generic.IList{System.Double},System.Double,System.Double,Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            <param name="amplitudes">Equidistant data points.</param>
+            <param name="nmPerStep">Nanometers between each data point in 'amplitudes'.</param>
+            <param name="maxWaveLength">Associated wavelength to the last value of 'amplitudes'.</param>
+            <param name="dataSource">
+                Reference to a AConvertibleColor instance from which this object has been generated.
+            </param>
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.EvaluateAt(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.GetSupportMinValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.GetSupportMaxValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.GetMaxValueOnSupport">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.GetNumberOfDataPoints">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.IsInsideColorSpace(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.RegularLightSpectrum.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Litipk.ColorSharp.LightSpectrums.TabularLightSpectrum">
+            Class to handle light spectrum samples with not equidistant data points
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.TabularLightSpectrum.#ctor(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.Double,System.Double}},Litipk.ColorSharp.ColorSpaces.AConvertibleColor)">
+            Preconditions : amplitudes MUST be sorted (crescent order)
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.TabularLightSpectrum.GetSupportMinValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.TabularLightSpectrum.GetSupportMaxValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.TabularLightSpectrum.GetMaxValueOnSupport">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.TabularLightSpectrum.GetNumberOfDataPoints">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.TabularLightSpectrum.EvaluateAt(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.TabularLightSpectrum.IsInsideColorSpace(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.TabularLightSpectrum.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.LightSpectrums.TabularLightSpectrum.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.AMatchingFunction">
+            <summary>
+            Abstract class to handle 'matching functions'. The matching functions are used to transform spectrums into
+            simpler parametric spaces (with information loss), like CIE's 1931 XYZ color space.
+            </summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.AMatchingFunction.EvaluateAt(System.Double)">
+            <summary>Returns the value of the matching function for a given wave length.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.AMatchingFunction.GetSupportMinValue">
+            <summary>The matching function has a support interval. This method gives us its lower bound.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.AMatchingFunction.GetSupportMaxValue">
+            <summary>The matching function has a support interval. This method gives us its upper bound.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.AMatchingFunction.GetNumberOfDataPoints">
+            <summary>
+            Returns us the number of data points used to construct the matching function. It returns -1 if the inner
+            implementation is analytical and there aren't data points.
+            </summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ1Nm2DegX">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ1Nm2DegX.Instance">
+            <summary>Component X of CIE's 1931 2º matching functions (1nm of precision)</summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ1Nm2DegY">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ1Nm2DegY.Instance">
+            <summary>Component Y of CIE's 1931 2º matching functions (1nm of precision)</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ1Nm2DegY.#ctor(System.Double,System.Double[],System.Double)">
+            We must seal this 
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ1Nm2DegZ">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ1Nm2DegZ.Instance">
+            <summary>Component Z of CIE's 1931 2º matching functions (1nm of precision)</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ1Nm2DegZ.#ctor(System.Double,System.Double[],System.Double)">
+            We must seal this 
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ5Nm2DegX">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ5Nm2DegX.Instance">
+            <summary>Component X of CIE's 1931 2º matching functions (5nm of precision)</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ5Nm2DegX.#ctor(System.Double,System.Double[],System.Double)">
+            We must seal this 
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ5Nm2DegY">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ5Nm2DegY.Instance">
+            <summary>Component Y of CIE's 1931 2º matching functions (5nm of precision)</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ5Nm2DegY.#ctor(System.Double,System.Double[],System.Double)">
+            We must seal this 
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ5Nm2DegZ">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ5Nm2DegZ.Instance">
+            <summary>Component Z of CIE's 1931 2º matching functions (5nm of precision)</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.CIE1931XYZ5Nm2DegZ.#ctor(System.Double,System.Double[],System.Double)">
+            We must seal this 
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ1Nm10DegX">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ1Nm10DegX.Instance">
+            <summary>Component X of CIE's 1964 10º matching functions (1nm of precision)</summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ1Nm10DegY">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ1Nm10DegY.Instance">
+            <summary>Component Y of CIE's 1964 10º matching functions (1nm of precision)</summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ1Nm10DegZ">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ1Nm10DegZ.Instance">
+            <summary>Component Z of CIE's 1964 10º matching functions (1nm of precision)</summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ5Nm10DegX">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ5Nm10DegX.Instance">
+            <summary>Component X of CIE's 1964 10º matching functions (5nm of precision)</summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ5Nm10DegY">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ5Nm10DegY.Instance">
+            <summary>Component Y of CIE's 1964 10º matching functions (5nm of precision)</summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ5Nm10DegZ">
+            This class will be a singleton
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.CIE1964XYZ5Nm10DegZ.Instance">
+            <summary>Component Z of CIE's 1964 10º matching functions (5nm of precision)</summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction">
+            <summary>
+            Implementation of AMatching function based on equally spaced data points.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction.NmPerStep">
+            <value>Number of nanometers between each data point.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction.MinWaveLength">
+            <value>Minimum wave length with an associated data point.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction.MaxWaveLength">
+            <value>Maximum wave length with an associated data point.</value>
+        </member>
+        <member name="F:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction.Amplitudes">
+            <value>Data points</value>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction.#ctor(System.Double,System.Double,System.Collections.Generic.IList{System.Double})">
+            <summary>Creates a new regular matching function.</summary>
+            <param name="minWaveLength">Lower boundary of the matching function's support.</param>
+            <param name="maxWaveLength">Upper boundary of the matching function's support.</param>
+            <param name="amplitudes">Data points.</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction.#ctor(System.Double,System.Collections.Generic.IList{System.Double},System.Double)">
+            <summary>Creates a new regular matching function.</summary>
+            <param name="minWaveLength">Lower boundary of the matching function's support.</param>
+            <param name="amplitudes">Data points.</param>
+            <param name="nmPerStep">Number of nanometers between data points.</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction.EvaluateAt(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction.GetSupportMinValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction.GetSupportMaxValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.RegularMatchingFunction.GetNumberOfDataPoints">
+            <inheritdoc />
+        </member>
+        <member name="T:Litipk.ColorSharp.MatchingFunctions.TabularMatchingFunction">
+            <summary>Useful to define matching functions with irregular spaced data points.</summary>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.TabularMatchingFunction.#ctor(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.Double,System.Double}})">
+            <summary>Useful to define matching functions with irregular spaced data points.</summary>
+            <param name="tabularData">irregular spaced data points</param>
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.TabularMatchingFunction.EvaluateAt(System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.TabularMatchingFunction.GetSupportMinValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.TabularMatchingFunction.GetSupportMaxValue">
+            <inheritdoc />
+        </member>
+        <member name="M:Litipk.ColorSharp.MatchingFunctions.TabularMatchingFunction.GetNumberOfDataPoints">
+            <inheritdoc />
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Litipk.ColorSharp.Strategies.LMSStrategy" -->
+        <member name="F:Litipk.ColorSharp.Strategies.LMSStrategy.VonKries">
+            <summary></summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.LMSStrategy.Bradford">
+            <summary></summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.LMSStrategy.Sharp">
+            <summary></summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.LMSStrategy.HuntPointerEstevez">
+            <summary></summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.LMSStrategy.CMCCAT97">
+            <summary></summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.LMSStrategy.CAT02">
+            <summary></summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.LMSStrategy.CMCCAT2000">
+            <summary></summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.LMSStrategy.XYZScaling">
+            <summary></summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.Strategies.Spd2ClrStrategy">
+            <summary>Enum type used to specify alternative strategies in spd->color conversion.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.Spd2ClrStrategy.WaveLength1NmStep">
+            <summary>Use the 1nm step matching functions to obtain the chromaticity components of the spectrum.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.Spd2ClrStrategy.WaveLength5NmStep">
+            <summary>Use the 5nm step matching functions to obtain the chromaticity components of the spectrum.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.Spd2ClrStrategy.TwoDegs">
+            <summary>Use the 2º matching functions to obtain the chromaticity components of the spectrum.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.Spd2ClrStrategy.TenDegs">
+            <summary>Use the 10º matching functions to obtain the chromaticity components of the spectrum.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.Spd2ClrStrategy.Nm1Deg2">
+            <summary>Combination of WaveLength1NmStep and TwoDegs</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.Spd2ClrStrategy.Nm5Deg2">
+            <summary>Combination of WaveLength5NmStep and TwoDegs</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.Spd2ClrStrategy.Nm1Deg10">
+            <summary>Combination of WaveLength1NmStep and TenDegs</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.Spd2ClrStrategy.Nm5Deg10">
+            <summary>Combination of WaveLength5NmStep and TenDegs</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.Spd2ClrStrategy.Default">
+            <summary>Nm5Deg2</summary>
+        </member>
+        <member name="T:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy">
+            <summary>Enum type used to specify alternative strategies in color conversion.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.NoForce">
+            <summary>If the color can't be represented in the new color space, an exception will be thrown.</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.ForceLowTruncate">
+            <summary>
+            "Truncates" component values in the new color space if they're lower than the new color space's lower boundaries.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.ForceLowStretch">
+            <summary>
+            "Stretches" component values in the new color space if they're lower than the new color space's lower boundaries.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.ForceHighTruncate">
+            <summary>
+            "Truncates" component values in the new color space if they're lower than the new color space's upper boundaries.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.ForceHighStretch">
+            <summary>
+            "Stretches" component values in the new color space if they're lower than the new color space's upper boundaries.
+            </summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.ForceLow">
+            <summary>Combination of ForceLowStretch and ForceLowTruncate</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.ForceHigh">
+            <summary>Combination of ForceHighStretch and ForceHighTruncate</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.ForceTruncate">
+            <summary>Combination of ForceLowTruncate and ForceHighTruncate</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.ForceStretch">
+            <summary>Combination of ForceLowStretch and ForceHighStretch</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.Force">
+            <summary>Combination of ForceLow and ForceHigh</summary>
+        </member>
+        <member name="F:Litipk.ColorSharp.Strategies.ToSmallSpaceStrategy.Default">
+            <summary>NoForce</summary>
+        </member>
         <member name="T:SpLib.DataTransfer.ClientToServer.AuthorizationTokenContainer">
             <summary>
             Represents a bearer token for json encoding.
@@ -24,10 +869,807 @@
             Represents a password.
             </summary>
         </member>
+        <member name="P:SpLib.Objects.Ship.AngularTurnSpeed">
+            <summary>
+            Should be in degrees per second. Valid values 0 to 360.
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.Ship.Type">
+            <summary>
+            See available ShipTemplates for type validation.
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.Ship.PlayerId">
+            <summary>
+            The player a ship belongs to if any.
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.Ship.ModuleSlots">
+            <summary>
+            List of ship modules, should be the same as this ship type template.
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.Ship.ShipModules">
+            <summary>
+            List of installed ship modules
+            </summary>
+        </member>
+        <member name="M:SpLib.Objects.Ship.#ctor(System.String,System.String)">
+            <summary>
+            Create a ship with the given name and type.
+            </summary>
+            <param name="name">The name of the ship</param>
+            <param name="type">The type of the ship (fighter, freighter, etc)</param>
+        </member>
+        <member name="P:SpLib.Objects.ShipModuleSlot.SlotType">
+            <summary>
+            Denotes power plant, gun, etc. See ShipTemplates for valid values.
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.ShipModuleSlot.MaxLevel">
+            <summary>
+            The maximum level of a module
+            </summary>
+        </member>
+        <member name="P:SpLib.Objects.ShipModuleSlot.MinLevel">
+            <summary>
+            The minimum level a module can be. Often 1.
+            </summary>
+        </member>
+        <member name="M:SpLib.Objects.ShipModuleSlot.#ctor(System.Int32,System.Int32,System.String)">
+            <summary>
+            Creates a record of a given module able to be populated on a ship or template.
+            </summary>
+            <param name="minLevel">Desired minimum module level.</param>
+            <param name="maxLevel">Desired maximum module level.</param>
+            <param name="slotType">Desired type of slot</param>
+        </member>
         <member name="P:SpLib.Objects.SpaceObject.ObjectType">
             <summary>
             Should be one of: Star, Planet, Moon, Asteroid, Comet
             </summary>
+        </member>
+        <member name="M:StarformCore.Accrete.GetPlanetaryBodies(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,StarformCore.Data.PlanetSeed,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="stellarMassRatio"></param>
+            <param name="stellarLumRatio"></param>
+            <param name="innerDust"></param>
+            <param name="outerDust"></param>
+            <param name="outerPlanetLimit"></param>
+            <param name="dustDensityCoeff"></param>
+            <param name="seedSystem"></param>
+            <param name="doMoons"></param>
+            <returns></returns>
+        </member>
+        <member name="P:StarformCore.Data.Planet.SemiMajorAxisAU">
+            <summary>
+            Semi-major axis of the body's orbit in astronomical units (au).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.Eccentricity">
+            <summary>
+            Eccentricity of the body's orbit.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.AxialTiltDegrees">
+            <summary>
+            Axial tilt of the planet expressed in degrees.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.OrbitZone">
+            <summary>
+            Orbital zone the planet is located in. Value is 1, 2, or 3. Used in
+            radius and volatile inventory calculations.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.OrbitalPeriodDays">
+            <summary>
+            The length of the planet's year in days.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.AngularVelocityRadSec">
+            <summary>
+            Angular velocity about the planet's axis in radians/sec.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.DayLengthHours">
+            <summary>
+            The length of the planet's day in hours.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.HillSphereKM">
+            <summary>
+            The Hill sphere of the planet expressed in km.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.MassSM">
+            <summary>
+            The mass of the planet in units of Solar mass.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.DustMassSM">
+            <summary>
+            The mass of dust retained by the planet (ie, the mass of the planet
+            sans atmosphere). Given in units of Solar mass.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.GasMassSM">
+            <summary>
+            The mass of gas retained by the planet (ie, the mass of its
+            atmosphere). Given in units of Solar mass.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.EscapeVelocityCMSec">
+            <summary>
+            The velocity required to escape from the body given in cm/sec.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.SurfaceAccelerationCMSec2">
+            <summary>
+            The gravitational acceleration felt at the surface of the planet. Given in cm/sec^2
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.SurfaceGravityG">
+            <summary>
+            The gravitational acceleration felt at the surface of the planet. Given as a fraction of Earth gravity (Gs).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.CoreRadiusKM">
+            <summary>
+            The radius of the planet's core in km.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.RadiusKM">
+            <summary>
+            The radius of the planet's surface in km.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.DensityGCC">
+            <summary>
+            The density of the planet given in g/cc. 
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.RMSVelocityCMSec">
+            <summary>
+            The root-mean-square velocity of N2 at the planet's exosphere given
+            in cm/sec. Used to determine where or not a planet is capable of
+            retaining an atmosphere.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.MolecularWeightRetained">
+            <summary>
+            The smallest molecular weight the planet is capable of retaining.
+            I believe this is in g/mol.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.VolatileGasInventory">
+            <summary>
+            Unitless value for the inventory of volatile gases that result from
+            outgassing. Used in the calculation of surface pressure. See Fogg
+            eq. 16. 
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.BoilingPointWaterKelvin">
+            <summary>
+            Boiling point of water on the planet given in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.Albedo">
+            <summary>
+            Planetary albedo. Unitless value between 0 (no reflection) and 1 
+            (completely reflective).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.Illumination">
+            <summary>
+            Illumination received by the body at at the farthest point of its
+            orbit. 1.0 is the amount of illumination received by an object 1 au
+            from the Sun.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.ExosphereTempKelvin">
+            <summary>
+            Temperature at the body's exosphere given in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.SurfaceTempKelvin">
+            <summary>
+            Temperature at the body's surface given in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.GreenhouseRiseKelvin">
+            <summary>
+            Amount (in Kelvin) that the planet's surface temperature is being
+            increased by a runaway greenhouse effect.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.DaytimeTempKelvin">
+            <summary>
+            Average daytime temperature in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.NighttimeTempKelvin">
+            <summary>
+            Average nighttime temperature in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.MaxTempKelvin">
+            <summary>
+            Maximum (summer/day) temperature in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.MinTempKelvin">
+            <summary>
+            Minimum (winter/night) temperature in Kelvin.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.WaterCoverFraction">
+            <summary>
+            Amount of the body's surface that is covered in water. Given as a
+            value between 0 (no water) and 1 (completely covered).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.CloudCoverFraction">
+            <summary>
+            Amount of the body's surface that is obscured by cloud cover. Given
+            as a value between 0 (no cloud coverage) and 1 (surface not visible
+            at all).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Planet.IceCoverFraction">
+            <summary>
+            Amount of the body's surface that is covered in ice. Given as a 
+            value between 0 (no ice) and 1 (completely covered).
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.AgeYears">
+            <summary>
+            Age of the star in years.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.Life">
+            <summary>
+            The maximum lifetime of the star in years.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.EcosphereRadiusAU">
+            <summary>
+            The distance that the star's "ecosphere" (as far as I can tell,
+            ye olden science speak for circumstellar habitable zone) is
+            centered on. Given in AU. 
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.Luminosity">
+            <summary>
+            Luminosity of the star in solar luminosity units (L<sub>☉</sub>).
+            The luminosity of the sun is 1.0.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.Mass">
+            <summary>
+            Mass of the star in solar mass units (M<sub>☉</sub>). The mass of
+            the sun is 1.0.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.BinaryMass">
+            <summary>
+            The mass of this star's companion star (if any) in solar mass
+            units (M<sub>☉</sub>). 
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.SemiMajorAxisAU">
+            <summary>
+            The semi-major axis of the companion star in au.
+            </summary>
+        </member>
+        <member name="P:StarformCore.Data.Star.Eccentricity">
+            <summary>
+            The eccentricity of the companion star's orbit.
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.MinimumIllumination(System.Double,System.Double)">
+            <summary>
+            Returns the illumination of a body at its farthest point from a
+            star.
+            </summary>
+            <param name="a">Semi-major axis of the body in au</param>
+            <param name="l">Luminance of the star in solar luminance units</param>
+            <returns>Illumination where 1.0 is equal to the light received by
+            the Earth from the Sun.</returns>
+        </member>
+        <member name="M:StarformCore.Environment.StarEcosphereRadiusAU(System.Double)">
+            <summary>
+            Returns the radius (center?) of a star's ecosphere in au.
+            </summary>
+            <param name="luminosity">Luminosity of the star in solar luminosity
+            units.</param>
+            <returns>Star's ecosphere radius in au.</returns>
+        </member>
+        <member name="M:StarformCore.Environment.SimplifiedHillSphereKM(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the hill sphere of object m orbiting object M with a semi-
+            major axis a. Ignores eccentricity.
+            </summary>
+            <param name="M">The mass of the larger body</param>
+            <param name="m">The mass of the smaller body</param>
+            <param name="a">Semi-major axis in AU</param>
+            <returns>Hill sphere in KM</returns>
+        </member>
+        <member name="M:StarformCore.Environment.SimplifiedHillSphereAU(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the hill sphere of object m orbiting object M with a semi-
+            major axis a. Ignores eccentricity.
+            </summary>
+            <param name="M">The mass of the larger body</param>
+            <param name="m">The mass of the smaller body</param>
+            <param name="a">Semi-major axis in AU</param>
+            <returns>Hill sphere in AU</returns>
+        </member>
+        <member name="M:StarformCore.Environment.RocheLimitKM(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the Roche limit of an object in KM
+            </summary>
+            <param name="bodyRadius">Radius of the body in km</param>
+            <param name="bodyDensity">Density of the body in g/cc</param>
+            <param name="satelliteDensity">Density of the orbiting satellite
+            in g/cc </param>
+            <returns>Roche limit for the satellite in KM</returns>
+        </member>
+        <member name="M:StarformCore.Environment.RocheLimitAU(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the Roche limit of an object in AU
+            </summary>
+            <param name="bodyRadius">Radius of the body in km</param>
+            <param name="bodyDensity">Density of the body in g/cc</param>
+            <param name="satelliteDensity">Density of the orbiting satellite
+            in g/cc </param>
+            <returns>Roche limit for the satellite in AU</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Luminosity(System.Double)">
+            <summary>
+            Returns the luminosity of a star using the Mass-Luminosity relationship.
+            </summary>
+            <param name="massRatio">Mass of the star</param>
+            <returns>Luminosity</returns>
+        </member>
+        <member name="M:StarformCore.Environment.IsTidallyLocked(StarformCore.Data.Planet)">
+            <summary>
+            Returns true if the planet is tidally locked to its parent body.
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.IsHabitable(StarformCore.Data.Planet)">
+            <summary>
+            Returns true if the planet's conditions can support human life
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.IsEarthlike(StarformCore.Data.Planet)">
+            <summary>
+            Returns true if the planet's conditions are similar to Earth
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.OrbitalZone(System.Double,System.Double)">
+            <summary>
+            This function, given the orbital radius of a planet in AU, returns
+            the orbital 'zone' of the planet.
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.VolumeRadius(System.Double,System.Double)">
+            <summary>
+            Calculates the radius of a planet.
+            </summary>
+            <param name="mass">Mass in units of solar masses</param>
+            <param name="density">Density in units of grams/cc</param>
+            <returns>Radius in units of km</returns>
+        </member>
+        <member name="M:StarformCore.Environment.KothariRadius(System.Double,System.Boolean,System.Int32)">
+            <summary>
+            Returns the radius of the planet in kilometers.        
+            </summary>
+            <param name="mass">Mass in units of solar mass</param>
+            <param name="giant">Is the planet a gas giant?</param>
+            <param name="zone">Orbital zone</param>
+            <returns>Radius in km</returns>
+        </member>
+        <member name="M:StarformCore.Environment.EmpiricalDensity(System.Double,System.Double,System.Double,System.Boolean)">
+            <summary>
+            Returns the the empirical density in grams/cc
+            </summary>
+            <param name="mass">Mass in units of solar masses</param>
+            <param name="orbRadius">Radius in units of AU</param>
+            <param name="rEcosphere"></param>
+            <param name="isGasGiant"></param>
+            <returns>Density in grams/cc</returns>
+        </member>
+        <member name="M:StarformCore.Environment.VolumeDensity(System.Double,System.Double)">
+            <summary>
+            Density returned in units of grams/cc
+            </summary>
+            <param name="mass">Mass in units of solar masses</param>
+            <param name="equatRadius">Equatorial radius in km</param>
+            <returns>Units of grams/cc</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Period(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns a planet's period in Earth days
+            </summary>
+            <param name="separation">Separation in units of AU</param>
+            <param name="smallMass">Units of solar masses</param>
+            <param name="largeMass">Units of solar masses</param>
+            <returns>Period in Earth days</returns>
+        </member>
+        <member name="M:StarformCore.Environment.BaseAngularVelocity(System.Double,System.Double,System.Boolean)">
+            <summary>
+            Provides an approximation of angular velocity for non-tidally decelerated
+            planets.
+            </summary>
+            <param name="massSM">Mass of the body in solar masses</param>
+            <param name="radiusKM">Radius of the body in km</param>
+            <param name="isGasGiant">Is the body a gas giant?</param>
+            <returns>Angular velocity in rad/sec</returns>
+        </member>
+        <member name="M:StarformCore.Environment.ChangeInAngularVelocity(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Provides an approximation of braking due to tidal forces as a ratio to the
+            effect on Earth.
+            </summary>
+            <param name="densityGCC">Density of the body in grams/cm3</param>
+            <param name="massSM">Mass of the body in solar masses</param>
+            <param name="radiusKM">Radius of the body in KM</param>
+            <param name="semiMajorAxisAU">Semi-major axis of the body's orbit in AU</param>
+            <param name="starMassSM">Mass of the parent star in solar masses</param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.AngularVelocity(System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Double,System.Double)">
+            <summary>
+            Returns an approximation of a planet's angular velocity in radians/sec
+            </summary>
+            <param name="massSM">Mass of the planet in solar masses</param>
+            <param name="radiusKM">Radius of the planet in km</param>
+            <param name="densityGCC">Density of the planet in grams/cm3</param>
+            <param name="semiMajorAxisAU">Semi-major axis of the planet's orbit
+            in AU</param>
+            <param name="isGasGiant">Is the planet a gas giant?</param>
+            <param name="starMassSM">Mass of the parent star in solar
+            masses</param>
+            <param name="starAgeYears">Age of the parent star in years</param>
+            <returns>Angular velocity in radians/sec</returns>
+        </member>
+        <member name="M:StarformCore.Environment.AngularVelocity(StarformCore.Data.Planet)">
+            <summary>
+            Returns an approximation of a planet's angular velocity in radians/sec
+            </summary>
+            <param name="planet">The planet to calculate angular velocity
+            for</param>
+            <returns>Angular velocity in radians/sec</returns>
+        </member>
+        <member name="M:StarformCore.Environment.DayLength(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the length of a planet's day in hours.
+            </summary>
+            <param name="angularVelocity">The planet's angular velocity in radians/sec</param>
+            <param name="orbitalPeriodDays">The planet's orbital period in days</param>
+            <param name="ecc">The eccentricity of the planet's orbit</param>
+            <returns>Length of day in hours</returns>
+        </member>
+        <member name="M:StarformCore.Environment.HasResonantPeriod(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Checks if a planet's rotation is in resonance with its orbit
+            </summary>
+            <param name="angularVelocity">The planet's angular velocity in
+            radians/sec</param>
+            <param name="dayInHours">The length of the planet's day in
+            hours</param>
+            <param name="orbitalPeriodDays">The orbital period of the planet
+            in days</param>
+            <param name="ecc">The eccentricity of the planet's orbit</param>
+            <returns>True if the planet is in a resonant orbit</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Inclination(System.Double)">
+            <summary>
+            Returns a randomized inclination in units of degrees
+            </summary>
+            <param name="semiMajorAxisAU">Orbital radius in units of AU</param>
+        </member>
+        <member name="M:StarformCore.Environment.EscapeVelocity(System.Double,System.Double)">
+            <summary>
+            Returns escape velocity in cm/sec
+            </summary>
+            <param name="mass">Mass in units of solar mass</param>
+            <param name="radius">Radius in km</param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.RMSVelocity(System.Double,System.Double)">
+            <summary>
+            Calculates the root-mean-square velocity of particles in a gas.
+            </summary>
+            <param name="molecularWeight">Mass of gas in g/mol</param>
+            <param name="exosphericTemp">Temperature in K</param>
+            <returns>Returns RMS velocity in m/sec</returns>
+        </member>
+        <member name="M:StarformCore.Environment.MoleculeLimit(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the smallest molecular weight retained by the body, which is useful
+            for determining atmospheric composition.
+            </summary>
+            <param name="mass">Mass in solar masses</param>
+            <param name="equatorialRadius">Equatorial radius in units of kilometers</param>
+            <param name="exosphericTemp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.Acceleration(System.Double,System.Double)">
+            <summary>
+            Calculates the surface acceleration of the planet.
+            </summary>
+            <param name="mass">Mass of the planet in solar masses</param>
+            <param name="radius">Radius of the planet in km</param>
+            <returns>Acceleration returned in units of cm/sec2</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Gravity(System.Double)">
+            <summary>
+            Calculates the surface gravity of a planet.
+            </summary>
+            <param name="acceleration">Acceleration in units of cm/sec2</param>
+            <returns>Gravity in units of Earth gravities</returns>
+        </member>
+        <member name="M:StarformCore.Environment.VolatileInventory(System.Double,System.Double,System.Double,System.Double,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            Calculates the inventory of volatiles in a planet's atmosphere
+            as a result of outgassing. This value is used to calculate 
+            the planet's surface pressure. Implements Fogg's eq. 17.
+            </summary>
+            <param name="mass">Planet mass in solar masses</param>
+            <param name="escapeVelocity">Planet escape velocity in cm/sec</param>
+            <param name="rmsVelocity">Planet RMS velocity in cm/sec</param>
+            <param name="stellarMass">Mass of the planet's star in solar masses</param>
+            <param name="zone">Planet's "zone" in the system</param>
+            <param name="hasGreenhouseEffect">True if the planet is experiencing
+            a runaway greenhouse effect</param>
+            <param name="hasAccretedGas">True if the planet has accreted any
+            gas</param>
+        </member>
+        <member name="M:StarformCore.Environment.Pressure(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns pressure in units of millibars. This implements Fogg's eq.18.
+            </summary>
+            <param name="volatileGasInventory"></param>
+            <param name="equatorialRadius">Radius in km</param>
+            <param name="gravity">Gravity in units of Earth gravities</param>
+            <returns>Pressure in millibars (mb)</returns>
+        </member>
+        <member name="M:StarformCore.Environment.BoilingPoint(System.Double)">
+            <summary>
+            Returns the boiling point of water using Fogg's eq.21.
+            </summary>
+            <param name="surfacePressure">Atmospheric pressure in millibars (mb)</param>
+            <returns>Boiling point of water in Kelvin.</returns>
+        </member>
+        <member name="M:StarformCore.Environment.HydroFraction(System.Double,System.Double)">
+            <summary>
+            This function is Fogg's eq.22.	 Given the volatile gas inventory and
+            planetary radius of a planet (in Km), this function returns the
+            fraction of the planet covered with water.	
+            </summary>
+            <param name="volatileGasInventory"></param>
+            <param name="planetRadius">Radius in km</param>
+            <returns>Fraction of the planet covered in water</returns>
+        </member>
+        <member name="M:StarformCore.Environment.CloudFraction(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the fraction of cloud cover available.
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.IceFraction(System.Double,System.Double)">
+            <summary>
+            Given the surface temperature of a planet (in Kelvin), this function
+            returns the fraction of the planet's surface covered by ice.
+            </summary>
+            <returns>Fraction of the planet's surface covered in ice</returns>
+        </member>
+        <member name="M:StarformCore.Environment.EffTemp(System.Double,System.Double,System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="ecosphereRadius">Ecosphere radius in AU</param>
+            <param name="orbitalRadius">Orbital radius in AU</param>
+            <param name="albedo"></param>
+            <returns>Temperature in Kelvin</returns>
+        </member>
+        <member name="M:StarformCore.Environment.EstTemp(System.Double,System.Double,System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="ecosphereRadius"></param>
+            <param name="orbitalRadius"></param>
+            <param name="albedo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.Greenhouse(System.Double,System.Double)">
+            <summary>
+            Calculates whether or not a planet is suffering from a runaway greenhouse
+            effect.
+            </summary>
+            <param name="ecosphereRadius">Radius of the star's ecosphere in AU</param>
+            <param name="orbitalRadius">Orbital radius of the planet in AU</param>
+            <returns>True if the planet is suffering a runaway greenhouse effect.</returns>
+        </member>
+        <member name="M:StarformCore.Environment.GreenRise(System.Double,System.Double,System.Double)">
+            <summary>
+            Returns the rise in temperature produced by the greenhouse effect.
+            </summary>
+            <param name="opticalDepth"></param>
+            <param name="effectiveTemp">Effective temperature in units of Kelvin</param>
+            <param name="surfPressure"></param>
+            <returns>Rise in temperature in Kelvin</returns>
+        </member>
+        <member name="M:StarformCore.Environment.PlanetAlbedo(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates the albedo of a planetary body.
+            </summary>
+            <param name="waterFraction">Fraction of surface covered by water.</param>
+            <param name="cloudFraction">Fraction of planet covered by clouds.</param>
+            <param name="iceFraction">Fraction of planet covered by ice.</param>
+            <param name="surfPressure">Surface pressure in mb.</param>
+            <returns>Average overall albedo of the body.</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Opacity(System.Double,System.Double)">
+            <summary>
+            Returns the dimensionless quantity of optical depth, which is useful in determing the amount
+            of greenhouse effect on a planet.
+            </summary>
+            <param name="molecularWeight"></param>
+            <param name="surfPressure"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.GasLife(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates the number of years it takes for 1/e of a gas to escape from a
+            planet's atmosphere
+            </summary>
+            <param name="molecularWeight">Molecular weight of the gas</param>
+            <param name="exoTempKelvin">Exosphere temperature of the planet in Kelvin</param>
+            <param name="surfGravG">Surface gravity of the planet in G</param>
+            <param name="radiusKM">Radius of the planet in km</param>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.MinMolecularWeight(StarformCore.Data.Planet)">
+            <summary>
+            Calculates the minimum molecular weight retained by a planet
+            </summary>
+        </member>
+        <member name="M:StarformCore.Environment.CalculateSurfaceTemperature(StarformCore.Data.Planet@,System.Boolean,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            The temperature of the planet calculated in degrees Kelvin
+            </summary>
+            <param name="planet"></param>
+            <param name="first"></param>
+            <param name="last_water"></param>
+            <param name="last_clouds"></param>
+            <param name="last_ice"></param>
+            <param name="last_temp"></param>
+            <param name="last_albedo"></param>
+        </member>
+        <member name="M:StarformCore.Environment.InspiredPartialPressure(System.Double,System.Double)">
+            <summary>
+            Inspired partial pressure, taking into account humidification of the air in the nasal
+            passage and throat.
+            </summary>
+            <param name="surf_pressure">Total atmospheric surface pressure in millibars</param>
+            <param name="gas_pressure">Partial gas pressure in millibars</param>
+            <returns>Inspired partial pressure in millibars</returns>
+        </member>
+        <member name="M:StarformCore.Environment.Breathability(StarformCore.Data.Planet)">
+            <summary>
+            Returns the breathability state of the planet's atmosphere.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StarformCore.Environment.IterateSurfaceTemp(StarformCore.Data.Planet@)">
+            <summary>
+            
+            </summary>
+            <param name="planet"></param>
+        </member>
+        <member name="T:StarformCore.UnitConversions">
+            <summary>
+            Simple helper methods for converting between different unit types.
+            </summary>
+        </member>
+        <member name="M:StarformCore.UnitConversions.KelvinToFahrenheit(System.Double)">
+            <summary>
+            Converts temperature from Kelvin to Fahrenheit degrees.
+            </summary>
+            <param name="tempK">Temperature in Kelvin</param>
+            <returns>Temperature in Fahrenheit degrees</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.MMHGToMillibars(System.Double)">
+            <summary>
+            Converts pressure from mmHg to millibars
+            </summary>
+            <param name="presmmHg">Pressure in mmHg</param>
+            <returns>Pressure in millibars</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.CMToKM(System.Double)">
+            <summary>
+            Converts cm to km
+            </summary>
+            <param name="cm">Units cm</param>
+            <returns>Units km</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.EarthRadiusToCentimeters(System.Double)">
+            <summary>
+            Converts from units of Earth radius (R⊕) to centimeters.
+            </summary>
+            <param name="r">Distance in Earth radius units.</param>
+            <returns>Distance in centimeters</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.EarthRadiusToKilometers(System.Double)">
+            <summary>
+            Converts from units of Earth radius (R⊕) to kilometers.
+            </summary>
+            <param name="r">Distance in Earth radius units.</param>
+            <returns>Distance in kilometers</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.CentimetersToEarthRadius(System.Double)">
+            <summary>
+            Converts from centimeters to Earth radius units (R⊕).
+            </summary>
+            <param name="cm">Distance in centimeters</param>
+            <returns>Distance in Earth radius (1.0 = Radius of Earth)</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.KilometersToEarthRadius(System.Double)">
+            <summary>
+            Converts from kilometers to Earth radius units (R⊕).
+            </summary>
+            <param name="km"></param>
+            <returns>Distance in Earth radius (1.0 = radius of Earth)</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.SolarMassesToEarthMasses(System.Double)">
+            <summary>
+            Converts from solar masses to units of Earth mass (M⊕).
+            </summary>
+            <param name="sm">Mass in solar masses</param>
+            <returns>Mass in Earth masses (1.0 = mass of Earth)</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.SolarMassesToKilograms(System.Double)">
+            <summary>
+            Converts from units of solar mass (M☉) to kilograms.
+            </summary>
+            <param name="sm">Mass in solar masses</param>
+            <returns>Mass in kilograms</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.SolarMassesToGrams(System.Double)">
+            <summary>
+            Converts from units of solar mass (M☉) to grams.
+            </summary>
+            <param name="sm">Mass in solar masses</param>
+            <returns>Mass in grams</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.MillibarsToAtm(System.Double)">
+            <summary>
+            Converts pressure from millibars to atm
+            </summary>
+            <param name="mb">Pressure in millibars</param>
+            <returns>Pressure in atm</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.PPMToMillibars(System.Double,System.Double)">
+            <summary>
+            Calculates the partial pressure of an atmospheric gas in millibars
+            from the concentration given in parts-per-million.
+            </summary>
+            <param name="ppm">Concentration in parts-per-million.</param>
+            <param name="atm">Total pressure of the gas in atm (default=1)</param>
+            <returns>Partial pressure in millibars</returns>
+        </member>
+        <member name="M:StarformCore.UnitConversions.MillibarsToPPM(System.Double,System.Double)">
+            <summary>
+            Converts partial pressure in millibars to PPM at a specific
+            atmospheric pressure.
+            </summary>
+            <param name="mb">Gas partial pressure in millibars</param>
+            <param name="atm">Atmospheric pressure in atm</param>
+            <returns>Pressure in PPM</returns>
         </member>
     </members>
 </doc>

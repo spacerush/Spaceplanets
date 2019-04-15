@@ -167,6 +167,39 @@ namespace SpacePlanetsClientLib.ClientServices
             return output;
         }
 
+        public GetCharacterForManagementResult GetCharacterForManagementWindow(string authorizationToken, Guid characterId)
+        {
+            var input = new AuthorizationTokenContainer();
+            input.Content = authorizationToken;
+            var output = new GetCharacterForManagementResult();
+            var result = _endpoint
+                .AllowAnyHttpStatus()
+                .WithHeader("Accept-Version", "1.0")
+                .AppendPathSegment("api")
+                .AppendPathSegment("Character")
+                .AppendPathSegment(characterId)
+                .WithHeader("authorization", authorizationToken)
+                .GetJsonAsync<GetCharacterForManagementResult>().Result;
+            return result;
+        }
+
+        public GetGalaxyByNameResult GetGalaxyByName(string authorizationToken, string galaxyName)
+        {
+            var input = new AuthorizationTokenContainer();
+            input.Content = authorizationToken;
+            var output = new GetGalaxyByNameResult();
+            var result = _endpoint
+                .AllowAnyHttpStatus()
+                .WithHeader("Accept-Version", "1.0")
+                .AppendPathSegment("api")
+                .AppendPathSegment("Rpc")
+                .AppendPathSegment("GetGalaxyByName")
+                .SetQueryParam("galaxyName", galaxyName)
+                .PostJsonAsync(input).Result;
+            output = JsonConvert.DeserializeObject<GetGalaxyByNameResult>(result.Content.ReadAsStringAsync().Result);
+            return output;
+        }
+
         public GetShipsForMenuResult GetShipsForManagementMenu(string authorizationToken)
         {
             List<GenericItemForPicklist> genericItemsForPicklist = new List<GenericItemForPicklist>();
