@@ -78,6 +78,8 @@ namespace WebApp
             IObjectService objectService = provider.GetRequiredService<IObjectService>();
             objectService.CreateDefaultShipTemplatesIfNecessary();
             objectService.CreateDefaultModuleTypesIfNecessary();
+            objectService.CreateDefaultImplantTemplatesIfNecessary();
+            objectService.CreateDefaultMicroclusterTemplatesIfNecessary();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
