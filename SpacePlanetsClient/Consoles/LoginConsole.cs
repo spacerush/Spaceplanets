@@ -28,15 +28,25 @@ namespace SpacePlanetsClient.Consoles
             txtPassword.PasswordChar = "*";
             this.Add(txtPassword);
 
-            Button btnLocal = new Button(20, 1);
-            btnLocal.Text = "Use Online Server";
-            btnLocal.Position = new Point(width - 20, height - 1);
-            btnLocal.Click += (s, a) =>
+            Button btnRemote = new Button(20, 1);
+            btnRemote.Text = "Use Online Server";
+            btnRemote.Position = new Point(width - 20, height - 1);
+            btnRemote.Click += (s, a) =>
             {
                 GameState.SetApiEndpoint("https://dev.spacerush.app/");
-                this.Remove(btnLocal);
+                this.Remove(btnRemote);
             };
-            this.Add(btnLocal);
+            this.Add(btnRemote);
+            
+            Button btnLocalNoTls = new Button(26, 1);
+            btnLocalNoTls.Text = "Use Local Http Server";
+            btnLocalNoTls.Position = new Point(width - 26, height - 5);
+            btnLocalNoTls.Click += (s, a) =>
+            {
+                GameState.SetApiEndpoint("http://localhost:5000/");
+                this.Remove(btnLocalNoTls);
+            };
+            this.Add(btnLocalNoTls);
 
             Button btnLogin = new Button(10, 3);
             btnLogin.Text = "Log in";
