@@ -92,6 +92,75 @@ namespace SpacePlanetsDAL.Services
 
         }
 
+        public void CreateDefaultImplantTemplatesIfNecessary()
+        {
+            long count = _wrapper.ImplantTemplateRepository.Count<ImplantTemplate>(f => f.Id != null);
+            if (count == 0)
+            {
+                List<ImplantTemplate> implantTemplatesToAdd = new List<ImplantTemplate>();
+                implantTemplatesToAdd.Add(new ImplantTemplate("Cerebrum Implant - Left Hemisphere", "Left Cerebrum", 1, 300, 4));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Cerebrum Implant - Right Hemisphere", "Right Cerebrum", 1, 300, 4));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Cerebellum Implant", "Cerebellum", 1, 300, 3));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Brainstem Implant", "Brainstem", 1, 300, 2));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Right Shoulder Implant", "Right Shoulder", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Left Shoulder Implant", "Left Shoulder", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Upper Back Implant", "Upper Back", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Left Arm Implant", "Left Arm", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Right Arm Implant", "Right Arm", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Chest Implant", "Chest", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Mid Back Implant", "Mid Back", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Stomach Implant", "Stomach", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Left Hand Implant", "Left Hand", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Right Hand Implant", "Right Hand", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Pelvic Implant", "Pelvis", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Waist Implant", "Waist", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Gluteal Implant", "Gluteas", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Right Leg Implant", "Right Leg", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Left Leg Implant", "Left Leg", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Left Foot Implant", "Left Foot", 1, 300, 1));
+                implantTemplatesToAdd.Add(new ImplantTemplate("Right Foot Implant", "Right Foot", 1, 300, 1));
+                _wrapper.ImplantTemplateRepository.AddMany<ImplantTemplate>(implantTemplatesToAdd);
+            }
+        }
+
+        public void CreateDefaultMicroclusterTemplatesIfNecessary()
+        {
+            long count = _wrapper.MicroclusterTemplateRepository.Count<MicroclusterTemplate>(f => f.Id != null);
+            if (count == 0)
+            {
+                List<MicroclusterTemplate> microclusterTemplatesToAdd = new List<MicroclusterTemplate>();
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Martial Arts", "Left Cerebrum", 1, 300, "Martial Arts", 1, 90));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Martial Arts", "Right Cerebrum", 1, 300, "Martial Arts", 1, 90));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Martial Arts", "Cerebellum", 1, 300, "Martial Arts", 1, 140));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Pistol", "Cerebellum", 1, 300, "Pistol", 1, 140));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Rifle", "Cerebellum", 1, 300, "Rifle", 1, 140));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Alertness", "Brainstem", 1, 300, "Alertness", 1, 140));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Pistol", "Right Shoulder", 1, 300, "Pistol", 1, 35));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Pistol", "Left Shoulder", 1, 300, "Pistol", 1, 35));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Plating - Reflection", "Upper Back", 1, 300, "Reflect All Damage", 1, 10));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Adjustment - Agility", "Left Arm", 1, 300, "Agility", 1, 75));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Adjustment - Agility", "Right Arm", 1, 300, "Agility", 1, 75));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Augmentation - Beauty", "Chest", 1, 300, "Beauty", 1, 140));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Plating - Reflection", "Chest", 1, 300, "Reflect All Damage", 1, 10));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Plating - Reflection", "Mid Back", 1, 300, "Reflect All Damage", 1, 8));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Poison Absorption", "Stomach", 1, 300, "Poison Resistance", 1, 75));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("First Aid", "Left Hand", 1, 300, "First Aid", 1, 125));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("First Aid", "Left Hand", 1, 300, "First Aid", 1, 125));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Strength Augmentation", "Pelvis", 1, 300, "Strength", 1, 125));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Stamina Augmentation", "Pelvis", 1, 300, "Stamina", 1, 125));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Strength Augmentation", "Waist", 1, 300, "Strength", 1, 125));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Stamina Augmentation", "Waist", 1, 300, "Stamina", 1, 125));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Beauty Boost", "Gluteas", 1, 300, "Beauty", 1, 125));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Martial Arts", "Right Leg", 1, 300, "Martial Arts", 1, 50));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Martial Arts", "Left Leg", 1, 300, "Martial Arts", 1, 50));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Martial Arts", "Left Foot", 1, 300, "Martial Arts", 1, 50));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Modification - Martial Arts", "Right Foot", 1, 300, "Martial Arts", 1, 50));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Enhanced Speed", "Left Foot", 1, 300, "Runspeed", 1, 50));
+                microclusterTemplatesToAdd.Add(new MicroclusterTemplate("Enhanced Speed", "Right Foot", 1, 300, "Runspeed", 1, 50));
+                _wrapper.MicroclusterTemplateRepository.AddMany<MicroclusterTemplate>(microclusterTemplatesToAdd);
+            }
+        }
+
         public void CreateDefaultModuleTypesIfNecessary()
         {
             long count = _wrapper.ShipModuleRepository.Count<ShipModule>(f => f.Id != null);

@@ -18,6 +18,17 @@ namespace SpacePlanetsDAL.Services
         /// </summary>
         void CreateDefaultModuleTypesIfNecessary();
 
+
+        /// <summary>
+        /// Create templates on which to base "empty" implants.
+        /// </summary>
+        void CreateDefaultImplantTemplatesIfNecessary();
+
+        /// <summary>
+        /// Create templates on which to base randomly generated microcluster items.
+        /// </summary>
+        void CreateDefaultMicroclusterTemplatesIfNecessary();
+
         /// <summary>
         /// Get all the ship templates (often times for display)
         /// </summary>
