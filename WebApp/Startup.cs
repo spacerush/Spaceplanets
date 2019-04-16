@@ -60,7 +60,7 @@ namespace WebApp
             {
                 c.AddSecurityDefinition("apikey", new ApiKeyScheme
                 {
-                    Description = "Authorization header using a token scheme. Not required if supplying api username and password. Example: \"{token}\"",
+                    Description = "Authorization header using a token scheme. Example: \"{token}\"",
                     In = "header",
                     Name = "Authorization",
                     Type = "apiKey"
@@ -68,7 +68,6 @@ namespace WebApp
 
 
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-
                 c.IncludeXmlComments(@"SpLib.xml");
                 c.OperationFilter<SwaggerAuthorizationHeaderFilter>();
             });
@@ -98,6 +97,7 @@ namespace WebApp
 
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
+
 
             app.UseMvc(routes =>
             {
