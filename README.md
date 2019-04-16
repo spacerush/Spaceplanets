@@ -4,6 +4,10 @@ This is a work in progress. There are no released versions yet, and the code in 
 # Introduction 
 Space planets is a space exploration game inside what looks like a console. Meant to provide a persistent world over a WAN or LAN, SpacePlanets is an Open API for open exploration.
 
+# Event Monitoring
+We will be utilizing the excellent Sentry software (https://sentry.io/) for monitoring exception events in the client and server.
+
+
 # Builds
 ## devel :: master
 [![Build Status](https://dev.azure.com/Spacerush/Spaceplanets/_apis/build/status/Spaceplanets-ASP.NET%20Core%20(Development)?branchName=development)](https://dev.azure.com/Spacerush/Spaceplanets/_build/latest?definitionId=1&branchName=development) :: [![Build Status](https://dev.azure.com/Spacerush/Spaceplanets/_apis/build/status/Spaceplanets-ASP.NET%20Core-CI%20(Master)?branchName=master)](https://dev.azure.com/Spacerush/Spaceplanets/_build/latest?definitionId=2&branchName=master)
