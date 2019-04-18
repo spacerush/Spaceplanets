@@ -14,7 +14,7 @@ using MongoDB.Driver;
 using Sentry;
 using SpacePlanetsDAL.Services;
 using Swashbuckle.AspNetCore.Swagger;
-using WebApp.Filters;
+
 
 namespace WebApp
 {
@@ -84,6 +84,7 @@ namespace WebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
