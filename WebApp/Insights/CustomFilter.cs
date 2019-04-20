@@ -24,8 +24,11 @@ namespace WebApp
 
         FilterResult IFilter.Evaluate(EventData eventData)
         {
+            // TODO: check the eventData object to see if the event data involves a dependency
+            // call to the telemetry collector, and return
+            // FilterResult.DiscardEvent instead of KeepEvent
             eventData.AddPayloadProperty("ServerName", MachineName, HealthReporter, "CustomFilter");
-            return FilterResult.DiscardEvent;
+            return FilterResult.KeepEvent;
         }
     }
 
