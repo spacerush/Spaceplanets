@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ApplicationInsights.AspNetCore;
 using Sentry;
+using System.Collections.Generic;
 
 namespace WebApp
 {
@@ -58,10 +59,9 @@ namespace WebApp
             var filterConfig = config.GetSection("FilterConfig");
             var healthReporter = new CsvHealthReporter(new CsvHealthReporterConfiguration());
             var aiInput = new ApplicationInsightsInputFactory().CreateItem(null, healthReporter);
+            var aiFilters = new CustomFilterFactory().CreateItem(filterConfig, healthReporter);
             var inputs = new IObservable<EventData>[] { aiInput };
-
-            var filters = new CustomGlobalFilterFactory().CreateItem(filterConfig, healthReporter);
-
+            var filters = new IFilter[] { aiFilters };
 
             var sinks = new EventSink[]
             {

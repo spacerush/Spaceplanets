@@ -12,11 +12,11 @@ using Microsoft.ApplicationInsights.AspNetCore;
 
 namespace WebApp
 {
-    class CustomGlobalFilter : IFilter
+    public class CustomFilter : IFilter
     {
         private IHealthReporter HealthReporter;
         private string MachineName;
-        public CustomGlobalFilter(string ServerName, IHealthReporter HealthReporter)
+        public CustomFilter(string ServerName, IHealthReporter HealthReporter)
         {
             MachineName = ServerName;
             this.HealthReporter = HealthReporter;
@@ -24,17 +24,17 @@ namespace WebApp
 
         FilterResult IFilter.Evaluate(EventData eventData)
         {
-            eventData.AddPayloadProperty("ServerName", MachineName, HealthReporter, "CustomGlobalFilter");
-            return FilterResult.KeepEvent;
+            eventData.AddPayloadProperty("ServerName", MachineName, HealthReporter, "CustomFilter");
+            return FilterResult.DiscardEvent;
         }
     }
 
-    class CustomGlobalFilterFactory : IPipelineItemFactory<CustomGlobalFilter>
+    public class CustomFilterFactory : IPipelineItemFactory<CustomFilter>
     {
-        public CustomGlobalFilter CreateItem(IConfiguration configuration, IHealthReporter healthReporter)
+        public CustomFilter CreateItem(IConfiguration configuration, IHealthReporter healthReporter)
         {
-            CustomGlobalFilter GlobalFilter = new CustomGlobalFilter(System.Environment.MachineName, healthReporter);
-            return GlobalFilter;
+            CustomFilter filter = new CustomFilter(System.Environment.MachineName, healthReporter);
+            return filter;
         }
     }
 }

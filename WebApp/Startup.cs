@@ -69,7 +69,7 @@ namespace WebApp
 
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
                 c.IncludeXmlComments(@"SpLib.xml");
-                c.OperationFilter<SwaggerAuthorizationHeaderFilter>();
+                c.OperationFilter<WebApp.Filters.SwaggerAuthorizationHeaderFilter>();
             });
 
             IServiceProvider provider = services.BuildServiceProvider();
