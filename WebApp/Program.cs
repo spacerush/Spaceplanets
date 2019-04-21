@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ApplicationInsights.AspNetCore;
 using Sentry;
 using System.Collections.Generic;
+using System.IO;
 
 namespace WebApp
 {
@@ -46,6 +47,11 @@ namespace WebApp
             if (isDevelopment)
             {
                 configBuilder.AddUserSecrets<Program>();
+            }
+            else
+            {
+                configBuilder.SetBasePath(Directory.GetCurrentDirectory());
+                configBuilder.AddJsonFile("appsettings.json", false, false);
             }
 
             if (args != null)
