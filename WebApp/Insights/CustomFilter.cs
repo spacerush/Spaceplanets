@@ -27,8 +27,15 @@ namespace WebApp
             // TODO: check the eventData object to see if the event data involves a dependency
             // call to the telemetry collector, and return
             // FilterResult.DiscardEvent instead of KeepEvent
-            eventData.AddPayloadProperty("ServerName", MachineName, HealthReporter, "CustomFilter");
-            return FilterResult.KeepEvent;
+            if (eventData.Payload["TelemetryType"].ToString() == "dependency" && eventData.Payload["Name"].ToString().StartsWith("POST") && eventData.Payload["Name"].ToString().EndsWith("/api/Collect"))
+            {
+                return FilterResult.DiscardEvent;
+            }
+            else
+            {
+                eventData.AddPayloadProperty("ServerName", MachineName, HealthReporter, "CustomFilter");
+                return FilterResult.KeepEvent;
+            }
         }
     }
 
