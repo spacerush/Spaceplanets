@@ -38,7 +38,7 @@ namespace WebApp
             });
 
 
-            var client = new MongoClient("mongodb://localhost:27017/SpacePlanetsDev");
+            var client = new MongoClient("mongodb://localhost:27017/SpacePlanets");
 
             services.AddSingleton<IMongoClient>(c => client);
             services.AddScoped<IGameService, GameService>();
