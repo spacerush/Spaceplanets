@@ -63,6 +63,13 @@ namespace WebApp
             // SEE https://github.com/Azure/diagnostics-eventflow#http
             var httpConfig = config.GetSection("HttpEventSinkConfig");
             var filterConfig = config.GetSection("FilterConfig");
+            var pipelineConfig = new DiagnosticPipelineConfiguration()
+            {
+                MaxBatchDelayMsec = 5000, // Specifies the maximum time that events are held in a batch before the batch gets pushed through the pipeline to filters and outputs. The batch is pushed down when it reaches the maxEventBatchSize, or its oldest event has been in the batch for more than maxBatchDelayMsec milliseconds.
+                PipelineCompletionTimeoutMsec = 10000, // Specifies the timeout to wait for the pipeline to shutdown and clean up. The shutdown process starts when the DiagnosePipeline object is disposed, which usually happens on application exit.
+                MaxEventBatchSize = 50, // Specifies the maximum number of events to be batched before the batch gets pushed through the pipeline to filters and outputs. The batch is pushed down when it reaches the maxEventBatchSize, or its oldest event has been in the batch for more than maxBatchDelayMsec milliseconds.
+                PipelineBufferSize = 1000 // Specifies how many events the pipeline can buffer if the events cannot flow through the pipeline fast enough. This buffer protects loss of data in cases where there is a sudden burst of data.
+            };
             var healthReporter = new CsvHealthReporter(new CsvHealthReporterConfiguration());
             var aiInput = new ApplicationInsightsInputFactory().CreateItem(null, healthReporter);
             var aiFilters = new CustomFilterFactory().CreateItem(filterConfig, healthReporter);
@@ -75,7 +82,7 @@ namespace WebApp
                 new EventSink(new HttpOutput(httpConfig, healthReporter), null) // again, see https://github.com/Azure/diagnostics-eventflow#http
             };
 
-            return new DiagnosticPipeline(healthReporter, inputs, filters, sinks, null, disposeDependencies: true);
+            return new DiagnosticPipeline(healthReporter, inputs, filters, sinks, pipelineConfig, disposeDependencies: true);
         }
     }
 }
