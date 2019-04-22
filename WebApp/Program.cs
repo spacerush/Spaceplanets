@@ -79,7 +79,7 @@ namespace WebApp
             var sinks = new EventSink[]
             {
                 new EventSink(new StdOutput(healthReporter), null),
-                new EventSink(new HttpOutput(httpConfig, healthReporter), null) // again, see https://github.com/Azure/diagnostics-eventflow#http
+                new EventSink(new HttpOutput(httpConfig, healthReporter), filters) // again, see https://github.com/Azure/diagnostics-eventflow#http
             };
 
             return new DiagnosticPipeline(healthReporter, inputs, filters, sinks, pipelineConfig, disposeDependencies: true);
