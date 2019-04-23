@@ -15,12 +15,15 @@ using System.Threading;
 using System.Diagnostics;
 using SpacePlanetsClient.Models;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.SignalR.Client;
+using System.IO;
 
 namespace SpacePlanetsClient
 {
     public static class GameState
     {
         internal static CancellationToken CancelHeartbeat;
+        internal static HubConnection connection;
 
         public static void SetClient(IFlurlClient client)
         {
@@ -171,8 +174,24 @@ namespace SpacePlanetsClient
             else
             {
                 _gameStatus = GameStatus.LoggedIn;
-
                 _accessToken = result.Token;
+
+                connection = new HubConnectionBuilder()
+                .WithUrl(_client.GetEndpoint() + "galaxyHub")
+                .Build();
+
+                connection.On<string>("chat", (message) =>
+                {
+                    _serverStatusConsole.Write("Receive Chat: " + message);
+                });
+
+                connection.Closed += async (error) =>
+                {
+                    await Task.Delay(new Random().Next(0, 5) * 1000);
+                    await connection.StartAsync();
+                };
+
+
                 _messageLogConsole = new MessageLogConsole(_mainConsole.Width, _mainConsole.Height / 4);
                 _messageLogConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height);
                 _messageLogConsole.IsVisible = true;
@@ -222,6 +241,7 @@ namespace SpacePlanetsClient
             TimeSpan ts = stopWatch.Elapsed;
             if (ts.TotalMilliseconds < 500)
             {
+                connection.InvokeAsync("chat", "pingin' at " + Math.Floor(ts.TotalMilliseconds) + " total ms");
                 _serverStatusConsole.Write("Ping: " + Math.Floor(ts.TotalMilliseconds), ServerStatusConsole.MessageTypes.Ok);
             }
             else

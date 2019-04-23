@@ -27,6 +27,11 @@ namespace SpacePlanetsClientLib.ClientServices
             _endpoint = newEndpoint;
         }
 
+        public string GetEndpoint()
+        {
+            return _endpoint;
+        }
+
         public GetAccessTokenResult GetAccessToken(string username, string password)
         {
             var output = new GetAccessTokenResult();
