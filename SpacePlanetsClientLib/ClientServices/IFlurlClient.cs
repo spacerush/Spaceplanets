@@ -18,6 +18,8 @@ namespace SpacePlanetsClientLib.ClientServices
         /// <param name="newEndpoint">The URL of the api server</param>
         void ChangeEndpoint(string newEndpoint);
 
+        string GetEndpoint();
+
         GetGalaxyByNameResult GetGalaxyByName(string authorizationToken, string galaxyName);
 
         GetAccessTokenResult GetAccessToken(RefreshToken refreshToken);

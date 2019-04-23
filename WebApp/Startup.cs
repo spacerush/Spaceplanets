@@ -14,7 +14,7 @@ using MongoDB.Driver;
 using Sentry;
 using SpacePlanetsDAL.Services;
 using Swashbuckle.AspNetCore.Swagger;
-using WebApp.Filters;
+using WebApp.Hubs;
 
 namespace WebApp
 {
@@ -30,6 +30,7 @@ namespace WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -37,9 +38,7 @@ namespace WebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
-            var client = new MongoClient("mongodb://localhost:27017/SpacePlanetsDev");
-
+            var client = new MongoClient("mongodb://localhost:27017/SpacePlanets");
             services.AddSingleton<IMongoClient>(c => client);
             services.AddScoped<IGameService, GameService>();
             services.AddScoped<IObjectService, ObjectService>();
@@ -60,7 +59,7 @@ namespace WebApp
             {
                 c.AddSecurityDefinition("apikey", new ApiKeyScheme
                 {
-                    Description = "Authorization header using a token scheme. Not required if supplying api username and password. Example: \"{token}\"",
+                    Description = "Authorization header using a token scheme. Example: \"{token}\"",
                     In = "header",
                     Name = "Authorization",
                     Type = "apiKey"
@@ -68,10 +67,11 @@ namespace WebApp
 
 
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-
                 c.IncludeXmlComments(@"SpLib.xml");
-                c.OperationFilter<SwaggerAuthorizationHeaderFilter>();
+                c.OperationFilter<WebApp.Filters.SwaggerAuthorizationHeaderFilter>();
             });
+
+            services.AddSignalR();
 
             IServiceProvider provider = services.BuildServiceProvider();
 
@@ -85,6 +85,7 @@ namespace WebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -96,14 +97,29 @@ namespace WebApp
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSignalR(router =>
+            {
+                router.MapHub<GalaxyHub>("/GalaxyHub");
             });
         }
     }

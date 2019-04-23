@@ -5,8 +5,14 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>..\WebApp\SpaceRushData.xml</DocumentationFile>
+    <DocumentationFile>..\WebApp\SpLib.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath />
+    <DocumentationFile>..\WebApp\SpLib.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
