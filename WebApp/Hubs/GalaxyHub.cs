@@ -10,7 +10,7 @@ namespace WebApp.Hubs
     {
         public async Task SendChat(string message)
         {
-            await Clients.Others.SendAsync("chat", message);
+            await Clients.All.SendAsync("chat", message);  // switch to Clients.Others to only send to other people.
         }
     }
 }

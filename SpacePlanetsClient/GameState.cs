@@ -179,10 +179,10 @@ namespace SpacePlanetsClient
                 connection = new HubConnectionBuilder()
                 .WithUrl(_client.GetEndpoint() + "galaxyHub")
                 .Build();
-
+                connection.StartAsync();
                 connection.On<string>("chat", (message) =>
                 {
-                    _serverStatusConsole.Write("Receive Chat: " + message);
+                    _messageLogConsole.Write("Receive Chat: " + message);
                 });
 
                 connection.Closed += async (error) =>
@@ -236,13 +236,13 @@ namespace SpacePlanetsClient
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             _client.GetPingResponse();
+            connection.InvokeAsync("SendChat", "Ping" + Guid.NewGuid().ToString());
             stopWatch.Stop();
             // Get the elapsed time as a TimeSpan value.
             TimeSpan ts = stopWatch.Elapsed;
             if (ts.TotalMilliseconds < 500)
             {
-                connection.InvokeAsync("chat", "pingin' at " + Math.Floor(ts.TotalMilliseconds) + " total ms");
-                _serverStatusConsole.Write("Ping: " + Math.Floor(ts.TotalMilliseconds), ServerStatusConsole.MessageTypes.Ok);
+                _messageLogConsole.Write("Ping: " + Math.Floor(ts.TotalMilliseconds), MessageLogConsole.MessageTypes.AdminOnlyMessage);
             }
             else
             {

@@ -119,7 +119,7 @@ namespace WebApp
 
             app.UseSignalR(router =>
             {
-                router.MapHub<GalaxyHub>("/galaxyHub");
+                router.MapHub<GalaxyHub>("/GalaxyHub");
             });
         }
     }
