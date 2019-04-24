@@ -15,6 +15,7 @@ using Sentry;
 using SpacePlanetsDAL.Services;
 using Swashbuckle.AspNetCore.Swagger;
 using WebApp.Hubs;
+using WebApp.Workers;
 
 namespace WebApp
 {
@@ -72,7 +73,7 @@ namespace WebApp
             });
 
             services.AddSignalR();
-
+            services.AddHostedService<Worker>();
             IServiceProvider provider = services.BuildServiceProvider();
 
             IObjectService objectService = provider.GetRequiredService<IObjectService>();

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace WebApp.Hubs
 {
-    public class GalaxyHub : Hub
+    public class GalaxyHub : Hub<IGalaxyClient>
     {
-        public async Task SendChat(string message)
+        public async Task SendMessage(string message)
         {
-            await Clients.All.SendAsync("chat", message);  // switch to Clients.Others to only send to other people.
+            await Clients.All.ReceiveMessage(message);  // switch to Clients.Others to only send to other people.
         }
     }
 }

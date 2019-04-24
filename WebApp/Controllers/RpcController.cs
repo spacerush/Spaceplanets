@@ -16,6 +16,8 @@ using System.Net.Http;
 using System.Net;
 using SpacePlanetsDAL.ServiceResponses;
 using SpLib.Shared;
+using Microsoft.AspNetCore.SignalR;
+using WebApp.Hubs;
 
 namespace WebApp.Controllers
 {
@@ -24,6 +26,7 @@ namespace WebApp.Controllers
     {
         private readonly IGameService _gameService;
         private readonly IObjectService _objectService;
+        private IHubContext<GalaxyHub, IGalaxyClient> _hubContext;
 
         private readonly IAuthenticationService _authenticationService;
         private static HttpClient Client = new HttpClient(new HttpClientHandler()
@@ -31,8 +34,9 @@ namespace WebApp.Controllers
             AutomaticDecompression = DecompressionMethods.None
         });
 
-        public RpcController(IGameService gameService, IAuthenticationService authenticationService, IObjectService objectService)
+        public RpcController(IGameService gameService, IAuthenticationService authenticationService, IObjectService objectService, IHubContext<GalaxyHub, IGalaxyClient> hubContext)
         {
+            _hubContext = hubContext;
             _gameService = gameService;
             _authenticationService = authenticationService;
             _objectService = objectService;
@@ -95,6 +99,7 @@ namespace WebApp.Controllers
         {
             if (pingRequest != null)
             {
+                _hubContext.Clients.All.ReceiveMessage("pinged!");
                 var pingResponse = new PingResponse();
                 pingResponse.Error = null;
                 pingResponse.OriginalDateTime = pingRequest.DateTime;

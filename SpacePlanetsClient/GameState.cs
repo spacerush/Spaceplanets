@@ -177,10 +177,10 @@ namespace SpacePlanetsClient
                 _accessToken = result.Token;
 
                 connection = new HubConnectionBuilder()
-                .WithUrl(_client.GetEndpoint() + "galaxyHub")
+                .WithUrl(_client.GetEndpoint() + "GalaxyHub")
                 .Build();
                 connection.StartAsync();
-                connection.On<string>("chat", (message) =>
+                connection.On<string>("ReceiveMessage", (message) =>
                 {
                     _messageLogConsole.Write("Receive Chat: " + message);
                 });
@@ -236,17 +236,17 @@ namespace SpacePlanetsClient
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             _client.GetPingResponse();
-            connection.InvokeAsync("SendChat", "Ping" + Guid.NewGuid().ToString());
             stopWatch.Stop();
             // Get the elapsed time as a TimeSpan value.
             TimeSpan ts = stopWatch.Elapsed;
             if (ts.TotalMilliseconds < 500)
             {
-                _messageLogConsole.Write("Ping: " + Math.Floor(ts.TotalMilliseconds), MessageLogConsole.MessageTypes.AdminOnlyMessage);
+                _serverStatusConsole.Write("Ping: " + Math.Floor(ts.TotalMilliseconds), ServerStatusConsole.MessageTypes.Ok);
             }
             else
             {
-                _serverStatusConsole.Write("Ping: " + Math.Floor(ts.TotalMilliseconds), ServerStatusConsole.MessageTypes.Danger);
+                _serverStatusConsole.Write("High Ping: " + Math.Floor(ts.TotalMilliseconds), ServerStatusConsole.MessageTypes.Danger);
+                _messageLogConsole.Write("High Ping: " + Math.Floor(ts.TotalMilliseconds), MessageLogConsole.MessageTypes.AdminOnlyMessage);
             }
         }
 
