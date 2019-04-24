@@ -23,7 +23,7 @@ namespace WebApp.Workers
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await _galaxyHub.Clients.All.ReceiveMessage(DateTime.Now.ToShortTimeString());
+                await _galaxyHub.Clients.All.ReceiveServerTime(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
                 await Task.Delay(1000);
             }
         }

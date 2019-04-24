@@ -13,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Sentry;
 using SpacePlanetsDAL.Services;
-using Swashbuckle.AspNetCore.Swagger;
 using WebApp.Hubs;
 using WebApp.Workers;
 
@@ -56,22 +55,6 @@ namespace WebApp
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSwaggerGen(c =>
-            {
-                c.AddSecurityDefinition("apikey", new ApiKeyScheme
-                {
-                    Description = "Authorization header using a token scheme. Example: \"{token}\"",
-                    In = "header",
-                    Name = "Authorization",
-                    Type = "apiKey"
-                });
-
-
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-                c.IncludeXmlComments(@"SpLib.xml");
-                c.OperationFilter<WebApp.Filters.SwaggerAuthorizationHeaderFilter>();
-            });
-
             services.AddSignalR();
             services.AddHostedService<Worker>();
             IServiceProvider provider = services.BuildServiceProvider();
@@ -100,16 +83,6 @@ namespace WebApp
 
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
 
             app.UseMvc(routes =>
             {

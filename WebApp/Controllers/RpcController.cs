@@ -114,50 +114,6 @@ namespace WebApp.Controllers
             return result;
         }
 
-        [Route("Rpc/GetCharactersForMenu")]
-        [HttpPost]
-        public JsonResult GetCharactersForMenu([FromBody] AuthorizationTokenContainer authorizationTokenContainer)
-        {
-            GetCharactersForMenuResult getCharactersForMenuResult = new GetCharactersForMenuResult();
-
-            if (authorizationTokenContainer != null)
-            {
-                GetPlayerByAccessTokenResponse getPlayerByAccessTokenResponse = _authenticationService.GetPlayerByAccessToken(authorizationTokenContainer.Content);
-                if (getPlayerByAccessTokenResponse.Success)
-                {
-                    List<GenericItemForPicklist> characters = new List<GenericItemForPicklist>();
-                    GetCharactersByPlayerIdResponse getCharactersByPlayerIdResponse = _gameService.GetCharactersByPlayerId(getPlayerByAccessTokenResponse.Player.Id);
-                    if (getCharactersByPlayerIdResponse.Success == true)
-                    {
-                        foreach (var item in getCharactersByPlayerIdResponse.Characters)
-                        {
-                            characters.Add(new GenericItemForPicklist(item.Id, item.Name + ", level " + item.Level + " " + item.Profession));
-                        }
-                    }
-                    getCharactersForMenuResult.Characters = characters;
-                    getCharactersForMenuResult.Error = null;
-                    getCharactersForMenuResult.Success = true;
-                }
-                else
-                {
-                    getCharactersForMenuResult.Error = new ErrorFromServer("Could not translate token into player for GetCharactersForMenu.");
-                    getCharactersForMenuResult.Characters = null;
-                    getCharactersForMenuResult.Success = false;
-                }
-            }
-            var serviceResponse = new JsonResult(getCharactersForMenuResult);
-            if (getCharactersForMenuResult.Success)
-            {
-                serviceResponse.StatusCode = 200;
-            }
-            else
-            {
-                serviceResponse.StatusCode = 403;
-            }
-            return serviceResponse;
-        }
-
-
         [Route("Rpc/GetGalaxyByName")]
         [HttpPost]
         public JsonResult GetGalaxyByName([FromBody] AuthorizationTokenContainer authorizationTokenContainer, [FromQuery] string galaxyName)
@@ -178,43 +134,6 @@ namespace WebApp.Controllers
             result.StatusCode = 501;
             return result;
         }
-
-        [Route("Rpc/GetShipsForMenu")]
-        [HttpPost]
-        public JsonResult GetShipsForMenu([FromBody] AuthorizationTokenContainer authorizationTokenContainer)
-        {
-            GetShipsForMenuResult getShipsForMenuResult = new GetShipsForMenuResult();
-
-            if (authorizationTokenContainer != null)
-            {
-                GetPlayerByAccessTokenResponse getPlayerByAccessTokenResponse = _authenticationService.GetPlayerByAccessToken(authorizationTokenContainer.Content);
-                if (getPlayerByAccessTokenResponse.Success)
-                {
-                    List<GenericItemForPicklist> ships = new List<GenericItemForPicklist>();
-                    ships.Add(new GenericItemForPicklist(Guid.NewGuid(), "testing"));
-                    getShipsForMenuResult.Ships = ships;
-                    getShipsForMenuResult.Error = null;
-                    getShipsForMenuResult.Success = true;
-                }
-                else
-                {
-                    getShipsForMenuResult.Error = new ErrorFromServer("Could not translate token into player for GetShipsForMenu.");
-                    getShipsForMenuResult.Ships = null;
-                    getShipsForMenuResult.Success = false;
-                }
-            }
-            var serviceResponse = new JsonResult(getShipsForMenuResult);
-            if (getShipsForMenuResult.Success)
-            {
-                serviceResponse.StatusCode = 200;
-            }
-            else
-            {
-                serviceResponse.StatusCode = 403;
-            }
-            return serviceResponse;
-        }
-
 
         [Route("Character/{id}")]
         [HttpGet]

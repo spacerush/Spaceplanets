@@ -17,6 +17,7 @@ using SpacePlanetsClient.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.IO;
+using SpLib.DataTransfer.ClientToServer;
 
 namespace SpacePlanetsClient
 {
@@ -133,6 +134,41 @@ namespace SpacePlanetsClient
             _loginWindow.UseKeyboard = true;
             _mainConsole.Children.Add(_loginWindow);
             _loginWindow.CenterWithinParent();
+
+
+            connection = new HubConnectionBuilder()
+                .WithUrl(_client.GetEndpoint() + "GalaxyHub")
+                .Build();
+            connection.StartAsync();
+
+            connection.On<string>("ReceiveMessage", (message) =>
+            {
+                if (_gameStatus == GameStatus.LoggedIn)
+                {
+                    _messageLogConsole.Write("Receive Chat: " + message);
+                }
+            });
+
+            connection.On<string>("ReceiveServerTime", (serverTime) =>
+            {
+                if (_gameStatus == GameStatus.LoggedIn)
+                {
+                    _messageLogConsole.Write("Receive server time: " + serverTime);
+                }
+            });
+
+            // retrieval of characters for menu.
+            connection.On<GetCharactersForMenuResult>("ReceiveCharactersForMenu", (param) =>
+            {
+                ProcessCharactersForMenu(param);
+            });
+
+            connection.Closed += async (error) =>
+            {
+                await Task.Delay(new Random().Next(0, 5) * 1000);
+                await connection.StartAsync();
+            };
+
         }
 
         public static void SetMenusHidden()
@@ -175,22 +211,6 @@ namespace SpacePlanetsClient
             {
                 _gameStatus = GameStatus.LoggedIn;
                 _accessToken = result.Token;
-
-                connection = new HubConnectionBuilder()
-                .WithUrl(_client.GetEndpoint() + "GalaxyHub")
-                .Build();
-                connection.StartAsync();
-                connection.On<string>("ReceiveMessage", (message) =>
-                {
-                    _messageLogConsole.Write("Receive Chat: " + message);
-                });
-
-                connection.Closed += async (error) =>
-                {
-                    await Task.Delay(new Random().Next(0, 5) * 1000);
-                    await connection.StartAsync();
-                };
-
 
                 _messageLogConsole = new MessageLogConsole(_mainConsole.Width, _mainConsole.Height / 4);
                 _messageLogConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height);
@@ -310,31 +330,8 @@ namespace SpacePlanetsClient
 
         internal static void RetrieveCharactersForCharacterMenu()
         {
-            GetCharactersForMenuResult result = _client.GetCharactersForManagementMenu(_accessToken.Content);
-            if (result.Success)
-            {
-                _displayingCharacterMenu = true;
-                List<MenuButtonMetadataItem> characters = new List<MenuButtonMetadataItem>();
-                foreach (var item in result.Characters)
-                {
-                    characters.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Character"));
-                }
-                CharacterMenu.SetElements(characters);
-                _mainConsole.Children.Add(CharacterMenu);
-                _mainConsole.Children.MoveToTop(CharacterMenu);
-                string menuTitle = "Manage your character(s)";
-                CharacterMenu.ShowMenu(menuTitle);
-                int cellX = 0;
-                while (cellX < menuTitle.Length)
-                {
-                    cellX++;
-                    CharacterMenu.SetEffect(cellX, 0, CharacterMenu.menuFade);
-                }
-            }
-            else
-            {
-                CreateErrorWindow(result.Error, _mainConsole);
-            }
+            connection.InvokeAsync("GetCharactersForMenu", new AuthorizationTokenContainer() { Content = _accessToken.Content });
+
         }
 
         internal static void DownloadCharacterForManagement(Guid characterId)
@@ -375,11 +372,42 @@ namespace SpacePlanetsClient
             }
         }
 
-
-
         public static void WriteGeneralMessageToLog(string message)
         {
             _messageLogConsole.Write(message, MessageLogConsole.MessageTypes.Status);
+        }
+
+        /// <summary>
+        /// Takes a list of characters that have been encapsulated into a GetCharactersForMenuResult object and
+        /// pops open a menu from which they can be chosen to interact with.
+        /// </summary>
+        /// <param name="characterresult">The result of a call to the server for data.</param>
+        private static void ProcessCharactersForMenu(GetCharactersForMenuResult characterresult)
+        {
+            if (characterresult.Success)
+            {
+                _displayingCharacterMenu = true;
+                List<MenuButtonMetadataItem> characters = new List<MenuButtonMetadataItem>();
+                foreach (var item in characterresult.Characters)
+                {
+                    characters.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Character"));
+                }
+                CharacterMenu.SetElements(characters);
+                _mainConsole.Children.Add(CharacterMenu);
+                _mainConsole.Children.MoveToTop(CharacterMenu);
+                string menuTitle = "Manage your character(s)";
+                CharacterMenu.ShowMenu(menuTitle);
+                int cellX = 0;
+                while (cellX < menuTitle.Length)
+                {
+                    cellX++;
+                    CharacterMenu.SetEffect(cellX, 0, CharacterMenu.menuFade);
+                }
+            }
+            else
+            {
+                CreateErrorWindow(characterresult.Error, _mainConsole);
+            }
         }
 
     }
