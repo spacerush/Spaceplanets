@@ -28,6 +28,7 @@ namespace WebApp
 
         public static IWebHost BuildWebHost(string[] args, DiagnosticPipeline eventFlow) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://0.0.0.0:5000")
                 .ConfigureServices(services => services.AddSingleton<ITelemetryProcessorFactory>(sp => new EventFlowTelemetryProcessorFactory(eventFlow)))
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
