@@ -9,7 +9,6 @@ namespace SpacePlanetsDAL.Repositories
     {
         #region Map
         IRepositoryBase<GalaxyContainer> GalaxyContainerRepository { get; }
-        IRepositoryBase<StarSystem> StarSystemRepository { get; }
         IRepositoryBase<SpaceObject> SpaceObjectRepository { get; }
         #endregion
 

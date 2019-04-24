@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SpacePlanetsDAL.ServiceResponses;
+using System.Linq;
 
 namespace SpacePlanetsDAL.Services
 {
@@ -265,6 +266,21 @@ namespace SpacePlanetsDAL.Services
             var result = new GetGalaxyResponse();
             result.GalaxyContainer = _wrapper.GalaxyContainerRepository.GetOne<GalaxyContainer>(o => o.Name == galaxyName);
             result.Success = true;
+            return result;
+        }
+
+        public GetGalaxyResponse GetFirstGalaxy()
+        {
+            var result = new GetGalaxyResponse();
+            result.GalaxyContainer = _wrapper.GalaxyContainerRepository.GetAll<GalaxyContainer>(f => f.Id != null).OrderBy(o => o.AddedAtUtc).SingleOrDefault();
+            if (result.GalaxyContainer != null)
+            {
+                result.Success = true;
+            }
+            else
+            {
+                result.Success = false;
+            }
             return result;
         }
     }

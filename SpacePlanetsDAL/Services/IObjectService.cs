@@ -50,5 +50,11 @@ namespace SpacePlanetsDAL.Services
         /// <param name="galaxyName">The name of the galaxy desired for retrieval.</param>
         /// <returns>A container object which has a galaxy inside.</returns>
         GetGalaxyResponse GetGalaxyContainer(string galaxyName);
+
+        /// <summary>
+        /// Return the first created galaxy
+        /// </summary>
+        /// <returns>A service response</returns>
+        GetGalaxyResponse GetFirstGalaxy();
     }
 }
