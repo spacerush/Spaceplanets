@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpacePlanetsMvc", "SpacePlanetsMvc\SpacePlanetsMvc.csproj", "{838D7D0F-2CCD-4A9A-9645-6B7DCCC0EC91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpacePlanetsMvc", "SpacePlanetsMvc\SpacePlanetsMvc.csproj", "{838D7D0F-2CCD-4A9A-9645-6B7DCCC0EC91}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpacePlanets.SharedModels", "SpacePlanets.SharedModels\SpacePlanets.SharedModels.csproj", "{A3442D41-1E3F-45F6-B2CF-9C031C9CA358}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpacePlanetsClient", "SpacePlanetsClient\SpacePlanetsClient.csproj", "{0936A544-9F82-4025-B9B2-F088FCAF562B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{838D7D0F-2CCD-4A9A-9645-6B7DCCC0EC91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{838D7D0F-2CCD-4A9A-9645-6B7DCCC0EC91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{838D7D0F-2CCD-4A9A-9645-6B7DCCC0EC91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3442D41-1E3F-45F6-B2CF-9C031C9CA358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3442D41-1E3F-45F6-B2CF-9C031C9CA358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3442D41-1E3F-45F6-B2CF-9C031C9CA358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3442D41-1E3F-45F6-B2CF-9C031C9CA358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0936A544-9F82-4025-B9B2-F088FCAF562B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0936A544-9F82-4025-B9B2-F088FCAF562B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0936A544-9F82-4025-B9B2-F088FCAF562B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0936A544-9F82-4025-B9B2-F088FCAF562B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
