@@ -6,8 +6,7 @@ namespace SpacePlanets.SharedModels.ServerToClient
 {
     public class PingResponse
     {
-        public DateTime OriginalDateTime { get; set; }
-        public DateTime ResponseDateTime { get; set; }
+        public string PingId { get; set; }
         public bool Success { get; set; }
         public ErrorFromServer Error { get; set; }
     }

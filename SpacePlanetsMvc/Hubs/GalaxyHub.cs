@@ -17,7 +17,7 @@ namespace SpacePlanetsMvc.Hubs
         private readonly IAuthenticationService _authService;
         private readonly IGameService _gameService;
         private readonly IObjectService _objectService;
-
+        
         public GalaxyHub(IAuthenticationService authService, IObjectService objectService, IGameService gameService)
         {
             _authService = authService;
@@ -56,6 +56,19 @@ namespace SpacePlanetsMvc.Hubs
             }
         }
 
+        public async Task GetAccessTokenWithRefreshToken(RefreshToken refreshToken)
+        {
+            var accessToken = _authService.CreateAccessTokenFromRefreshToken(refreshToken.Content);
+            if (accessToken != null)
+            {
+                var result = new GetAccessTokenResult();
+                result.Error = null;
+                result.Success = true;
+                result.Token = accessToken;
+                await Clients.Caller.ReceiveAccessTokenResult(result);
+            }
+        }
+
         public async Task GetCharactersForMenu(AuthorizationTokenContainer ctr)
         {
             GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(ctr.Token);
@@ -68,7 +81,18 @@ namespace SpacePlanetsMvc.Hubs
                     await Clients.Caller.ReceiveCharactersForMenu(result);
                 }
             }
-
         }
+
+        public async Task Ping(AuthorizationTokenContainer authorizationTokenCtr, PingRequest pingRequest)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(authorizationTokenCtr.Token);
+            var result = new PingResponse();
+            result.PingId = pingRequest.PingId;
+            result.Error = null;
+            result.Success = true;
+            await Clients.Caller.ReceivePingResponse(result);
+        }
+
+
     }
 }

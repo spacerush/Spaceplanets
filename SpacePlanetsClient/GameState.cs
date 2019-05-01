@@ -24,6 +24,8 @@ namespace SpacePlanetsClient
         internal static CancellationToken CancelHeartbeat;
         internal static HubConnection connection;
         internal static string serverUri;
+        internal static Stopwatch pingStopWatch = new Stopwatch();
+        internal static string lastPingId;
 
         public static void SetApiEndpoint(string endpoint)
         {
@@ -140,6 +142,25 @@ namespace SpacePlanetsClient
                 .Build();
             connection.StartAsync();
 
+            connection.On<PingResponse>("ReceivePingResponse", (ping) => 
+            {
+                if (ping.PingId == lastPingId)
+                {
+                    pingStopWatch.Stop();
+                    // Get the elapsed time as a TimeSpan value.
+                    TimeSpan ts = pingStopWatch.Elapsed;
+                    if (ts.TotalMilliseconds < 500)
+                    {
+                        _serverStatusConsole.Write("Latency: " + Math.Floor(ts.TotalMilliseconds), ServerStatusConsole.MessageTypes.Ok);
+                    }
+                    else
+                    {
+                        _serverStatusConsole.Write("High latency detected: " + Math.Floor(ts.TotalMilliseconds) + " ms", ServerStatusConsole.MessageTypes.Danger);
+                        _messageLogConsole.Write("High latency detected: " + Math.Floor(ts.TotalMilliseconds) + " ms", MessageLogConsole.MessageTypes.AdminOnlyMessage);
+                    }
+                }
+            });
+
             connection.On<string>("ReceiveMessage", (message) =>
             {
                 if (_gameStatus == GameStatus.LoggedIn)
@@ -152,7 +173,8 @@ namespace SpacePlanetsClient
             {
                 if (_gameStatus == GameStatus.LoggedIn)
                 {
-                    _messageLogConsole.Write("Receive server time: " + serverTime);
+                    // TODO: REMOVE THIS
+                    //_messageLogConsole.Write("Receive server time: " + serverTime);
                 }
             });
 
@@ -280,21 +302,11 @@ namespace SpacePlanetsClient
 
         private static void Heartbeat()
         {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            //connection.SendAsync("Ping", stopWatch.ti)
-            stopWatch.Stop();
-            // Get the elapsed time as a TimeSpan value.
-            TimeSpan ts = stopWatch.Elapsed;
-            if (ts.TotalMilliseconds < 500)
-            {
-                _serverStatusConsole.Write("Ping: " + Math.Floor(ts.TotalMilliseconds), ServerStatusConsole.MessageTypes.Ok);
-            }
-            else
-            {
-                _serverStatusConsole.Write("High Ping: " + Math.Floor(ts.TotalMilliseconds), ServerStatusConsole.MessageTypes.Danger);
-                _messageLogConsole.Write("High Ping: " + Math.Floor(ts.TotalMilliseconds), MessageLogConsole.MessageTypes.AdminOnlyMessage);
-            }
+            pingStopWatch.Reset();
+            pingStopWatch.Start();
+            var pingRequest = new PingRequest();
+            lastPingId = pingRequest.PingId;
+            connection.SendAsync("Ping", new AuthorizationTokenContainer() { Token = _accessToken.Content }, pingRequest);
         }
 
         private static void RefreshTokenIfNeeded()
