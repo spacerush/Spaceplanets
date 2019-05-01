@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpacePlanets.SharedModels.ServerToClient;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,5 +10,7 @@ namespace SpacePlanets.SharedModels.Interface
     {
         Task ReceiveMessage(string message);
         Task ReceiveServerTime(string message);
+
+        Task ReceiveAccessTokenResult(GetAccessTokenResult result);
     }
 }

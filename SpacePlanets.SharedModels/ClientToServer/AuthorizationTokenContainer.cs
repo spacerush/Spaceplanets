@@ -12,6 +12,6 @@ namespace SpacePlanets.SharedModels.ClientToServer
         /// <summary>
         /// Represents the content of the token.
         /// </summary>
-        public string Content { get; set; }
+        public string Token { get; set; }
     }
 }

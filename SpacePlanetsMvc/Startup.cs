@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using SpacePlanetsMvc.BackgroundServices;
 using SpacePlanetsMvc.Hubs;
+using SpacePlanetsMvc.Repositories;
 
 namespace SpacePlanetsMvc
 {
@@ -27,6 +28,8 @@ namespace SpacePlanetsMvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var client = new MongoClient("mongodb://localhost:27017/SpacePlanets");
+            services.AddSingleton<IMongoClient>(c => client);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -34,10 +37,6 @@ namespace SpacePlanetsMvc
                 options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
-            var client = new MongoClient("mongodb://localhost:27017/SpacePlanets");
-            services.AddSingleton<IMongoClient>(c => client);
-
 
             services.AddCookieManager(options =>
             {
@@ -50,9 +49,11 @@ namespace SpacePlanetsMvc
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<SpacePlanetsMvc.Services.IAuthenticationService, SpacePlanetsMvc.Services.AuthenticationService>();
             services.AddSignalR();
-            services.AddHostedService<CurrentTimeWorker>();
             IServiceProvider provider = services.BuildServiceProvider();
+            services.AddHostedService<CurrentTimeWorker>();
 
         }
 

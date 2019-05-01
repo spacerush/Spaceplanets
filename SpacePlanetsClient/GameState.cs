@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.IO;
 using SpacePlanets.SharedModels.ServerToClient;
+using SpacePlanets.SharedModels.ClientToServer;
 
 namespace SpacePlanetsClient
 {
@@ -257,8 +258,9 @@ namespace SpacePlanetsClient
         /// <param name="password">A password which should be transmitted using TLS. The server will receive the password and calculate its hash.</param>
         public static void DoLogin(string username, string password)
         {
+            var ctr = new CredentialsContainer(username, password);
             _gameStatus = GameStatus.LoggingIn;
-            connection.SendAsync("GetAccessToken", username, password);
+            connection.SendAsync("GetAccessToken", ctr);
         }
 
         private static async Task StartHeartbeat(TimeSpan interval, CancellationToken cancellationToken)
