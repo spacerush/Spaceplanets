@@ -28,6 +28,10 @@ namespace SpacePlanetsClient
         public static void SetApiEndpoint(string endpoint)
         {
             serverUri = endpoint;
+            connection = new HubConnectionBuilder()
+                .WithUrl(serverUri + "GalaxyHub")
+                .Build();
+                connection.StartAsync();
         }
 
 
@@ -131,6 +135,7 @@ namespace SpacePlanetsClient
 
 
             connection = new HubConnectionBuilder()
+                // TODO: connect to https://dev.spacerush.app/
                 .WithUrl(serverUri + "GalaxyHub")
                 .Build();
             connection.StartAsync();
