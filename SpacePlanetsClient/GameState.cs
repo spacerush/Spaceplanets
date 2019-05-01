@@ -135,13 +135,6 @@ namespace SpacePlanetsClient
             _mainConsole.Children.Add(_loginWindow);
             _loginWindow.CenterWithinParent();
 
-
-            connection = new HubConnectionBuilder()
-                // TODO: connect to https://dev.spacerush.app/
-                .WithUrl(serverUri + "GalaxyHub")
-                .Build();
-            connection.StartAsync();
-
             connection.On<PingResponse>("ReceivePingResponse", (ping) => 
             {
                 if (ping.PingId == lastPingId)
