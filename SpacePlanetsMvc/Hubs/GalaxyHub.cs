@@ -3,6 +3,7 @@ using SpacePlanets.SharedModels.ClientToServer;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanets.SharedModels.Interface;
 using SpacePlanets.SharedModels.ServerToClient;
+using SpacePlanetsMvc.ServiceResponses;
 using SpacePlanetsMvc.Services;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,14 @@ namespace SpacePlanetsMvc.Hubs
     public class GalaxyHub : Hub<IGalaxyClient>
     {
         private readonly IAuthenticationService _authService;
+        private readonly IGameService _gameService;
+        private readonly IObjectService _objectService;
 
-        public GalaxyHub(IAuthenticationService authService)
+        public GalaxyHub(IAuthenticationService authService, IObjectService objectService, IGameService gameService)
         {
             _authService = authService;
+            _gameService = gameService;
+            _objectService = objectService;
         }
 
         public async Task SendMessage(string message)
@@ -40,6 +45,28 @@ namespace SpacePlanetsMvc.Hubs
                 result.Success = true;
                 result.Token = token;
                 await Clients.Caller.ReceiveAccessTokenResult(result);
+            }
+            else
+            {
+                var result = new GetAccessTokenResult();
+                result.Error = new ErrorFromServer("Could not verify credentials.");
+                result.Success = false;
+                result.Token = null;
+                await Clients.Caller.ReceiveAccessTokenResult(result);
+            }
+        }
+
+        public async Task GetCharactersForMenu(AuthorizationTokenContainer ctr)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(ctr.Token);
+            if (playerByAccessTokenResponse.Success == true)
+            {
+                GetCharactersByPlayerIdResponse getCharactersByPlayerIdResponse = _gameService.GetCharactersByPlayerId(playerByAccessTokenResponse.Player.Id);
+                if (getCharactersByPlayerIdResponse.Success)
+                {
+                    var result = new GetCharactersForMenuResult(getCharactersByPlayerIdResponse.Characters);
+                    await Clients.Caller.ReceiveCharactersForMenu(result);
+                }
             }
 
         }

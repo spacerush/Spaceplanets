@@ -12,5 +12,9 @@ namespace SpacePlanets.SharedModels.Interface
         Task ReceiveServerTime(string message);
 
         Task ReceiveAccessTokenResult(GetAccessTokenResult result);
+
+        Task ReceiveCharactersForMenu(GetCharactersForMenuResult result);
+
+        
     }
 }

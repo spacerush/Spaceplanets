@@ -340,7 +340,7 @@ namespace SpacePlanetsClient
 
         internal static void RetrieveCharactersForCharacterMenu()
         {
-            connection.InvokeAsync("GetCharactersForMenu", _accessToken.Content);
+            connection.InvokeAsync("GetCharactersForMenu", new AuthorizationTokenContainer() { Token = _accessToken.Content });
 
         }
 
