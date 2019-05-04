@@ -1,0 +1,44 @@
+﻿@model SpacePlanetsMvc.Models.WebViewModels.GalaxyIndexViewModel
+
+@{
+    ViewData["Title"] = "Galaxy Home";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="display-4">Galaxy</h1>
+        <h2>@Model.Message</h2>
+        <form method="get" action="@Url.Action("Index", "Galaxy")">
+            <input type="hidden" name="saveSeed" value="true" /><br />
+            <label for="galaxyName">Provide galaxy seed:</label><br />
+            <input type="text" id="seed" name="seed" class="form-control" placeholder="@Model.Seed" value="@Model.Seed" /><br />
+            <label for="galaxyName">Provide galaxy name:</label><br />
+            <input type="text" id="galaxyName" name="galaxyName" class="form-control" placeholder="Default" value="Default" /><br />
+            <input type="submit" class="btn btn-outline-primary" value="Save" />
+        </form>
+        <h2>View Generated Galaxy # @Model.Seed</h2>
+        <form method="get" action="@Url.Action("Index", "Galaxy")">
+            <label for="galaxyName">Provide galaxy seed:</label><br />
+            <input type="text" id="seed" name="seed" class="form-control" placeholder="@Model.Seed" value="@Model.Seed" /><br />
+            <input type="submit" class="btn btn-outline-primary" value="View" />
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>X</td>
+                    <td>Y</td>
+                    <td>Z</td>
+                    <td>Temperature</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Galaxy.Stars)
+                {
+                    <tr><td>@item.Name</td><td>@item.Position.X</td><td>@item.Position.Y</td><td>@item.Position.Z</td><td>@item.Temperature</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

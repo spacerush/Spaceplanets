@@ -24,7 +24,17 @@ namespace SpacePlanetsMvc.Services
             _wrapper = new Repositories.RepositoryWrapper(_mongoClient);
             _random = new Random();
         }
-
+        
+        /// <summary>
+        /// Creates a default galaxy if needed.
+        /// </summary>
+        public void CreateDefaultGalaxyIfNecessary()
+        {
+            CasualGodComplex.Galaxy galaxy = CasualGodComplex.Galaxy.Generate(new CasualGodComplex.Galaxies.Spiral(), new Random(12345)).Result;
+            GalaxyContainer ctr = new GalaxyContainer("Default");
+            ctr.SetGalaxy(galaxy);
+            SaveGalaxyResponse response = this.SaveGalaxyContainer(ctr);
+        }
 
         /// <inheritdoc />
         public void CreateDefaultShipTemplatesIfNecessary()

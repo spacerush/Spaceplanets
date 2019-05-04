@@ -13,6 +13,7 @@ using MongoDB.Driver;
 using SpacePlanetsMvc.BackgroundServices;
 using SpacePlanetsMvc.Hubs;
 using SpacePlanetsMvc.Repositories;
+using SpacePlanetsMvc.Services;
 
 namespace SpacePlanetsMvc
 {
@@ -56,6 +57,14 @@ namespace SpacePlanetsMvc
 
             services.AddSignalR();
             IServiceProvider provider = services.BuildServiceProvider();
+
+            // Create default things needed to run an instance of the game.
+            IObjectService objectService = provider.GetRequiredService<IObjectService>();
+            objectService.CreateDefaultShipTemplatesIfNecessary();
+            objectService.CreateDefaultModuleTypesIfNecessary();
+            objectService.CreateDefaultImplantTemplatesIfNecessary();
+            objectService.CreateDefaultMicroclusterTemplatesIfNecessary();
+
             services.AddHostedService<CurrentTimeWorker>();
 
         }

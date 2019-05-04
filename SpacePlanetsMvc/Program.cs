@@ -80,7 +80,7 @@ namespace SpacePlanetsMvc
 
             var sinks = new EventSink[]
             {
-                new EventSink(new StdOutput(healthReporter), null),
+                //new EventSink(new StdOutput(healthReporter), null),
                 new EventSink(new HttpOutput(httpConfig, healthReporter), filters) // again, see https://github.com/Azure/diagnostics-eventflow#http
             };
 

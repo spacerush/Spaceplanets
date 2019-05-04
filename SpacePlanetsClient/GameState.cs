@@ -34,6 +34,7 @@ namespace SpacePlanetsClient
                 .WithUrl(serverUri + "GalaxyHub")
                 .Build();
                 connection.StartAsync();
+            BindEventHandlersForconnection();
         }
 
 
@@ -134,126 +135,6 @@ namespace SpacePlanetsClient
             _loginWindow.UseKeyboard = true;
             _mainConsole.Children.Add(_loginWindow);
             _loginWindow.CenterWithinParent();
-
-            connection.On<PingResponse>("ReceivePingResponse", (ping) => 
-            {
-                if (ping.PingId == lastPingId)
-                {
-                    pingStopWatch.Stop();
-                    // Get the elapsed time as a TimeSpan value.
-                    TimeSpan ts = pingStopWatch.Elapsed;
-                    if (ts.TotalMilliseconds < 500)
-                    {
-                        _serverStatusConsole.Write("Latency: " + Math.Floor(ts.TotalMilliseconds), ServerStatusConsole.MessageTypes.Ok);
-                    }
-                    else
-                    {
-                        _serverStatusConsole.Write("High latency detected: " + Math.Floor(ts.TotalMilliseconds) + " ms", ServerStatusConsole.MessageTypes.Danger);
-                        _messageLogConsole.Write("High latency detected: " + Math.Floor(ts.TotalMilliseconds) + " ms", MessageLogConsole.MessageTypes.AdminOnlyMessage);
-                    }
-                }
-            });
-
-            connection.On<string>("ReceiveMessage", (message) =>
-            {
-                if (_gameStatus == GameStatus.LoggedIn)
-                {
-                    _messageLogConsole.Write("Receive Chat: " + message);
-                }
-            });
-
-            connection.On<string>("ReceiveServerTime", (serverTime) =>
-            {
-                if (_gameStatus == GameStatus.LoggedIn)
-                {
-                    // TODO: REMOVE THIS
-                    //_messageLogConsole.Write("Receive server time: " + serverTime);
-                }
-            });
-
-            connection.On<GetAccessTokenResult>("ReceiveAccessTokenResult", (result) =>
-            {
-                if (!result.Success)
-                {
-                    _gameStatus = GameStatus.Startup;
-                    CreateErrorWindow(result.Error, _loginWindow.Children.First());
-                }
-                else
-                {
-                    _gameStatus = GameStatus.LoggedIn;
-                    _accessToken = result.Token;
-
-                    _messageLogConsole = new MessageLogConsole(_mainConsole.Width, _mainConsole.Height / 4);
-                    _messageLogConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height);
-                    _messageLogConsole.IsVisible = true;
-                    _mainConsole.Children.Add(_messageLogConsole);
-
-                    _serverStatusConsole = new ServerStatusConsole(_mainConsole.Width, 1);
-                    _serverStatusConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height - 1);
-                    _serverStatusConsole.IsVisible = true;
-                    _mainConsole.Children.Add(_serverStatusConsole);
-
-                    _menuBarConsole = new MenuBarConsole(_mainConsole.Width, 1);
-                    _menuBarConsole.Position = new Point(0, 0);
-                    _menuBarConsole.IsVisible = true;
-                    _mainConsole.Children.Add(_menuBarConsole);
-
-                    GameState.ShipMenu = new MenuConsole(_mainConsole.Width, _mainConsole.Height - 1);
-                    GameState.CharacterMenu = new MenuConsole(_mainConsole.Width, _mainConsole.Height - 1);
-                    ShipMenu.Position = new Point(0, 1);
-                    CharacterMenu.Position = new Point(0, 1);
-
-                    _loginWindow.IsVisible = false;
-                    _loginWindow.Controls.RemoveAll();
-                    _loginWindow.Clear();
-                    StartHeartbeat(TimeSpan.FromSeconds(10), CancelHeartbeat);
-                }
-            });
-
-            connection.On<GetShipsForMenuResult>("ReceiveShipsForMenu", (result) =>
-            {
-                if (result.Success)
-                {
-                    _displayingShipMenu = true;
-                    List<MenuButtonMetadataItem> ships = new List<MenuButtonMetadataItem>();
-                    foreach (var item in result.Ships)
-                    {
-                        ships.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Ship"));
-                    }
-                    ShipMenu.SetElements(ships);
-                    _mainConsole.Children.Add(ShipMenu);
-                    _mainConsole.Children.MoveToTop(ShipMenu);
-                    string menuTitle = "Manage your ship(s)";
-                    ShipMenu.ShowMenu(menuTitle);
-                    int cellX = 0;
-                    while (cellX < menuTitle.Length)
-                    {
-                        cellX++;
-                        ShipMenu.SetEffect(cellX, 0, ShipMenu.menuFade);
-                    }
-                }
-                else
-                {
-                    CreateErrorWindow(result.Error, _mainConsole);
-                }
-            });
-
-            // retrieval of characters for menu.
-            connection.On<GetCharactersForMenuResult>("ReceiveCharactersForMenu", (param) =>
-            {
-                ProcessCharactersForMenu(param);
-            });
-
-            connection.On<GetCharacterForManagementResult>("ReceiveCharacterForManagement", (param) =>
-            {
-                CreateCharacterWindow(param.Character);
-            });
-
-            connection.Closed += async (error) =>
-            {
-                await Task.Delay(new Random().Next(0, 5) * 1000);
-                await connection.StartAsync();
-            };
 
         }
 
@@ -416,5 +297,133 @@ namespace SpacePlanetsClient
             return ctr;
         }
 
+        private static void BindEventHandlersForconnection()
+        {
+            connection.On<PingResponse>("ReceivePingResponse", (ping) =>
+            {
+                if (ping.PingId == lastPingId)
+                {
+                    pingStopWatch.Stop();
+                    // Get the elapsed time as a TimeSpan value.
+                    TimeSpan ts = pingStopWatch.Elapsed;
+                    if (ts.TotalMilliseconds < 100)
+                    {
+                        _serverStatusConsole.Write("Scanner responsiveness: " + Math.Floor(ts.TotalMilliseconds) + " ms", ServerStatusConsole.MessageTypes.Ok);
+                    }
+                    else
+                    {
+                        _serverStatusConsole.Write("Scanner responsiveness degraded: " + Math.Floor(ts.TotalMilliseconds) + " ms", ServerStatusConsole.MessageTypes.Danger);
+                        _messageLogConsole.Write("Scanner responsiveness degraded: " + Math.Floor(ts.TotalMilliseconds) + " ms", MessageLogConsole.MessageTypes.Warning);
+                    }
+                }
+                else
+                {
+                    pingStopWatch.Stop();
+                    _serverStatusConsole.Write("Scanner responsiveness probe error (data received out of order).", ServerStatusConsole.MessageTypes.Danger);
+                    _messageLogConsole.Write("Scanner responsiveness probe error (data received out of order).", MessageLogConsole.MessageTypes.Warning);
+                }
+            });
+
+            connection.On<string>("ReceiveMessage", (message) =>
+            {
+                if (_gameStatus == GameStatus.LoggedIn)
+                {
+                    _messageLogConsole.Write("Receive Chat: " + message);
+                }
+            });
+
+            connection.On<string>("ReceiveServerTime", (serverTime) =>
+            {
+                if (_gameStatus == GameStatus.LoggedIn)
+                {
+                    // TODO: REMOVE THIS
+                    //_messageLogConsole.Write("Receive server time: " + serverTime);
+                }
+            });
+
+            connection.On<GetAccessTokenResult>("ReceiveAccessTokenResult", (result) =>
+            {
+                if (!result.Success)
+                {
+                    _gameStatus = GameStatus.Startup;
+                    CreateErrorWindow(result.Error, _loginWindow.Children.First());
+                }
+                else
+                {
+                    _gameStatus = GameStatus.LoggedIn;
+                    _accessToken = result.Token;
+
+                    _messageLogConsole = new MessageLogConsole(_mainConsole.Width, _mainConsole.Height / 4);
+                    _messageLogConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height);
+                    _messageLogConsole.IsVisible = true;
+                    _mainConsole.Children.Add(_messageLogConsole);
+
+                    _serverStatusConsole = new ServerStatusConsole(_mainConsole.Width, 1);
+                    _serverStatusConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height - 1);
+                    _serverStatusConsole.IsVisible = true;
+                    _mainConsole.Children.Add(_serverStatusConsole);
+
+                    _menuBarConsole = new MenuBarConsole(_mainConsole.Width, 1);
+                    _menuBarConsole.Position = new Point(0, 0);
+                    _menuBarConsole.IsVisible = true;
+                    _mainConsole.Children.Add(_menuBarConsole);
+
+                    GameState.ShipMenu = new MenuConsole(_mainConsole.Width, _mainConsole.Height - 1);
+                    GameState.CharacterMenu = new MenuConsole(_mainConsole.Width, _mainConsole.Height - 1);
+                    ShipMenu.Position = new Point(0, 1);
+                    CharacterMenu.Position = new Point(0, 1);
+
+                    _loginWindow.IsVisible = false;
+                    _loginWindow.Controls.RemoveAll();
+                    _loginWindow.Clear();
+                    StartHeartbeat(TimeSpan.FromSeconds(10), CancelHeartbeat);
+                }
+            });
+
+            connection.On<GetShipsForMenuResult>("ReceiveShipsForMenu", (result) =>
+            {
+                if (result.Success)
+                {
+                    _displayingShipMenu = true;
+                    List<MenuButtonMetadataItem> ships = new List<MenuButtonMetadataItem>();
+                    foreach (var item in result.Ships)
+                    {
+                        ships.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Ship"));
+                    }
+                    ShipMenu.SetElements(ships);
+                    _mainConsole.Children.Add(ShipMenu);
+                    _mainConsole.Children.MoveToTop(ShipMenu);
+                    string menuTitle = "Manage your ship(s)";
+                    ShipMenu.ShowMenu(menuTitle);
+                    int cellX = 0;
+                    while (cellX < menuTitle.Length)
+                    {
+                        cellX++;
+                        ShipMenu.SetEffect(cellX, 0, ShipMenu.menuFade);
+                    }
+                }
+                else
+                {
+                    CreateErrorWindow(result.Error, _mainConsole);
+                }
+            });
+
+            // retrieval of characters for menu.
+            connection.On<GetCharactersForMenuResult>("ReceiveCharactersForMenu", (param) =>
+            {
+                ProcessCharactersForMenu(param);
+            });
+
+            connection.On<GetCharacterForManagementResult>("ReceiveCharacterForManagement", (param) =>
+            {
+                CreateCharacterWindow(param.Character);
+            });
+
+            connection.Closed += async (error) =>
+            {
+                await Task.Delay(new Random().Next(0, 5) * 1000);
+                await connection.StartAsync();
+            };
+        }
     }
 }
