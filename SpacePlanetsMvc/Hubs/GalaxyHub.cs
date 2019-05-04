@@ -93,6 +93,23 @@ namespace SpacePlanetsMvc.Hubs
             await Clients.Caller.ReceivePingResponse(result);
         }
 
+        public async Task GetCharacterForManagement(AuthorizationTokenContainer tokenContainer, CharacterForManagementRequest characterForManagementRequest)
+        {
+            var result = new GetCharacterForManagementResult();
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success)
+            {
+                GetCharacterByPlayerIdAndCharacterIdResponse retrievedCharacter = _gameService.GetCharacterByPlayerIdAndCharacter(playerByAccessTokenResponse.Player.Id, characterForManagementRequest.CharacterId);
+                if (retrievedCharacter.Success)
+                {
+                    result.Success = true;
+                    result.Character = retrievedCharacter.Character;
+                    result.Error = null;
+                    await Clients.Caller.ReceiveCharacterForManagement(result);
+                }
+            }
+        }
+
 
     }
 }

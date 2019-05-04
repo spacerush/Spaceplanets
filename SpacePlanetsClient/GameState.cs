@@ -237,10 +237,16 @@ namespace SpacePlanetsClient
                     CreateErrorWindow(result.Error, _mainConsole);
                 }
             });
+
             // retrieval of characters for menu.
             connection.On<GetCharactersForMenuResult>("ReceiveCharactersForMenu", (param) =>
             {
                 ProcessCharactersForMenu(param);
+            });
+
+            connection.On<GetCharacterForManagementResult>("ReceiveCharacterForManagement", (param) =>
+            {
+                CreateCharacterWindow(param.Character);
             });
 
             connection.Closed += async (error) =>
@@ -350,13 +356,14 @@ namespace SpacePlanetsClient
 
         internal static void RetrieveCharactersForCharacterMenu()
         {
-            connection.InvokeAsync("GetCharactersForMenu", new AuthorizationTokenContainer() { Token = _accessToken.Content });
+            connection.InvokeAsync("GetCharactersForMenu", GetAuthorizationTokenContainer());
 
         }
 
         internal static void DownloadCharacterForManagement(Guid characterId)
         {
-            connection.InvokeAsync("GetCharacterForManagement", _accessToken.Content, characterId);           
+            var request = new CharacterForManagementRequest(characterId);
+            connection.InvokeAsync("GetCharacterForManagement", GetAuthorizationTokenContainer(), request);
         }
 
         internal static void RetrieveShipsForShipMenu()
@@ -400,6 +407,13 @@ namespace SpacePlanetsClient
             {
                 CreateErrorWindow(characterresult.Error, _mainConsole);
             }
+        }
+
+        private static AuthorizationTokenContainer GetAuthorizationTokenContainer()
+        {
+            var ctr = new AuthorizationTokenContainer();
+            ctr.Token = _accessToken.Content;
+            return ctr;
         }
 
     }
