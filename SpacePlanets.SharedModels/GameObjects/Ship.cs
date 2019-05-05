@@ -14,6 +14,10 @@ namespace SpacePlanets.SharedModels.GameObjects
         /// </summary>
         public int AngularTurnSpeed { get; set; }
 
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
+
         /// <summary>
         /// See available ShipTemplates for type validation.
         /// </summary>

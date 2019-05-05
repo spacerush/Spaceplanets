@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace SpacePlanetsMvc.Repositories.Ships
 {
-    public interface IShipRepository : IRepositoryBase<Ship>
+    public interface IPlayerRepository : IRepositoryBase<Player>
     {
-        void InitializeShip(Guid shipid, string typeOfShip);
-
-        void PlaceCharacterIn(Guid shipId, Guid characterId);
+        void CenterPlayerCamera(Guid playerId, int x, int y, int z);
     }
 }

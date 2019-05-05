@@ -20,6 +20,8 @@ namespace SpacePlanets.SharedModels.Interface
 
         Task ReceiveCharacterForManagement(GetCharacterForManagementResult result);
 
+        Task ReceivePlayerCameraCoordinates(GetPlayerCameraCoordinatesResult result);
+
 
     }
 }

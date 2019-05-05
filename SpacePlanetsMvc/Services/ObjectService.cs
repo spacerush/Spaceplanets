@@ -30,10 +30,13 @@ namespace SpacePlanetsMvc.Services
         /// </summary>
         public void CreateDefaultGalaxyIfNecessary()
         {
-            CasualGodComplex.Galaxy galaxy = CasualGodComplex.Galaxy.Generate(new CasualGodComplex.Galaxies.Spiral(), new Random(12345)).Result;
-            GalaxyContainer ctr = new GalaxyContainer("Default");
-            ctr.SetGalaxy(galaxy);
-            SaveGalaxyResponse response = this.SaveGalaxyContainer(ctr);
+            if (this.GetDefaultGalaxy().Success == false)
+            {
+                CasualGodComplex.Galaxy galaxy = CasualGodComplex.Galaxy.Generate(new CasualGodComplex.Galaxies.Spiral(), new Random(12345)).Result;
+                GalaxyContainer ctr = new GalaxyContainer("Default");
+                ctr.SetGalaxy(galaxy);
+                SaveGalaxyResponse response = this.SaveGalaxyContainer(ctr);
+            }
         }
 
         /// <inheritdoc />
@@ -297,7 +300,7 @@ namespace SpacePlanetsMvc.Services
         public GetGalaxyResponse GetDefaultGalaxy()
         {
             var result = new GetGalaxyResponse();
-            result.GalaxyContainer = _wrapper.GalaxyContainerRepository.GetAll<GalaxyContainer>(f => f.Id != null).OrderBy(o => o.Name == "Default").SingleOrDefault();
+            result.GalaxyContainer = _wrapper.GalaxyContainerRepository.GetOne<GalaxyContainer>(f => f.Name == "Default");
             if (result.GalaxyContainer != null)
             {
                 result.Success = true;

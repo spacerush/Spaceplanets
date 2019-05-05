@@ -11,11 +11,18 @@ namespace SpacePlanets.SharedModels.GameObjects
         public string PasswordHash { get; set; }
         public string DisplayName { get; set; }
         public bool IsAdmin { get; set; }
+
+        public int CameraY { get; set; }
+        public int CameraX { get; set; }
+        public int CameraZ { get; set; }
+
         public Player()
         {
             IsAdmin = false;
             Version = 1;
         }
+
+        
 
     }
 }

@@ -297,6 +297,11 @@ namespace SpacePlanetsClient
             }
         }
 
+        private static void RequestCameraCoordinates()
+        {
+            connection.SendAsync("GetPlayerCameraCoordinates", new AuthorizationTokenContainer() { Token = _accessToken.Content });
+        }
+
         private static AuthorizationTokenContainer GetAuthorizationTokenContainer()
         {
             var ctr = new AuthorizationTokenContainer();
@@ -359,6 +364,7 @@ namespace SpacePlanetsClient
                 {
                     _gameStatus = GameStatus.LoggedIn;
                     _accessToken = result.Token;
+                    RequestCameraCoordinates();
 
                     _messageLogConsole = new MessageLogConsole(_mainConsole.Width, _mainConsole.Height / 4);
                     _messageLogConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height);
@@ -432,6 +438,11 @@ namespace SpacePlanetsClient
             connection.On<GetCharacterForManagementResult>("ReceiveCharacterForManagement", (param) =>
             {
                 CreateCharacterWindow(param.Character);
+            });
+
+            connection.On<GetPlayerCameraCoordinatesResult>("ReceivePlayerCameraCoordinates", (param) =>
+            {
+                _messageLogConsole.Write("Camera coordinates received: " + param.X + "," + param.Y + "," + param.Z, MessageLogConsole.MessageTypes.Status);
             });
 
             connection.Closed += async (error) =>

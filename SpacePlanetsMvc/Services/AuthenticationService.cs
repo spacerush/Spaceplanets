@@ -100,8 +100,12 @@ namespace SpacePlanetsMvc.Services
                 character.PlayerId = player.Id;
                 _wrapper.CharacterRepository.AddOne<Character>(character);
                 Ship ship = new Ship("Nameless Explorer's First Ship", "Starseeker");
+                ship.PlayerId = player.Id;
                 _wrapper.ShipRepository.AddOne(ship);
                 _wrapper.ShipRepository.InitializeShip(ship.Id, ship.Type);
+                ship = _wrapper.ShipRepository.GetOne<Ship>(f => f.Id == ship.Id);
+                _wrapper.ShipRepository.PlaceCharacterIn(ship.Id, character.Id);
+                _wrapper.PlayerRepository.CenterPlayerCamera(player.Id, ship.X, ship.Y, ship.Z);
             }
             if (VerifyPassword(password, player.PasswordHash))
             {

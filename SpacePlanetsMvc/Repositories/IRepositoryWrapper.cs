@@ -16,7 +16,7 @@ namespace SpacePlanetsMvc.Repositories
 
         #region Accounts
         IRepositoryBase<WebSession> WebSessionRepository { get; }
-        IRepositoryBase<Player> PlayerRepository { get; }
+        IPlayerRepository PlayerRepository { get; }
         IRepositoryBase<AccessToken> AccessTokenRepository { get; }
         #endregion
 

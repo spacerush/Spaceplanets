@@ -15,7 +15,7 @@ namespace SpacePlanetsMvc.Repositories
         private IRepositoryBase<GalaxyContainer> _galaxyContainerRepository;
         private IRepositoryBase<SpaceObject> _spaceObjectRepository;
         private IRepositoryBase<WebSession> _webSessionRepository;
-        private IRepositoryBase<Player> _playerRepository;
+        private IPlayerRepository _playerRepository;
         private IRepositoryBase<AccessToken> _accessTokenRepository;
         private IRepositoryBase<Character> _characterRepository;
 
@@ -70,13 +70,13 @@ namespace SpacePlanetsMvc.Repositories
         }
 
 
-        public IRepositoryBase<Player> PlayerRepository
+        public IPlayerRepository PlayerRepository
         {
             get
             {
                 if (_playerRepository == null)
                 {
-                    _playerRepository = new RepositoryBase<Player>(_mongoClient);
+                    _playerRepository = new PlayerRepository(_mongoClient);
                 }
                 return _playerRepository;
             }

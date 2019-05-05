@@ -17,7 +17,7 @@ namespace SpacePlanetsMvc.Hubs
         private readonly IAuthenticationService _authService;
         private readonly IGameService _gameService;
         private readonly IObjectService _objectService;
-        
+
         public GalaxyHub(IAuthenticationService authService, IObjectService objectService, IGameService gameService)
         {
             _authService = authService;
@@ -39,7 +39,7 @@ namespace SpacePlanetsMvc.Hubs
         {
             if (_authService.TryLoginCredentials(ctr.Username, ctr.Password))
             {
-               AccessToken token = _authService.CreateGameplayToken(ctr.Username);
+                AccessToken token = _authService.CreateGameplayToken(ctr.Username);
                 var result = new GetAccessTokenResult();
                 result.Error = null;
                 result.Success = true;
@@ -110,6 +110,18 @@ namespace SpacePlanetsMvc.Hubs
             }
         }
 
+        public async Task GetPlayerCameraCoordinates(AuthorizationTokenContainer tokenContainer)
+        {
+            var result = new GetPlayerCameraCoordinatesResult();
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success)
+            {
+                result.X = playerByAccessTokenResponse.Player.CameraX;
+                result.Y = playerByAccessTokenResponse.Player.CameraY;
+                result.Z = playerByAccessTokenResponse.Player.CameraZ;
+                await Clients.Caller.ReceivePlayerCameraCoordinates(result);
+            }
+        }
 
     }
 }
