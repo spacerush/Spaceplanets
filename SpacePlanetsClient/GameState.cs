@@ -256,7 +256,7 @@ namespace SpacePlanetsClient
 
         internal static void RetrieveShipsForShipMenu()
         {
-            connection.InvokeAsync("GetShipsForManagement", _accessToken.Content);
+            connection.InvokeAsync("GetShipsForMenu", GetAuthorizationTokenContainer());
         }
 
         public static void WriteGeneralMessageToLog(string message)
@@ -294,6 +294,39 @@ namespace SpacePlanetsClient
             else
             {
                 CreateErrorWindow(characterresult.Error, _mainConsole);
+            }
+        }
+
+        /// <summary>
+        /// Takes a list of ships that have been encapsulated into a GetShipsForMenuResult object and
+        /// pops open a menu from which they can be chosen to interact with.
+        /// </summary>
+        /// <param name="shipresult">The result of a call to the server for data.</param>
+        private static void ProcessShipsForMenu(GetShipsForMenuResult shipresult)
+        {
+            if (shipresult.Success)
+            {
+                _displayingShipMenu = true;
+                List<MenuButtonMetadataItem> ships = new List<MenuButtonMetadataItem>();
+                foreach (var item in shipresult.Ships)
+                {
+                    ships.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Ship"));
+                }
+                ShipMenu.SetElements(ships);
+                _mainConsole.Children.Add(ShipMenu);
+                _mainConsole.Children.MoveToTop(ShipMenu);
+                string menuTitle = "Manage your ship(s)";
+                ShipMenu.ShowMenu(menuTitle);
+                int cellX = 0;
+                while (cellX < menuTitle.Length)
+                {
+                    cellX++;
+                    ShipMenu.SetEffect(cellX, 0, ShipMenu.menuFade);
+                }
+            }
+            else
+            {
+                CreateErrorWindow(shipresult.Error, _mainConsole);
             }
         }
 

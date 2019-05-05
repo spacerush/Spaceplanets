@@ -9,6 +9,13 @@ namespace SpacePlanetsMvc.Services
     public interface IGameService
     {
         /// <summary>
+        /// Get all ships owned by a certain player.
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <returns></returns>
+        GetShipsByPlayerIdResponse GetShipsByPlayerId(Guid playerId);
+
+        /// <summary>
         /// Get all the characters owned by a certain player.
         /// </summary>
         /// <param name="playerId">The unique identifier of the player.</param>

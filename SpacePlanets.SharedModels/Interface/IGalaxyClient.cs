@@ -16,6 +16,8 @@ namespace SpacePlanets.SharedModels.Interface
 
         Task ReceiveCharactersForMenu(GetCharactersForMenuResult result);
 
+        Task ReceiveShipsForMenu(GetShipsForMenuResult result);
+
         Task ReceivePingResponse(PingResponse result);
 
         Task ReceiveCharacterForManagement(GetCharacterForManagementResult result);

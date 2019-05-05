@@ -83,6 +83,21 @@ namespace SpacePlanetsMvc.Hubs
             }
         }
 
+
+        public async Task GetShipsForMenu(AuthorizationTokenContainer ctr)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(ctr.Token);
+            if (playerByAccessTokenResponse.Success == true)
+            {
+                GetShipsByPlayerIdResponse getShipsByPlayerIdResponse = _gameService.GetShipsByPlayerId(playerByAccessTokenResponse.Player.Id);
+                if (getShipsByPlayerIdResponse.Success)
+                {
+                    var result = new GetShipsForMenuResult(getShipsByPlayerIdResponse.Ships);
+                    await Clients.Caller.ReceiveShipsForMenu(result);
+                }
+            }
+        }
+
         public async Task Ping(AuthorizationTokenContainer authorizationTokenCtr, PingRequest pingRequest)
         {
             GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(authorizationTokenCtr.Token);
