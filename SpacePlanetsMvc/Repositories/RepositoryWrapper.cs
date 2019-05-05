@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using SpacePlanets.SharedModels.GameObjects;
+using SpacePlanetsMvc.Repositories.Ships;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace SpacePlanetsMvc.Repositories
         private IRepositoryBase<AccessToken> _accessTokenRepository;
         private IRepositoryBase<Character> _characterRepository;
 
-        private IRepositoryBase<Ship> _shipRepository;
+        private IShipRepository _shipRepository;
         private IRepositoryBase<ShipTemplate> _shipTemplateRepository;
         private IRepositoryBase<ShipModule> _shipModuleRepository;
 
@@ -104,13 +105,13 @@ namespace SpacePlanetsMvc.Repositories
                 return _characterRepository;
             }
         }
-        public IRepositoryBase<Ship> ShipRepository
+        public IShipRepository ShipRepository
         {
             get
             {
                 if (_shipRepository == null)
                 {
-                    _shipRepository = new RepositoryBase<Ship>(_mongoClient);
+                    _shipRepository = new ShipRepository(_mongoClient);
                 }
                 return _shipRepository;
             }

@@ -42,6 +42,8 @@ namespace SpacePlanets.SharedModels.GameObjects
         {
             Name = name;
             Type = type;
+            
         }
+
     }
 }

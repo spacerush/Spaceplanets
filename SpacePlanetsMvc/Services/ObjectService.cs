@@ -293,5 +293,20 @@ namespace SpacePlanetsMvc.Services
             }
             return result;
         }
+
+        public GetGalaxyResponse GetDefaultGalaxy()
+        {
+            var result = new GetGalaxyResponse();
+            result.GalaxyContainer = _wrapper.GalaxyContainerRepository.GetAll<GalaxyContainer>(f => f.Id != null).OrderBy(o => o.Name == "Default").SingleOrDefault();
+            if (result.GalaxyContainer != null)
+            {
+                result.Success = true;
+            }
+            else
+            {
+                result.Success = false;
+            }
+            return result;
+        }
     }
 }

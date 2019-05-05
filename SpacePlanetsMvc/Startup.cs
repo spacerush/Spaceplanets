@@ -64,7 +64,7 @@ namespace SpacePlanetsMvc
             objectService.CreateDefaultModuleTypesIfNecessary();
             objectService.CreateDefaultImplantTemplatesIfNecessary();
             objectService.CreateDefaultMicroclusterTemplatesIfNecessary();
-
+            objectService.CreateDefaultGalaxyIfNecessary();
             services.AddHostedService<CurrentTimeWorker>();
 
         }

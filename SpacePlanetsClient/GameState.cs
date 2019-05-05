@@ -23,6 +23,13 @@ namespace SpacePlanetsClient
     {
         internal static CancellationToken CancelHeartbeat;
         internal static HubConnection connection;
+        public static HubConnection Connection
+        {
+            get
+            {
+                return connection;
+            }
+        }
         internal static string serverUri;
         internal static Stopwatch pingStopWatch = new Stopwatch();
         internal static string lastPingId;
@@ -377,6 +384,14 @@ namespace SpacePlanetsClient
                     _loginWindow.Controls.RemoveAll();
                     _loginWindow.Clear();
                     StartHeartbeat(TimeSpan.FromSeconds(10), CancelHeartbeat);
+                }
+            });
+
+            connection.On<GetAccessTokenResult>("ReceiveAccessTokenFromRefreshToken", (result) =>
+            {
+                if (result.Success)
+                {
+                    _accessToken = result.Token;
                 }
             });
 

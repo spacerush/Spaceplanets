@@ -56,5 +56,15 @@ namespace SpacePlanetsMvc.Services
         /// </summary>
         /// <returns>A service response</returns>
         GetGalaxyResponse GetFirstGalaxy();
+
+        /// <summary>
+        /// Create a default galaxy
+        /// </summary>
+        void CreateDefaultGalaxyIfNecessary();
+
+        /// <summary>
+        /// Return the galaxy named Default
+        /// </summary>
+        GetGalaxyResponse GetDefaultGalaxy();
     }
 }

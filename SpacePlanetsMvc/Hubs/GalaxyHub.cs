@@ -65,7 +65,7 @@ namespace SpacePlanetsMvc.Hubs
                 result.Error = null;
                 result.Success = true;
                 result.Token = accessToken;
-                await Clients.Caller.ReceiveAccessTokenResult(result);
+                await Clients.Caller.ReceiveAccessTokenFromRefreshToken(result);
             }
         }
 

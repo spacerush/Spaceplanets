@@ -53,7 +53,6 @@ namespace MyProject
         private static void Init()
         {
             // TODO: stop hardcoding this endpoint!
-            GameState.SetApiEndpoint("https://localhost:5001/");
             var startingConsole = SadConsole.Global.CurrentScreen;
             GameState.InitializeConsole(startingConsole);
         }

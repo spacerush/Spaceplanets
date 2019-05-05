@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SpacePlanetsMvc.Repositories.Ships;
 
 namespace SpacePlanetsMvc.Repositories
 {
@@ -21,7 +22,7 @@ namespace SpacePlanetsMvc.Repositories
 
         #region OtherObjects
         IRepositoryBase<Character> CharacterRepository { get; }
-        IRepositoryBase<Ship> ShipRepository { get; }
+        IShipRepository ShipRepository { get; }
         #endregion
 
         #region Defaults Or Templates
