@@ -32,5 +32,10 @@ namespace SpacePlanets.SharedModels.GameObjects
             MinLevel = minLevel;
             MaxLevel = maxLevel;
         }
+
+        public ShipModuleSlot()
+        {
+
+        }
     }
 }

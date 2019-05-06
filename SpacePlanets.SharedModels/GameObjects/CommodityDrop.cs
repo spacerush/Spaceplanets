@@ -5,8 +5,16 @@ using System.Text;
 
 namespace SpacePlanets.SharedModels.GameObjects
 {
-    public class CommodityTemplate : Document
+    public class CommodityDrop : Document
     {
-        public string Name { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
+        public string CommodityName { get; set; }
+
+        public CommodityDrop()
+        {
+
+        }
     }
 }

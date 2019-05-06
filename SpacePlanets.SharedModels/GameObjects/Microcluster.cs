@@ -13,5 +13,10 @@ namespace SpacePlanets.SharedModels.GameObjects
         public int Level { get; set; }
         public string StatToBuff { get; set; }
         public int AmountToBuffStat { get; set; }
+
+        public Microcluster()
+        {
+
+        }
     }
 }

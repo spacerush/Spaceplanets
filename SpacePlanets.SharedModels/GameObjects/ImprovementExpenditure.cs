@@ -9,5 +9,10 @@ namespace SpacePlanets.SharedModels.GameObjects
         public int ImprovementQuantity { get; set; }
         public string Skill { get; set; }
         public DateTime TrainDate { get; set; }
+
+        public ImprovementExpenditure()
+        {
+
+        }
     }
 }

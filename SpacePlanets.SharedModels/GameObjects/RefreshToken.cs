@@ -15,5 +15,6 @@ namespace SpacePlanets.SharedModels.GameObjects
             Version = 1;
             Used = false;
         }
+
     }
 }

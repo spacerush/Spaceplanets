@@ -21,5 +21,10 @@ namespace SpacePlanets.SharedModels.GameObjects
             Version = 1;
             Name = name;
         }
+
+        public SpaceObject()
+        {
+
+        }
     }
 }

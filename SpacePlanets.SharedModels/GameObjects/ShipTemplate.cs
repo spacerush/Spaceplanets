@@ -15,5 +15,10 @@ namespace SpacePlanets.SharedModels.GameObjects
             Type = type;
             Name = name;
         }
+
+        public ShipTemplate()
+        {
+
+        }
     }
 }

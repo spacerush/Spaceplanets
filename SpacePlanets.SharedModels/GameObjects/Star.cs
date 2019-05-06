@@ -13,5 +13,10 @@ namespace SpacePlanets.SharedModels.GameObjects
         public string Name { get; set; }
         public float Temperature { get; set; }
         public Guid Id { get; set; }
+
+        public Star()
+        {
+
+        }
     }
 }

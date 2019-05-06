@@ -9,5 +9,10 @@ namespace SpacePlanets.SharedModels.GameObjects
         public string SessionCookie { get; set; }
         public string ForUsername { get; set; }
         public DateTime Expiry { get; set; }
+
+        public WebSession()
+        {
+
+        }
     }
 }
