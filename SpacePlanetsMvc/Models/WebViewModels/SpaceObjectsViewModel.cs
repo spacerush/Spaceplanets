@@ -1,4 +1,4 @@
-using SpacePlanets.SharedModels.GameObjects;
+﻿using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.ServiceResponses;
 using SpacePlanetsMvc.Services;
 using System;
@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 
 namespace SpacePlanetsMvc.Models.WebViewModels
 {
-    /// <summary>
-    /// Used to retrieve galaxy information.
-    /// </summary>
-    public class GalaxyIndexViewModel
+    public class SpaceObjectsViewModel
     {
+
+
         private readonly IAuthenticationService _authenticationService;
         private readonly IObjectService _objectService;
         private readonly Player _player;
-        private readonly CasualGodComplex.Galaxy _galaxy;
-        private readonly CasualGodComplex.Galaxy _output;
-        private readonly int _seed;
-        public int Seed { get { return _seed; } }
-        private List<string> _usedNames;
-        private readonly bool _success;
-        public bool Success { get { return _success; } }
-        public CasualGodComplex.Galaxy Galaxy { get { return _galaxy; } }
+
+        public List<SpaceObject> AllSpaceObjects { get; set; }
+
+        public int X { get; set; }
+        public int Z { get; set; }
+        public int Y { get; set; }
+
+        public string ObjectType { get; set; }
+        public string ObjectName { get; set; }
 
         private readonly string _message;
         public string Message
@@ -39,13 +39,20 @@ namespace SpacePlanetsMvc.Models.WebViewModels
             get { return _player; }
         }
 
-        public GalaxyIndexViewModel(IAuthenticationService authenticationService, IObjectService objectService, int seed, bool saveSeed, string galaxyName = "Default", string cookie = "")
+        public SpaceObjectsViewModel(IAuthenticationService authenticationService, IObjectService objectService, string objectType, string objectName, int X, int Y, int Z, string cookie = "")
         {
-            _seed = seed;
-            _success = false;
+            this.X = X;
+            this.Y = Y;
+            this.Z = Z;
+            this.ObjectName = objectName;
+            this.ObjectType = objectType;
+
             _authenticationService = authenticationService;
             _objectService = objectService;
-            _galaxy = CasualGodComplex.Galaxy.Generate(new CasualGodComplex.Galaxies.Spiral(), new Random(seed)).Result;
+
+            AllSpaceObjects = new List<SpaceObject>();
+            AllSpaceObjects.AddRange(_objectService.GetAllSpaceObjects());
+
             // For personalization, load in some player details.
             if (!string.IsNullOrEmpty(cookie))
             {
@@ -56,32 +63,31 @@ namespace SpacePlanetsMvc.Models.WebViewModels
                 if (playerByWebCookie.Success == true)
                 {
                     _player = playerByWebCookie.Player;
-                    if (saveSeed == true)
+                    if (!string.IsNullOrEmpty(objectName) && !string.IsNullOrEmpty(objectType))
                     {
                         if (_player.IsAdmin)
                         {
-
-                            GalaxyContainer ctr = new GalaxyContainer(galaxyName);
-                            ctr.SetGalaxy(_galaxy);
-                            SaveGalaxyResponse response = _objectService.SaveGalaxyContainer(ctr);
-                            _success = response.Success;
-                            if (_success)
+                            SpaceObject newSpaceObject = new SpaceObject(objectType, objectName);
+                            newSpaceObject.X = X;
+                            newSpaceObject.Y = Y;
+                            newSpaceObject.Z = Z;
+                            if (_objectService.SaveNewSpaceObject(newSpaceObject))
                             {
-                                _message = "Saved galaxy as " + galaxyName;
+                                _message = "Saved new space object: " + newSpaceObject.Name;
                             }
                             else
                             {
-                                _message = "Tried to save galaxy as " + galaxyName + " but failed.";
+                                _message = "Was unable to save object. Try saving a 'Moon', 'Asteroid', or 'Planet'?";
                             }
                         }
-                        else {
-                            _success = false;
-                            _message = "Cannot save galaxy because you are not an administrator.";
+                        else
+                        {
+                            _message = "You are not an administrator and can't save.";
                         }
                     }
                     else
                     {
-                        _message = "Fill in the form to save this galaxy.";
+                        _message = "You may create a new space object here.";
                     }
                 }
                 else
@@ -91,5 +97,9 @@ namespace SpacePlanetsMvc.Models.WebViewModels
                 }
             }
         }
+
+
+
+
     }
 }

@@ -66,5 +66,20 @@ namespace SpacePlanetsMvc.Services
         /// Return the galaxy named Default
         /// </summary>
         GetGalaxyResponse GetDefaultGalaxy();
+
+
+
+        /// <summary>
+        /// Simply saves a space object.
+        /// </summary>
+        /// <param name="spaceObject">Object to save.</param>
+        bool SaveNewSpaceObject(SpaceObject spaceObject);
+
+
+        /// <summary>
+        /// Return every space object anywhere
+        /// </summary>
+        /// <returns>All objects</returns>
+        List<SpaceObject> GetAllSpaceObjects();
     }
 }

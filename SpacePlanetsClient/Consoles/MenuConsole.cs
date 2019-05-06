@@ -78,6 +78,10 @@ namespace SpacePlanetsClient.Consoles
             {
                 GameState.DownloadCharacterForManagement(Guid.Parse(buttonNameParts.Last()));
             }
+            if (buttonNameParts.First() == "Ship")
+            {
+                GameState.DownloadMapAtShip(Guid.Parse(buttonNameParts.Last()));
+            }
             GameState.SetMenusHidden();
         }
 

@@ -86,6 +86,7 @@ namespace SpacePlanetsClient
         private static MessageLogConsole _messageLogConsole;
         private static ServerStatusConsole _serverStatusConsole;
         private static MenuBarConsole _menuBarConsole;
+        private static SpaceMapConsole _spaceMap;
 
         private static AccessToken _accessToken;
 
@@ -254,6 +255,15 @@ namespace SpacePlanetsClient
             connection.InvokeAsync("GetCharacterForManagement", GetAuthorizationTokenContainer(), request);
         }
 
+        internal static void DownloadMapAtShip(Guid shipId)
+        {
+            var request = new MapAtShipRequest();
+            request.ShipId = shipId;
+            request.ViewWidth = _spaceMap.Width;
+            request.ViewHeight = _spaceMap.Height;
+            connection.InvokeAsync("GetMapAtShip", GetAuthorizationTokenContainer(), request);
+        }
+
         internal static void RetrieveShipsForShipMenu()
         {
             connection.InvokeAsync("GetShipsForMenu", GetAuthorizationTokenContainer());
@@ -409,6 +419,11 @@ namespace SpacePlanetsClient
                     _serverStatusConsole.IsVisible = true;
                     _mainConsole.Children.Add(_serverStatusConsole);
 
+                    _spaceMap = new SpaceMapConsole(_mainConsole.Width, _mainConsole.Height - _messageLogConsole.Height - 2);
+                    _spaceMap.Position = new Point(0, 1);
+                    _spaceMap.IsVisible = true;
+                    _mainConsole.Children.Add(_spaceMap);
+
                     _menuBarConsole = new MenuBarConsole(_mainConsole.Width, 1);
                     _menuBarConsole.Position = new Point(0, 0);
                     _menuBarConsole.IsVisible = true;
@@ -476,6 +491,46 @@ namespace SpacePlanetsClient
             connection.On<GetPlayerCameraCoordinatesResult>("ReceivePlayerCameraCoordinates", (param) =>
             {
                 _messageLogConsole.Write("Camera coordinates received: " + param.X + "," + param.Y + "," + param.Z, MessageLogConsole.MessageTypes.Status);
+            });
+
+            connection.On<GetMapDataResult>("ReceiveMapData", (param) =>
+            {
+                _spaceMap.Clear();
+                _messageLogConsole.Write("Receive map data:");
+                foreach (MapDataCell item in param.MapDataCells)
+                {
+                    if (item.Stars != null && item.Stars.Count > 0)
+                    {
+                        _messageLogConsole.Write("Star(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
+                        foreach (Star star in item.Stars)
+                        {
+                            _messageLogConsole.Write("--" + star.Name);
+                            _spaceMap.Print(item.CellX, item.CellY, "*", Color.OrangeRed, Color.Black);
+                        }
+                    }
+                    if (item.Ships != null && item.Ships.Count > 0)
+                    {
+                        _messageLogConsole.Write("Ship(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
+                        foreach (Ship ship in item.Ships)
+                        {
+                            _messageLogConsole.Write("--" + ship.Name);
+                            _spaceMap.Print(item.CellX, item.CellY, "+", Color.Turquoise, Color.Black);
+                        }
+
+                    }
+                    if (item.SpaceObjects != null && item.SpaceObjects.Count > 0)
+                    {
+                        _messageLogConsole.Write("Space Object(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
+                        foreach (SpaceObject spaceObject in item.SpaceObjects)
+                        {
+                            _messageLogConsole.Write("--" + spaceObject.Name + " of type: " + spaceObject.ObjectType);
+                            if (spaceObject.ObjectType == "Asteroid")
+                            {
+                                _spaceMap.Print(item.CellX, item.CellY, "`", Color.WhiteSmoke, Color.Black);
+                            }
+                        }
+                    }
+                }
             });
 
             connection.Closed += async (error) =>

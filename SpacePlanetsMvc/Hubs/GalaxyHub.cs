@@ -3,6 +3,7 @@ using SpacePlanets.SharedModels.ClientToServer;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanets.SharedModels.Interface;
 using SpacePlanets.SharedModels.ServerToClient;
+using SpacePlanetsMvc.Models.ServiceResponses.Map;
 using SpacePlanetsMvc.ServiceResponses;
 using SpacePlanetsMvc.Services;
 using System;
@@ -17,12 +18,14 @@ namespace SpacePlanetsMvc.Hubs
         private readonly IAuthenticationService _authService;
         private readonly IGameService _gameService;
         private readonly IObjectService _objectService;
+        private readonly IMapService _mapService;
 
-        public GalaxyHub(IAuthenticationService authService, IObjectService objectService, IGameService gameService)
+        public GalaxyHub(IAuthenticationService authService, IObjectService objectService, IGameService gameService, IMapService mapService)
         {
             _authService = authService;
             _gameService = gameService;
             _objectService = objectService;
+            _mapService = mapService;
         }
 
         public async Task SendMessage(string message)
@@ -135,6 +138,24 @@ namespace SpacePlanetsMvc.Hubs
                 result.Y = playerByAccessTokenResponse.Player.CameraY;
                 result.Z = playerByAccessTokenResponse.Player.CameraZ;
                 await Clients.Caller.ReceivePlayerCameraCoordinates(result);
+            }
+        }
+
+        public async Task GetMapAtShip(AuthorizationTokenContainer tokenContainer, MapAtShipRequest mapAtShipRequestContainer)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, mapAtShipRequestContainer.ShipId);
+                if (serviceResult.Success)
+                {
+                    Ship ship = serviceResult.Ships.First();
+                    GetMapAtShipByShipIdResponse map = _mapService.GetMapAtShipByShipId(ship.Id, mapAtShipRequestContainer.ViewWidth, mapAtShipRequestContainer.ViewHeight);
+                    if (map.Success)
+                    {
+                        await Clients.Caller.ReceiveMapData(map.MapDataResult);
+                    }
+                }
             }
         }
 

@@ -16,6 +16,13 @@ namespace SpacePlanetsMvc.Services
         GetShipsByPlayerIdResponse GetShipsByPlayerId(Guid playerId);
 
         /// <summary>
+        /// Gets a single ship owned by a certain player, but returns it as the sole member of what could be a list of ships.
+        /// </summary>
+        /// <param name="playerId">The playerId in question</param>
+        /// <param name="shipId">The shipId being searched for</param>
+        GetShipsByPlayerIdResponse GetShipByPlayerId(Guid playerId, Guid shipId);
+
+        /// <summary>
         /// Get all the characters owned by a certain player.
         /// </summary>
         /// <param name="playerId">The unique identifier of the player.</param>

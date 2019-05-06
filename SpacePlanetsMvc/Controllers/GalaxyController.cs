@@ -28,6 +28,16 @@ namespace SpacePlanetsMvc.Controllers
             _objectService = objectService;
         }
         
+        public IActionResult SpaceObjects(int? X, int? Y, int? Z, string objectType, string objectName)
+        {
+            string sessionId = _cookie.Get("SpacePlanetsSession");
+            if (X == null) { X = 0; }
+            if (Y == null) { Y = 0; }
+            if (Z == null) { Z = 0; }
+            var viewModel = new SpaceObjectsViewModel(_authenticationService, _objectService, objectType, objectName, X.Value, Y.Value, Z.Value, sessionId);
+            return View(viewModel);
+        }
+
         public IActionResult Index(int? seed, bool saveSeed, string galaxyName)
         {
             string sessionId = _cookie.Get("SpacePlanetsSession");

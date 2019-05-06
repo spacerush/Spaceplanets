@@ -24,6 +24,6 @@ namespace SpacePlanets.SharedModels.Interface
 
         Task ReceivePlayerCameraCoordinates(GetPlayerCameraCoordinatesResult result);
 
-
+        Task ReceiveMapData(GetMapDataResult result);
     }
 }

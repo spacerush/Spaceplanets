@@ -311,5 +311,23 @@ namespace SpacePlanetsMvc.Services
             }
             return result;
         }
+
+
+        public bool SaveNewSpaceObject(SpaceObject spaceObject)
+        {
+            bool result = false;
+            // make sure it is of valid type first.
+            if (spaceObject.ObjectType == "Moon" || spaceObject.ObjectType == "Planet" || spaceObject.ObjectType == "Asteroid")
+            {
+                result = true;
+                _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(spaceObject);
+            }
+            return result;
+        }
+
+        public List<SpaceObject> GetAllSpaceObjects()
+        {
+            return _wrapper.SpaceObjectRepository.GetAll<SpaceObject>(f => f.Id != null).ToList();
+        }
     }
 }

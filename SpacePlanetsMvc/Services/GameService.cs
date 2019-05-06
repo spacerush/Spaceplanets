@@ -37,6 +37,23 @@ namespace SpacePlanetsMvc.Services
             return result;
         }
 
+        public GetShipsByPlayerIdResponse GetShipByPlayerId(Guid playerId, Guid shipId)
+        {
+            var result = new GetShipsByPlayerIdResponse();
+            result.Ships = new List<Ship>();
+            result.Ships.Add(_wrapper.ShipRepository.GetOne<Ship>(f => f.PlayerId == playerId && f.Id == shipId));
+            if (result.Ships.Count == 1)
+            {
+                result.Success = true;
+            }
+            else
+            {
+                result.Success = false;
+            }
+            result.PlayerId = playerId;
+            return result;
+        }
+
         public GetCharactersByPlayerIdResponse GetCharactersByPlayerId(Guid playerId)
         {
             var result = new GetCharactersByPlayerIdResponse();

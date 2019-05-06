@@ -1,0 +1,39 @@
+﻿@model SpacePlanetsMvc.Models.WebViewModels.SpaceObjectsViewModel
+
+@{
+    ViewData["Title"] = "Space Object Creation";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="display-4">Space Objects</h1>
+        <h2>@Model.Message</h2>
+        <form method="post" action="@Url.Action("SpaceObjects", "Galaxy")">
+            <label for="objectType">Object Type:<input type="text" id="objectType" name="objectType" class="form-control" value="@Model.ObjectType" /></label><br />
+            <label for="objectName">Object Name:<input type="text" id="objectName" name="objectName" class="form-control" value="@Model.ObjectName" /></label><br />
+            <label for="X">X:<input type="text" id="X" name="X" class="form-control" value="@Model.X" /></label><br />
+            <label for="Y">Y:<input type="text" id="Y" name="Y" class="form-control" value="@Model.Y" /></label><br />
+            <label for="Z">Z:<input type="text" id="Z" name="Z" class="form-control" value="@Model.Z" /></label><br />
+            <input type="submit" class="btn btn-outline-primary" value="Create New" />
+        </form>
+
+        <h2>List of existing:</h2>
+        <table>
+            <thead>
+                <tr><th>Item</th><th>Type</th><th>X</th><th>Y</th><th>Z</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.AllSpaceObjects)
+                {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.ObjectType</td>
+                    <td>@item.X</td>
+                    <td>@item.Y</td>
+                    <td>@item.Z</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

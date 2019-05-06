@@ -54,7 +54,7 @@ namespace SpacePlanetsMvc
             services.AddScoped<SpacePlanetsMvc.Services.IAuthenticationService, SpacePlanetsMvc.Services.AuthenticationService>();
             services.AddScoped<SpacePlanetsMvc.Services.IObjectService, SpacePlanetsMvc.Services.ObjectService>();
             services.AddScoped<SpacePlanetsMvc.Services.IGameService, SpacePlanetsMvc.Services.GameService>();
-
+            services.AddScoped<SpacePlanetsMvc.Services.IMapService, SpacePlanetsMvc.Services.MapService>();
             services.AddSignalR();
             IServiceProvider provider = services.BuildServiceProvider();
 
