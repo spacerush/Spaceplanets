@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System.IO;
 using SpacePlanets.SharedModels.ServerToClient;
 using SpacePlanets.SharedModels.ClientToServer;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SpacePlanetsClient
 {
@@ -39,6 +40,7 @@ namespace SpacePlanetsClient
             serverUri = endpoint;
             connection = new HubConnectionBuilder()
                 .WithUrl(serverUri + "GalaxyHub")
+                .AddMessagePackProtocol()
                 .Build();
                 connection.StartAsync();
             BindEventHandlersForconnection();
@@ -526,8 +528,17 @@ namespace SpacePlanetsClient
                             _messageLogConsole.Write("--" + spaceObject.Name + " of type: " + spaceObject.ObjectType);
                             if (spaceObject.ObjectType == "Asteroid")
                             {
-                                _spaceMap.Print(item.CellX, item.CellY, "`", Color.WhiteSmoke, Color.Black);
+                                _spaceMap.Print(item.CellX, item.CellY, "`", Color.DimGray, Color.Black);
                             }
+                            if (spaceObject.ObjectType == "Moon")
+                            {
+                                _spaceMap.Print(item.CellX, item.CellY, "o", Color.WhiteSmoke, Color.Black);
+                            }
+                            if (spaceObject.ObjectType == "Planet")
+                            {
+                                _spaceMap.Print(item.CellX, item.CellY, "O", Color.CornflowerBlue, Color.Black);
+                            }
+
                         }
                     }
                 }

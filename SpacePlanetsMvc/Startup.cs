@@ -55,7 +55,7 @@ namespace SpacePlanetsMvc
             services.AddScoped<SpacePlanetsMvc.Services.IObjectService, SpacePlanetsMvc.Services.ObjectService>();
             services.AddScoped<SpacePlanetsMvc.Services.IGameService, SpacePlanetsMvc.Services.GameService>();
             services.AddScoped<SpacePlanetsMvc.Services.IMapService, SpacePlanetsMvc.Services.MapService>();
-            services.AddSignalR();
+            services.AddSignalR().AddMessagePackProtocol();
             IServiceProvider provider = services.BuildServiceProvider();
 
             // Create default things needed to run an instance of the game.
