@@ -42,7 +42,7 @@ namespace StarformCore
             };
         }
 
-        private static List<Planet> GeneratePlanets(Star sun, List<PlanetSeed> seeds, bool useRandomTilt, SystemGenerationOptions genOptions)
+        public static List<Planet> GeneratePlanets(Star sun, List<PlanetSeed> seeds, bool useRandomTilt, SystemGenerationOptions genOptions)
         {
             var planets = new List<Planet>();
             for (var i = 0; i < seeds.Count; i++)
@@ -410,12 +410,12 @@ namespace StarformCore
             planet.IsEarthlike = Environment.IsEarthlike(planet);
         }
 
-        private static double GetStellarDustLimit(double stellarMassRatio)
+        public static double GetStellarDustLimit(double stellarMassRatio)
         {
             return (200.0 * Math.Pow(stellarMassRatio, (1.0 / 3.0)));
         }
 
-        private static double GetOuterLimit(Star star)
+        public static double GetOuterLimit(Star star)
         {
             if (star.BinaryMass < .001)
             {

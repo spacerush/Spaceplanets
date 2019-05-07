@@ -1,6 +1,7 @@
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.ServiceResponses;
 using SpacePlanetsMvc.Services;
+using StarformCore.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,6 +89,7 @@ namespace SpacePlanetsMvc.Models.WebViewModels
                 {
                     // Is this necessary?
                     _player = null;
+                    _message = "You are not logged in, no attempt to save will be made.";
                 }
             }
         }

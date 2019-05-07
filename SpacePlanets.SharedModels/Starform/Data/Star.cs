@@ -53,5 +53,23 @@
         /// The eccentricity of the companion star's orbit.
         /// </summary>
         public double Eccentricity { get; set; }
+
+        public Star()
+        {
+
+        }
+
+        public Star(string name, double ageYears, double life, double ecosphereRadiusAU, double luminosity, double mass, double binarymass, double semimajoraxisau, double eccentricity)
+        {
+            this.Name = name;
+            this.AgeYears = ageYears;
+            this.Life = life;
+            this.EcosphereRadiusAU = ecosphereRadiusAU;
+            this.Luminosity = luminosity;
+            this.Mass = mass;
+            this.BinaryMass = binarymass;
+            this.SemiMajorAxisAU = semimajoraxisau;
+            this.Eccentricity = eccentricity;
+        }
     }
 }

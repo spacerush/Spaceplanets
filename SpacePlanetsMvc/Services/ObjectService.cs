@@ -329,5 +329,60 @@ namespace SpacePlanetsMvc.Services
         {
             return _wrapper.SpaceObjectRepository.GetAll<SpaceObject>(f => f.Id != null).ToList();
         }
+
+        public void CreateDefaultSpaceObjectsForAllStarsInDefaultGalaxyIfNecessary()
+        {
+            long count = _wrapper.SpaceObjectRepository.Count<SpaceObject>(f => f.ObjectType == "Planet");
+            if (count == 0)
+            {
+                GetGalaxyResponse galaxyResponse = this.GetDefaultGalaxy();
+                if (galaxyResponse.Success)
+                {
+                    List<Star> stars = galaxyResponse.GalaxyContainer.Galaxy.Stars;
+                    foreach (var star in stars)
+                    {
+
+                        var generationOptions = StarformCore.SystemGenerationOptions.DefaultOptions;
+                        var accrete = new StarformCore.Accrete(generationOptions.CloudEccentricity, generationOptions.GasDensityRatio);
+                        StarformCore.Data.Star starformStar = new StarformCore.Data.Star(star.Name, star.AgeYears, star.Life, star.EcosphereRadiusAU, star.Luminosity, star.Mass, star.BinaryMass, star.SemiMajorAxisAU, star.Eccentricity);
+
+                        double outer_planet_limit = StarformCore.Generator.GetOuterLimit(starformStar);
+                        double outer_dust_limit = StarformCore.Generator.GetStellarDustLimit(star.Mass);
+                        var seedSystem = accrete.GetPlanetaryBodies(star.Mass, star.Luminosity, 0.0, outer_dust_limit, outer_planet_limit, generationOptions.DustDensityCoeff, null, true);
+
+                        var planets = StarformCore.Generator.GeneratePlanets(starformStar, seedSystem, false, StarformCore.SystemGenerationOptions.DefaultOptions);
+                        var stellarSystem = new StarformCore.Data.StellarSystem()
+                        {
+                            Options = StarformCore.SystemGenerationOptions.DefaultOptions,
+                            Planets = planets,
+                            Name = star.Name,
+                            Star = starformStar
+                        };
+
+                        // seed for generating planet locations
+                        Random random = new Random(1);
+                        foreach (var planet in stellarSystem.Planets)
+                        {
+                            int minX = star.X - 80;
+                            int maxX = star.X + 80;
+                            int minY = star.Y - 80;
+                            int maxY = star.Y + 80;
+                            int minZ = star.Z - 80;
+                            int maxZ = star.Z + 80;
+                            int planetX = random.Next(minX, maxX);
+                            int planetY = random.Next(minX, maxX);
+                            int planetZ = random.Next(minX, maxX);
+
+                            SpaceObject planetObject = new SpaceObject("Planet", Guid.NewGuid().ToString());
+                            planetObject.X = planetX;
+                            planetObject.Y = planetY;
+                            planetObject.Z = planetZ;
+                            planetObject.PlanetMetadata = planet;
+                            _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(planetObject);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

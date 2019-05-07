@@ -65,8 +65,8 @@ namespace SpacePlanetsMvc
             objectService.CreateDefaultImplantTemplatesIfNecessary();
             objectService.CreateDefaultMicroclusterTemplatesIfNecessary();
             objectService.CreateDefaultGalaxyIfNecessary();
+            objectService.CreateDefaultSpaceObjectsForAllStarsInDefaultGalaxyIfNecessary();
             services.AddHostedService<CurrentTimeWorker>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

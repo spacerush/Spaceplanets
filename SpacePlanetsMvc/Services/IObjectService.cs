@@ -81,5 +81,10 @@ namespace SpacePlanetsMvc.Services
         /// </summary>
         /// <returns>All objects</returns>
         List<SpaceObject> GetAllSpaceObjects();
+
+        /// <summary>
+        /// Creates planets if none exist already.
+        /// </summary>
+        void CreateDefaultSpaceObjectsForAllStarsInDefaultGalaxyIfNecessary();
     }
 }
