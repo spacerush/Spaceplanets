@@ -81,6 +81,7 @@ namespace SpacePlanetsClient.Consoles
             if (buttonNameParts.First() == "Ship")
             {
                 GameState.DownloadMapAtShip(Guid.Parse(buttonNameParts.Last()));
+                GameState.SetSelectedShip(Guid.Parse(buttonNameParts.Last()));
             }
             GameState.SetMenusHidden();
         }

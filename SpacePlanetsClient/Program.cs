@@ -47,6 +47,24 @@ namespace MyProject
                 // TODO: add something
             }
 
+            // If the space key is pressed down solid...
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.W))
+            {
+                GameState.MoveSelectedShipUp();
+            }
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.A))
+            {
+                GameState.MoveSelectedShipLeft();
+            }
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.S))
+            {
+                GameState.MoveSelectedShipDown();
+            }
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.D))
+            {
+                GameState.MoveSelectedShipRight();
+            }
+
         }
 
 

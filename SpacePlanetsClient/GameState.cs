@@ -22,6 +22,180 @@ namespace SpacePlanetsClient
 {
     public static class GameState
     {
+        internal static GetMapDataResult cachedMapData;
+        
+        private static void SetMapData(GetMapDataResult data)
+        {
+            cachedMapData = data;
+        }
+
+        private static void MoveShipOnClient(Guid shipId, int shipCellX, int shipCellY, int shipCellZ)
+        {
+            Ship ship = FindShipInMapById(shipId);
+
+            List<MapDataCell> newCells = new List<MapDataCell>();
+
+            int newX = 0;
+            int newY = 0;
+            int newZ = 0;
+            foreach (MapDataCell item in cachedMapData.MapDataCells)
+            {
+                if (item != FindCellInMapContainingShip(shipId))
+                {
+                    newCells.Add(item);
+                }
+                else
+                {
+                    MapDataCell cellWithoutShip = new MapDataCell();
+                    cellWithoutShip.CellX = item.CellX;
+                    cellWithoutShip.CellY = item.CellY;
+                    cellWithoutShip.CellZ = item.CellZ;
+                    cellWithoutShip.Stars = item.Stars;
+                    cellWithoutShip.SpaceObjects = item.SpaceObjects;
+                    cellWithoutShip.Ships = new List<Ship>();
+                    cellWithoutShip.Ships.AddRange(item.Ships.Where(x => x.Id != shipId));
+                    newCells.Add(cellWithoutShip);
+                }
+            }
+            MapDataCell newLocation = newCells.Where(l => (l.CellX == shipCellX) && (l.CellY == shipCellY) && (l.CellZ == shipCellZ)).SingleOrDefault();
+            if (newLocation == null)
+            {
+                MapDataCell cellWithoutShip = new MapDataCell();
+                cellWithoutShip.CellX = shipCellX;
+                cellWithoutShip.CellY = shipCellY;
+                cellWithoutShip.CellZ = shipCellZ;
+                cellWithoutShip.SpaceObjects = new List<SpaceObject>();
+                cellWithoutShip.Ships = new List<Ship>();
+                cellWithoutShip.Stars = new List<Star>();
+                cellWithoutShip.Ships.Add(ship);
+                newCells.Add(cellWithoutShip);
+            }
+            else
+            {
+                newLocation.Ships.Add(ship);
+            }
+            cachedMapData.MapDataCells = newCells;
+        }
+
+        private static Ship FindShipInMapById(Guid shipId)
+        {
+            Ship foundShip = null;
+            foreach (MapDataCell item in cachedMapData.MapDataCells.Where(x => x.Ships.Count > 0))
+            {
+                foundShip = item.Ships.Where(s => s.Id == shipId).FirstOrDefault();
+                if (foundShip != null)
+                {
+                    break;
+                }
+            }
+            return foundShip;
+        }
+
+        private static MapDataCell FindCellInMapContainingShip(Guid shipId)
+        {
+            Ship foundShip = null;
+            MapDataCell foundCell = null;
+            foreach (MapDataCell item in cachedMapData.MapDataCells.Where(x => x.Ships.Count > 0))
+            {
+                foundShip = item.Ships.Where(s => s.Id == shipId).FirstOrDefault();
+                if (foundShip != null)
+                {
+                    foundCell = item;
+                    break;
+                }
+            }
+            return foundCell;
+        }
+
+        public static void MoveSelectedShipUp()
+        {
+            if (_gameStatus == GameStatus.LoggedIn)
+            {
+                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
+                MoveShipOnClient(selectedShip, cell.CellX, cell.CellY - 1, cell.CellZ);
+                DrawMapData();
+            }
+        }
+
+        public static void MoveSelectedShipDown()
+        {
+            if (_gameStatus == GameStatus.LoggedIn)
+            {
+                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
+                MoveShipOnClient(selectedShip, cell.CellX, cell.CellY + 1, cell.CellZ);
+                DrawMapData();
+            }
+        }
+
+        public static void MoveSelectedShipLeft()
+        {
+            if (_gameStatus == GameStatus.LoggedIn)
+            {
+                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
+                MoveShipOnClient(selectedShip, cell.CellX -1, cell.CellY, cell.CellZ);
+                DrawMapData();
+            }
+        }
+
+        public static void MoveSelectedShipRight()
+        {
+            if (_gameStatus == GameStatus.LoggedIn)
+            {
+                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
+                MoveShipOnClient(selectedShip, cell.CellX + 1, cell.CellY, cell.CellZ);
+                DrawMapData();
+            }
+        }
+
+        private static void DrawMapData()
+        {
+            _spaceMap.Clear();
+            foreach (MapDataCell item in cachedMapData.MapDataCells)
+            {
+                if (item.Stars != null && item.Stars.Count > 0)
+                {
+                    _messageLogConsole.Write("Star(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
+                    foreach (Star star in item.Stars)
+                    {
+                        _messageLogConsole.Write("--" + star.Name + " coords: " + star.X + "," + star.Y + "," + star.Z);
+                        _spaceMap.Print(item.CellX, item.CellY, "*", Color.OrangeRed, Color.Black);
+                    }
+                }
+                if (item.Ships != null && item.Ships.Count > 0)
+                {
+                    _messageLogConsole.Write("Ship(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
+                    foreach (Ship ship in item.Ships)
+                    {
+                        _messageLogConsole.Write("--" + ship.Name);
+                        _spaceMap.Print(item.CellX, item.CellY, "+", Color.Turquoise, Color.Black);
+                    }
+
+                }
+                if (item.SpaceObjects != null && item.SpaceObjects.Count > 0)
+                {
+                    _messageLogConsole.Write("Space Object(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
+                    foreach (SpaceObject spaceObject in item.SpaceObjects)
+                    {
+                        _messageLogConsole.Write("--" + spaceObject.Name + " of type: " + spaceObject.ObjectType);
+                        if (spaceObject.ObjectType == "Asteroid")
+                        {
+                            _spaceMap.Print(item.CellX, item.CellY, "`", Color.DimGray, Color.Black);
+                        }
+                        if (spaceObject.ObjectType == "Moon")
+                        {
+                            _spaceMap.Print(item.CellX, item.CellY, "o", Color.WhiteSmoke, Color.Black);
+                        }
+                        if (spaceObject.ObjectType == "Planet")
+                        {
+                            _spaceMap.Print(item.CellX, item.CellY, "O", Color.CornflowerBlue, Color.Black);
+                        }
+
+                    }
+                }
+            }
+        }
+        internal static Guid selectedShip;
+
         internal static CancellationToken CancelHeartbeat;
         internal static HubConnection connection;
         public static HubConnection Connection
@@ -255,6 +429,11 @@ namespace SpacePlanetsClient
         {
             var request = new CharacterForManagementRequest(characterId);
             connection.InvokeAsync("GetCharacterForManagement", GetAuthorizationTokenContainer(), request);
+        }
+
+        internal static void SetSelectedShip(Guid shipId)
+        {
+            selectedShip = shipId;
         }
 
         internal static void DownloadMapAtShip(Guid shipId)
@@ -497,51 +676,9 @@ namespace SpacePlanetsClient
 
             connection.On<GetMapDataResult>("ReceiveMapData", (param) =>
             {
-                _spaceMap.Clear();
                 _messageLogConsole.Write("Receive map data:");
-                foreach (MapDataCell item in param.MapDataCells)
-                {
-                    if (item.Stars != null && item.Stars.Count > 0)
-                    {
-                        _messageLogConsole.Write("Star(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
-                        foreach (Star star in item.Stars)
-                        {
-                            _messageLogConsole.Write("--" + star.Name + " coords: " + star.X + "," + star.Y + "," + star.Z);
-                            _spaceMap.Print(item.CellX, item.CellY, "*", Color.OrangeRed, Color.Black);
-                        }
-                    }
-                    if (item.Ships != null && item.Ships.Count > 0)
-                    {
-                        _messageLogConsole.Write("Ship(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
-                        foreach (Ship ship in item.Ships)
-                        {
-                            _messageLogConsole.Write("--" + ship.Name);
-                            _spaceMap.Print(item.CellX, item.CellY, "+", Color.Turquoise, Color.Black);
-                        }
-
-                    }
-                    if (item.SpaceObjects != null && item.SpaceObjects.Count > 0)
-                    {
-                        _messageLogConsole.Write("Space Object(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
-                        foreach (SpaceObject spaceObject in item.SpaceObjects)
-                        {
-                            _messageLogConsole.Write("--" + spaceObject.Name + " of type: " + spaceObject.ObjectType);
-                            if (spaceObject.ObjectType == "Asteroid")
-                            {
-                                _spaceMap.Print(item.CellX, item.CellY, "`", Color.DimGray, Color.Black);
-                            }
-                            if (spaceObject.ObjectType == "Moon")
-                            {
-                                _spaceMap.Print(item.CellX, item.CellY, "o", Color.WhiteSmoke, Color.Black);
-                            }
-                            if (spaceObject.ObjectType == "Planet")
-                            {
-                                _spaceMap.Print(item.CellX, item.CellY, "O", Color.CornflowerBlue, Color.Black);
-                            }
-
-                        }
-                    }
-                }
+                SetMapData(param);
+                DrawMapData();
             });
 
             connection.Closed += async (error) =>

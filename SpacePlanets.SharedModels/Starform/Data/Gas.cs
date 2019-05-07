@@ -13,5 +13,10 @@ namespace StarformCore.Data
             GasType = gType;
             surf_pressure = pressure;
         }
+
+        public Gas()
+        {
+
+        }
     }
 }
