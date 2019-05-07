@@ -1,5 +1,5 @@
-﻿using SpacePlanetsClient.Models;
-using SpacePlanetsClientLib.Results;
+﻿using SpacePlanets.SharedModels.ServerToClient;
+using SpacePlanetsClient.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

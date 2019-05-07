@@ -28,6 +28,18 @@ namespace SpacePlanetsClient.Consoles
             txtPassword.PasswordChar = "*";
             this.Add(txtPassword);
 
+            Button btnLogin = new Button(10, 3);
+            btnLogin.Text = "Log in";
+            btnLogin.Position = new Point(width - 10, height - 4);
+            btnLogin.Click += (s, a) =>
+            {
+                if (GameState.Connection != null && GameState.Connection.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected)
+                {
+                    GameState.DoLogin(txtUsername.Text, txtPassword.Text);
+                }
+            };
+            this.Add(btnLogin);
+
             Button btnRemote = new Button(20, 1);
             btnRemote.Text = "Use Online Server";
             btnRemote.Position = new Point(width - 20, height - 1);
@@ -37,25 +49,17 @@ namespace SpacePlanetsClient.Consoles
                 this.Remove(btnRemote);
             };
             this.Add(btnRemote);
-            
+
             Button btnLocalNoTls = new Button(26, 1);
-            btnLocalNoTls.Text = "Use Local Http Server";
+            btnLocalNoTls.Text = "Use Local Https Server";
             btnLocalNoTls.Position = new Point(width - 26, height - 5);
             btnLocalNoTls.Click += (s, a) =>
             {
-                GameState.SetApiEndpoint("http://localhost:5000/");
+                GameState.SetApiEndpoint("https://localhost:5001/");
                 this.Remove(btnLocalNoTls);
             };
             this.Add(btnLocalNoTls);
 
-            Button btnLogin = new Button(10, 3);
-            btnLogin.Text = "Log in";
-            btnLogin.Position = new Point(width - 10, height - 4);
-            btnLogin.Click += (s, a) =>
-            {
-                GameState.DoLogin(txtUsername.Text, txtPassword.Text);
-            };
-            this.Add(btnLogin);
         }
     }
 }

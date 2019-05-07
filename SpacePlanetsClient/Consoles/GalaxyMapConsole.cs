@@ -8,7 +8,7 @@ namespace SpacePlanetsClient.Consoles
     public class GalaxyMapConsole : ScrollingConsole
     {
         private readonly Console _scrollingConsole;
-        public void SetStars(SpLib.Objects.Galaxy galaxy)
+        public void SetStars(SpacePlanets.SharedModels.GameObjects.Galaxy galaxy)
         {
             this.Clear();
             foreach (var item in galaxy.Stars)

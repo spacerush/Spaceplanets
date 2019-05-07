@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using SadConsole;
 using Console = SadConsole.Console;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpacePlanetsClient;
 using Microsoft.Extensions.DependencyInjection;
-using SpacePlanetsClientLib.ClientServices;
 
 namespace MyProject
 {
@@ -48,17 +47,30 @@ namespace MyProject
                 // TODO: add something
             }
 
+            // If the space key is pressed down solid...
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.W))
+            {
+                GameState.MoveSelectedShipUp();
+            }
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.A))
+            {
+                GameState.MoveSelectedShipLeft();
+            }
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.S))
+            {
+                GameState.MoveSelectedShipDown();
+            }
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.D))
+            {
+                GameState.MoveSelectedShipRight();
+            }
+
         }
 
 
         private static void Init()
         {
-            IServiceCollection services = new ServiceCollection();
             // TODO: stop hardcoding this endpoint!
-            services.AddSingleton<IFlurlClient>(f => new FlurlClient("https://localhost:5001/"));
-            var provider = services.BuildServiceProvider();
-            IFlurlClient client = provider.GetRequiredService<IFlurlClient>();
-            GameState.SetClient(client);
             var startingConsole = SadConsole.Global.CurrentScreen;
             GameState.InitializeConsole(startingConsole);
         }

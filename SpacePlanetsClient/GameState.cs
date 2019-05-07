@@ -5,10 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpacePlanetsClient.Extensions;
 using SpacePlanetsClient.Consoles;
-using SpacePlanetsClientLib.ClientServices;
-using SpLib.Objects;
-using SpLib.DataTransfer.ServerToClient;
-using SpacePlanetsClientLib.Results;
+using SpacePlanets.SharedModels.GameObjects;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
@@ -17,22 +14,210 @@ using SpacePlanetsClient.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.IO;
+using SpacePlanets.SharedModels.ServerToClient;
+using SpacePlanets.SharedModels.ClientToServer;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SpacePlanetsClient
 {
     public static class GameState
     {
+        internal static GetMapDataResult cachedMapData;
+        
+        private static void SetMapData(GetMapDataResult data)
+        {
+            cachedMapData = data;
+        }
+
+        private static void MoveShipOnClient(Guid shipId, int shipCellX, int shipCellY, int shipCellZ)
+        {
+            Ship ship = FindShipInMapById(shipId);
+
+            List<MapDataCell> newCells = new List<MapDataCell>();
+
+            int newX = 0;
+            int newY = 0;
+            int newZ = 0;
+            foreach (MapDataCell item in cachedMapData.MapDataCells)
+            {
+                if (item != FindCellInMapContainingShip(shipId))
+                {
+                    newCells.Add(item);
+                }
+                else
+                {
+                    MapDataCell cellWithoutShip = new MapDataCell();
+                    cellWithoutShip.CellX = item.CellX;
+                    cellWithoutShip.CellY = item.CellY;
+                    cellWithoutShip.CellZ = item.CellZ;
+                    cellWithoutShip.Stars = item.Stars;
+                    cellWithoutShip.SpaceObjects = item.SpaceObjects;
+                    cellWithoutShip.Ships = new List<Ship>();
+                    cellWithoutShip.Ships.AddRange(item.Ships.Where(x => x.Id != shipId));
+                    newCells.Add(cellWithoutShip);
+                }
+            }
+            MapDataCell newLocation = newCells.Where(l => (l.CellX == shipCellX) && (l.CellY == shipCellY) && (l.CellZ == shipCellZ)).SingleOrDefault();
+            if (newLocation == null)
+            {
+                MapDataCell cellWithoutShip = new MapDataCell();
+                cellWithoutShip.CellX = shipCellX;
+                cellWithoutShip.CellY = shipCellY;
+                cellWithoutShip.CellZ = shipCellZ;
+                cellWithoutShip.SpaceObjects = new List<SpaceObject>();
+                cellWithoutShip.Ships = new List<Ship>();
+                cellWithoutShip.Stars = new List<Star>();
+                cellWithoutShip.Ships.Add(ship);
+                newCells.Add(cellWithoutShip);
+            }
+            else
+            {
+                newLocation.Ships.Add(ship);
+            }
+            cachedMapData.MapDataCells = newCells;
+        }
+
+        private static Ship FindShipInMapById(Guid shipId)
+        {
+            Ship foundShip = null;
+            foreach (MapDataCell item in cachedMapData.MapDataCells.Where(x => x.Ships.Count > 0))
+            {
+                foundShip = item.Ships.Where(s => s.Id == shipId).FirstOrDefault();
+                if (foundShip != null)
+                {
+                    break;
+                }
+            }
+            return foundShip;
+        }
+
+        private static MapDataCell FindCellInMapContainingShip(Guid shipId)
+        {
+            Ship foundShip = null;
+            MapDataCell foundCell = null;
+            foreach (MapDataCell item in cachedMapData.MapDataCells.Where(x => x.Ships.Count > 0))
+            {
+                foundShip = item.Ships.Where(s => s.Id == shipId).FirstOrDefault();
+                if (foundShip != null)
+                {
+                    foundCell = item;
+                    break;
+                }
+            }
+            return foundCell;
+        }
+
+        public static void MoveSelectedShipUp()
+        {
+            if (_gameStatus == GameStatus.LoggedIn)
+            {
+                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
+                MoveShipOnClient(selectedShip, cell.CellX, cell.CellY - 1, cell.CellZ);
+                DrawMapData();
+            }
+        }
+
+        public static void MoveSelectedShipDown()
+        {
+            if (_gameStatus == GameStatus.LoggedIn)
+            {
+                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
+                MoveShipOnClient(selectedShip, cell.CellX, cell.CellY + 1, cell.CellZ);
+                DrawMapData();
+            }
+        }
+
+        public static void MoveSelectedShipLeft()
+        {
+            if (_gameStatus == GameStatus.LoggedIn)
+            {
+                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
+                MoveShipOnClient(selectedShip, cell.CellX -1, cell.CellY, cell.CellZ);
+                DrawMapData();
+            }
+        }
+
+        public static void MoveSelectedShipRight()
+        {
+            if (_gameStatus == GameStatus.LoggedIn)
+            {
+                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
+                MoveShipOnClient(selectedShip, cell.CellX + 1, cell.CellY, cell.CellZ);
+                DrawMapData();
+            }
+        }
+
+        private static void DrawMapData()
+        {
+            _spaceMap.Clear();
+            foreach (MapDataCell item in cachedMapData.MapDataCells)
+            {
+                if (item.Stars != null && item.Stars.Count > 0)
+                {
+                    _messageLogConsole.Write("Star(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
+                    foreach (Star star in item.Stars)
+                    {
+                        _messageLogConsole.Write("--" + star.Name + " coords: " + star.X + "," + star.Y + "," + star.Z);
+                        _spaceMap.Print(item.CellX, item.CellY, "*", Color.OrangeRed, Color.Black);
+                    }
+                }
+                if (item.Ships != null && item.Ships.Count > 0)
+                {
+                    _messageLogConsole.Write("Ship(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
+                    foreach (Ship ship in item.Ships)
+                    {
+                        _messageLogConsole.Write("--" + ship.Name);
+                        _spaceMap.Print(item.CellX, item.CellY, "+", Color.Turquoise, Color.Black);
+                    }
+
+                }
+                if (item.SpaceObjects != null && item.SpaceObjects.Count > 0)
+                {
+                    _messageLogConsole.Write("Space Object(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
+                    foreach (SpaceObject spaceObject in item.SpaceObjects)
+                    {
+                        _messageLogConsole.Write("--" + spaceObject.Name + " of type: " + spaceObject.ObjectType);
+                        if (spaceObject.ObjectType == "Asteroid")
+                        {
+                            _spaceMap.Print(item.CellX, item.CellY, "`", Color.DimGray, Color.Black);
+                        }
+                        if (spaceObject.ObjectType == "Moon")
+                        {
+                            _spaceMap.Print(item.CellX, item.CellY, "o", Color.WhiteSmoke, Color.Black);
+                        }
+                        if (spaceObject.ObjectType == "Planet")
+                        {
+                            _spaceMap.Print(item.CellX, item.CellY, "O", Color.CornflowerBlue, Color.Black);
+                        }
+
+                    }
+                }
+            }
+        }
+        internal static Guid selectedShip;
+
         internal static CancellationToken CancelHeartbeat;
         internal static HubConnection connection;
-
-        public static void SetClient(IFlurlClient client)
+        public static HubConnection Connection
         {
-            _client = client;
+            get
+            {
+                return connection;
+            }
         }
+        internal static string serverUri;
+        internal static Stopwatch pingStopWatch = new Stopwatch();
+        internal static string lastPingId;
 
         public static void SetApiEndpoint(string endpoint)
         {
-            _client.ChangeEndpoint(endpoint);
+            serverUri = endpoint;
+            connection = new HubConnectionBuilder()
+                .WithUrl(serverUri + "GalaxyHub")
+                .AddMessagePackProtocol()
+                .Build();
+                connection.StartAsync();
+            BindEventHandlersForconnection();
         }
 
 
@@ -77,9 +262,10 @@ namespace SpacePlanetsClient
         private static MessageLogConsole _messageLogConsole;
         private static ServerStatusConsole _serverStatusConsole;
         private static MenuBarConsole _menuBarConsole;
+        private static SpaceMapConsole _spaceMap;
 
         private static AccessToken _accessToken;
-        private static IFlurlClient _client;
+
         public static bool DisplayingCharacterMenu
         {
             get
@@ -133,6 +319,7 @@ namespace SpacePlanetsClient
             _loginWindow.UseKeyboard = true;
             _mainConsole.Children.Add(_loginWindow);
             _loginWindow.CenterWithinParent();
+
         }
 
         public static void SetMenusHidden()
@@ -160,65 +347,11 @@ namespace SpacePlanetsClient
         /// </summary>
         /// <param name="username">An account name</param>
         /// <param name="password">A password which should be transmitted using TLS. The server will receive the password and calculate its hash.</param>
-        /// <returns>TRUE if authentication is successful.</returns>
-        public static bool DoLogin(string username, string password)
+        public static void DoLogin(string username, string password)
         {
+            var ctr = new CredentialsContainer(username, password);
             _gameStatus = GameStatus.LoggingIn;
-            GetAccessTokenResult result = _client.GetAccessToken(username, password);
-            if (!result.Success)
-            {
-                _gameStatus = GameStatus.Startup;
-                CreateErrorWindow(result.Error, _loginWindow.Children.First());
-                return false;
-            }
-            else
-            {
-                _gameStatus = GameStatus.LoggedIn;
-                _accessToken = result.Token;
-
-                connection = new HubConnectionBuilder()
-                .WithUrl(_client.GetEndpoint() + "galaxyHub")
-                .Build();
-                connection.StartAsync();
-                connection.On<string>("chat", (message) =>
-                {
-                    _messageLogConsole.Write("Receive Chat: " + message);
-                });
-
-                connection.Closed += async (error) =>
-                {
-                    await Task.Delay(new Random().Next(0, 5) * 1000);
-                    await connection.StartAsync();
-                };
-
-
-                _messageLogConsole = new MessageLogConsole(_mainConsole.Width, _mainConsole.Height / 4);
-                _messageLogConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height);
-                _messageLogConsole.IsVisible = true;
-                _mainConsole.Children.Add(_messageLogConsole);
-
-                _serverStatusConsole = new ServerStatusConsole(_mainConsole.Width, 1);
-                _serverStatusConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height - 1);
-                _serverStatusConsole.IsVisible = true;
-                _mainConsole.Children.Add(_serverStatusConsole);
-
-                _menuBarConsole = new MenuBarConsole(_mainConsole.Width, 1);
-                _menuBarConsole.Position = new Point(0, 0);
-                _menuBarConsole.IsVisible = true;
-                _mainConsole.Children.Add(_menuBarConsole);
-
-                GameState.ShipMenu = new MenuConsole(_mainConsole.Width, _mainConsole.Height -1);
-                GameState.CharacterMenu = new MenuConsole(_mainConsole.Width, _mainConsole.Height -1);
-                ShipMenu.Position = new Point(0, 1);
-                CharacterMenu.Position = new Point(0, 1);
-
-                _loginWindow.IsVisible = false;
-                _loginWindow.Controls.RemoveAll();
-                _loginWindow.Clear();
-
-                StartHeartbeat(TimeSpan.FromSeconds(10), CancelHeartbeat);
-                return true;
-            }
+            connection.SendAsync("GetAccessToken", ctr);
         }
 
         private static async Task StartHeartbeat(TimeSpan interval, CancellationToken cancellationToken)
@@ -233,21 +366,11 @@ namespace SpacePlanetsClient
 
         private static void Heartbeat()
         {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            _client.GetPingResponse();
-            connection.InvokeAsync("SendChat", "Ping" + Guid.NewGuid().ToString());
-            stopWatch.Stop();
-            // Get the elapsed time as a TimeSpan value.
-            TimeSpan ts = stopWatch.Elapsed;
-            if (ts.TotalMilliseconds < 500)
-            {
-                _messageLogConsole.Write("Ping: " + Math.Floor(ts.TotalMilliseconds), MessageLogConsole.MessageTypes.AdminOnlyMessage);
-            }
-            else
-            {
-                _serverStatusConsole.Write("Ping: " + Math.Floor(ts.TotalMilliseconds), ServerStatusConsole.MessageTypes.Danger);
-            }
+            pingStopWatch.Reset();
+            pingStopWatch.Start();
+            var pingRequest = new PingRequest();
+            lastPingId = pingRequest.PingId;
+            connection.SendAsync("Ping", new AuthorizationTokenContainer() { Token = _accessToken.Content }, pingRequest);
         }
 
         private static void RefreshTokenIfNeeded()
@@ -258,15 +381,7 @@ namespace SpacePlanetsClient
                 if (_accessToken.RefreshToken.Expiry.ToUniversalTime() > DateTime.UtcNow)
                 {
                     _messageLogConsole.Write("Requesting access token refresh using the refresh token.", MessageLogConsole.MessageTypes.AdminOnlyMessage);
-                    GetAccessTokenResult getAccessTokenResult = _client.GetAccessToken(_accessToken.RefreshToken);
-                    if (getAccessTokenResult.Success)
-                    {
-                        _accessToken = getAccessTokenResult.Token;
-                    }
-                    else
-                    {
-                        CreateErrorWindow(getAccessTokenResult.Error, _mainConsole);
-                    }
+                    connection.InvokeAsync("GetAccessTokenWithRefreshToken", _accessToken.RefreshToken);
                 }
                 else
                 {
@@ -300,22 +415,58 @@ namespace SpacePlanetsClient
 
         internal static void RetrieveGalaxyAndDisplay()
         {
-            var result = _client.GetGalaxyByName(_accessToken.Content, "Seed 0");
-            if (result.Success)
-            {
-                MainConsole.Print(3, 3, result.GalaxyContainer.Galaxy.Stars.Count() + " stars in galaxy");
-            }
+
         }
 
 
         internal static void RetrieveCharactersForCharacterMenu()
         {
-            GetCharactersForMenuResult result = _client.GetCharactersForManagementMenu(_accessToken.Content);
-            if (result.Success)
+            connection.InvokeAsync("GetCharactersForMenu", GetAuthorizationTokenContainer());
+
+        }
+
+        internal static void DownloadCharacterForManagement(Guid characterId)
+        {
+            var request = new CharacterForManagementRequest(characterId);
+            connection.InvokeAsync("GetCharacterForManagement", GetAuthorizationTokenContainer(), request);
+        }
+
+        internal static void SetSelectedShip(Guid shipId)
+        {
+            selectedShip = shipId;
+        }
+
+        internal static void DownloadMapAtShip(Guid shipId)
+        {
+            var request = new MapAtShipRequest();
+            request.ShipId = shipId;
+            request.ViewWidth = _spaceMap.Width;
+            request.ViewHeight = _spaceMap.Height;
+            connection.InvokeAsync("GetMapAtShip", GetAuthorizationTokenContainer(), request);
+        }
+
+        internal static void RetrieveShipsForShipMenu()
+        {
+            connection.InvokeAsync("GetShipsForMenu", GetAuthorizationTokenContainer());
+        }
+
+        public static void WriteGeneralMessageToLog(string message)
+        {
+            _messageLogConsole.Write(message, MessageLogConsole.MessageTypes.Status);
+        }
+
+        /// <summary>
+        /// Takes a list of characters that have been encapsulated into a GetCharactersForMenuResult object and
+        /// pops open a menu from which they can be chosen to interact with.
+        /// </summary>
+        /// <param name="characterresult">The result of a call to the server for data.</param>
+        private static void ProcessCharactersForMenu(GetCharactersForMenuResult characterresult)
+        {
+            if (characterresult.Success)
             {
                 _displayingCharacterMenu = true;
                 List<MenuButtonMetadataItem> characters = new List<MenuButtonMetadataItem>();
-                foreach (var item in result.Characters)
+                foreach (var item in characterresult.Characters)
                 {
                     characters.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Character"));
                 }
@@ -333,27 +484,22 @@ namespace SpacePlanetsClient
             }
             else
             {
-                CreateErrorWindow(result.Error, _mainConsole);
+                CreateErrorWindow(characterresult.Error, _mainConsole);
             }
         }
 
-        internal static void DownloadCharacterForManagement(Guid characterId)
+        /// <summary>
+        /// Takes a list of ships that have been encapsulated into a GetShipsForMenuResult object and
+        /// pops open a menu from which they can be chosen to interact with.
+        /// </summary>
+        /// <param name="shipresult">The result of a call to the server for data.</param>
+        private static void ProcessShipsForMenu(GetShipsForMenuResult shipresult)
         {
-            GetCharacterForManagementResult result = _client.GetCharacterForManagementWindow(_accessToken.Content, characterId);
-            if (result.Success)
-            {
-                CreateCharacterWindow(result.Character);
-            }
-        }
-
-        internal static void RetrieveShipsForShipMenu()
-        {
-            GetShipsForMenuResult result = _client.GetShipsForManagementMenu(_accessToken.Content);
-            if (result.Success)
+            if (shipresult.Success)
             {
                 _displayingShipMenu = true;
                 List<MenuButtonMetadataItem> ships = new List<MenuButtonMetadataItem>();
-                foreach (var item in result.Ships)
+                foreach (var item in shipresult.Ships)
                 {
                     ships.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Ship"));
                 }
@@ -371,16 +517,175 @@ namespace SpacePlanetsClient
             }
             else
             {
-                CreateErrorWindow(result.Error, _mainConsole);
+                CreateErrorWindow(shipresult.Error, _mainConsole);
             }
         }
 
-
-
-        public static void WriteGeneralMessageToLog(string message)
+        private static void RequestCameraCoordinates()
         {
-            _messageLogConsole.Write(message, MessageLogConsole.MessageTypes.Status);
+            connection.SendAsync("GetPlayerCameraCoordinates", new AuthorizationTokenContainer() { Token = _accessToken.Content });
         }
 
+        private static AuthorizationTokenContainer GetAuthorizationTokenContainer()
+        {
+            var ctr = new AuthorizationTokenContainer();
+            ctr.Token = _accessToken.Content;
+            return ctr;
+        }
+
+        private static void BindEventHandlersForconnection()
+        {
+            connection.On<PingResponse>("ReceivePingResponse", (ping) =>
+            {
+                if (ping.PingId == lastPingId)
+                {
+                    pingStopWatch.Stop();
+                    // Get the elapsed time as a TimeSpan value.
+                    TimeSpan ts = pingStopWatch.Elapsed;
+                    if (ts.TotalMilliseconds < 100)
+                    {
+                        _serverStatusConsole.Write("Scanner responsiveness: " + Math.Floor(ts.TotalMilliseconds) + " ms", ServerStatusConsole.MessageTypes.Ok);
+                    }
+                    else
+                    {
+                        _serverStatusConsole.Write("Scanner responsiveness degraded: " + Math.Floor(ts.TotalMilliseconds) + " ms", ServerStatusConsole.MessageTypes.Danger);
+                        _messageLogConsole.Write("Scanner responsiveness degraded: " + Math.Floor(ts.TotalMilliseconds) + " ms", MessageLogConsole.MessageTypes.Warning);
+                    }
+                }
+                else
+                {
+                    pingStopWatch.Stop();
+                    _serverStatusConsole.Write("Scanner responsiveness probe error (data received out of order).", ServerStatusConsole.MessageTypes.Danger);
+                    _messageLogConsole.Write("Scanner responsiveness probe error (data received out of order).", MessageLogConsole.MessageTypes.Warning);
+                }
+            });
+
+            connection.On<string>("ReceiveMessage", (message) =>
+            {
+                if (_gameStatus == GameStatus.LoggedIn)
+                {
+                    _messageLogConsole.Write("Receive Chat: " + message);
+                }
+            });
+
+            connection.On<string>("ReceiveServerTime", (serverTime) =>
+            {
+                if (_gameStatus == GameStatus.LoggedIn)
+                {
+                    // TODO: REMOVE THIS
+                    //_messageLogConsole.Write("Receive server time: " + serverTime);
+                }
+            });
+
+            connection.On<GetAccessTokenResult>("ReceiveAccessTokenResult", (result) =>
+            {
+                if (!result.Success)
+                {
+                    _gameStatus = GameStatus.Startup;
+                    CreateErrorWindow(result.Error, _loginWindow.Children.First());
+                }
+                else
+                {
+                    _gameStatus = GameStatus.LoggedIn;
+                    _accessToken = result.Token;
+                    RequestCameraCoordinates();
+
+                    _messageLogConsole = new MessageLogConsole(_mainConsole.Width, _mainConsole.Height / 4);
+                    _messageLogConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height);
+                    _messageLogConsole.IsVisible = true;
+                    _mainConsole.Children.Add(_messageLogConsole);
+
+                    _serverStatusConsole = new ServerStatusConsole(_mainConsole.Width, 1);
+                    _serverStatusConsole.Position = new Point(0, _mainConsole.Height - _messageLogConsole.Height - 1);
+                    _serverStatusConsole.IsVisible = true;
+                    _mainConsole.Children.Add(_serverStatusConsole);
+
+                    _spaceMap = new SpaceMapConsole(_mainConsole.Width, _mainConsole.Height - _messageLogConsole.Height - 2);
+                    _spaceMap.Position = new Point(0, 1);
+                    _spaceMap.IsVisible = true;
+                    _mainConsole.Children.Add(_spaceMap);
+
+                    _menuBarConsole = new MenuBarConsole(_mainConsole.Width, 1);
+                    _menuBarConsole.Position = new Point(0, 0);
+                    _menuBarConsole.IsVisible = true;
+                    _mainConsole.Children.Add(_menuBarConsole);
+
+                    GameState.ShipMenu = new MenuConsole(_mainConsole.Width, _mainConsole.Height - 1);
+                    GameState.CharacterMenu = new MenuConsole(_mainConsole.Width, _mainConsole.Height - 1);
+                    ShipMenu.Position = new Point(0, 1);
+                    CharacterMenu.Position = new Point(0, 1);
+
+                    _loginWindow.IsVisible = false;
+                    _loginWindow.Controls.RemoveAll();
+                    _loginWindow.Clear();
+                    StartHeartbeat(TimeSpan.FromSeconds(10), CancelHeartbeat);
+                }
+            });
+
+            connection.On<GetAccessTokenResult>("ReceiveAccessTokenFromRefreshToken", (result) =>
+            {
+                if (result.Success)
+                {
+                    _accessToken = result.Token;
+                }
+            });
+
+            connection.On<GetShipsForMenuResult>("ReceiveShipsForMenu", (result) =>
+            {
+                if (result.Success)
+                {
+                    _displayingShipMenu = true;
+                    List<MenuButtonMetadataItem> ships = new List<MenuButtonMetadataItem>();
+                    foreach (var item in result.Ships)
+                    {
+                        ships.Add(new MenuButtonMetadataItem(item.Id, item.Name, "Ship"));
+                    }
+                    ShipMenu.SetElements(ships);
+                    _mainConsole.Children.Add(ShipMenu);
+                    _mainConsole.Children.MoveToTop(ShipMenu);
+                    string menuTitle = "Manage your ship(s)";
+                    ShipMenu.ShowMenu(menuTitle);
+                    int cellX = 0;
+                    while (cellX < menuTitle.Length)
+                    {
+                        cellX++;
+                        ShipMenu.SetEffect(cellX, 0, ShipMenu.menuFade);
+                    }
+                }
+                else
+                {
+                    CreateErrorWindow(result.Error, _mainConsole);
+                }
+            });
+
+            // retrieval of characters for menu.
+            connection.On<GetCharactersForMenuResult>("ReceiveCharactersForMenu", (param) =>
+            {
+                ProcessCharactersForMenu(param);
+            });
+
+            connection.On<GetCharacterForManagementResult>("ReceiveCharacterForManagement", (param) =>
+            {
+                CreateCharacterWindow(param.Character);
+            });
+
+            connection.On<GetPlayerCameraCoordinatesResult>("ReceivePlayerCameraCoordinates", (param) =>
+            {
+                _messageLogConsole.Write("Camera coordinates received: " + param.X + "," + param.Y + "," + param.Z, MessageLogConsole.MessageTypes.Status);
+            });
+
+            connection.On<GetMapDataResult>("ReceiveMapData", (param) =>
+            {
+                _messageLogConsole.Write("Receive map data:");
+                SetMapData(param);
+                DrawMapData();
+            });
+
+            connection.Closed += async (error) =>
+            {
+                await Task.Delay(new Random().Next(0, 5) * 1000);
+                await connection.StartAsync();
+            };
+        }
     }
 }
