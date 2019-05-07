@@ -506,7 +506,7 @@ namespace SpacePlanetsClient
                         _messageLogConsole.Write("Star(s) located at xyz=" + item.CellX + "," + item.CellY + "," + item.CellZ);
                         foreach (Star star in item.Stars)
                         {
-                            _messageLogConsole.Write("--" + star.Name);
+                            _messageLogConsole.Write("--" + star.Name + " coords: " + star.X + "," + star.Y + "," + star.Z);
                             _spaceMap.Print(item.CellX, item.CellY, "*", Color.OrangeRed, Color.Black);
                         }
                     }

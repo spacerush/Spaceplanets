@@ -5,6 +5,7 @@ using System.Text;
 using System.Linq;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.ServiceResponses;
+using System.Numerics;
 
 namespace SpacePlanetsMvc.Services
 {
@@ -361,22 +362,24 @@ namespace SpacePlanetsMvc.Services
 
                         // seed for generating planet locations
                         Random random = new Random(1);
+                        List<Vector3> vectors = new List<Vector3>();
                         foreach (var planet in stellarSystem.Planets)
                         {
-                            int minX = star.X - 80;
-                            int maxX = star.X + 80;
-                            int minY = star.Y - 80;
-                            int maxY = star.Y + 80;
-                            int minZ = star.Z - 80;
-                            int maxZ = star.Z + 80;
+
+                            int minX = star.X - 20;
+                            int maxX = star.X + 20;
+                            int minY = star.Y - 20;
+                            int maxY = star.Y + 20;
+                            int minZ = star.Z - 20;
+                            int maxZ = star.Z + 20;
                             int planetX = random.Next(minX, maxX);
-                            int planetY = random.Next(minX, maxX);
-                            int planetZ = random.Next(minX, maxX);
+                            int planetY = random.Next(minY, maxY);
+                            int planetZ = random.Next(minZ, maxZ);
 
                             SpaceObject planetObject = new SpaceObject("Planet", Guid.NewGuid().ToString());
                             planetObject.X = planetX;
                             planetObject.Y = planetY;
-                            planetObject.Z = planetZ;
+                            planetObject.Z = (int)planetZ;
                             planetObject.PlanetMetadata = planet;
                             _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(planetObject);
                         }

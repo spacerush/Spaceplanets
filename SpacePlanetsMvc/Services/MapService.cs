@@ -43,7 +43,7 @@ namespace SpacePlanetsMvc.Services
             result.MapDataResult = new GetMapDataResult();
             result.MapDataResult.MapDataCells = new List<MapDataCell>();
             Ship ship = _wrapper.ShipRepository.GetOne<Ship>(f => f.Id == shipId);
-            int scanDistance = 20; // hardcoded value for now, the distance from the ship the player can see.           
+            int scanDistance = 50; // hardcoded value for now, the distance from the ship the player and the ship is aware of.           
             int minX = ship.X - scanDistance;
             int maxX = ship.X + scanDistance;
             int minY = ship.Y - scanDistance;
@@ -113,8 +113,8 @@ namespace SpacePlanetsMvc.Services
             {
                 int displayAtX = centerDisplayX - (ship.X - spaceObject.X);
                 int displayAtY = centerDisplayY - (ship.Y - spaceObject.Y);
-                if (displayAtX >= 0 && displayAtY >= 0 && displayAtX < viewWidth && displayAtY < viewHeight)
-                {
+                //if (displayAtX >= 0 && displayAtY >= 0 && displayAtX < viewWidth && displayAtY < viewHeight)
+                //{
                     MapDataCell existingDataCell = result.MapDataResult.MapDataCells.Where(w => w.CellX == displayAtX && w.CellY == displayAtY).FirstOrDefault();
                     if (existingDataCell == null)
                     {
@@ -132,7 +132,7 @@ namespace SpacePlanetsMvc.Services
                     {
                         existingDataCell.SpaceObjects.Add(spaceObject);
                     }
-                }
+                //}
             }
 
             result.Success = true;
