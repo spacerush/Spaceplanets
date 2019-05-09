@@ -29,7 +29,11 @@ namespace SpacePlanetsMvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var client = new MongoClient("mongodb://localhost:27017/SpacePlanets");
+            string connstring = Configuration["MongoDb:Storage"];
+            if (string.IsNullOrEmpty(connstring)) {
+                connstring = "mongodb://localhost:27017/SpacePlanets";
+            }
+            var client = new MongoClient(connstring);
             services.AddSingleton<IMongoClient>(c => client);
 
             services.Configure<CookiePolicyOptions>(options =>

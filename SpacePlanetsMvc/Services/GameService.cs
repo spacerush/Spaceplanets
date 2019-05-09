@@ -100,5 +100,13 @@ namespace SpacePlanetsMvc.Services
             GalaxyContainer galaxyContainer = _wrapper.GalaxyContainerRepository.GetOne<GalaxyContainer>(f => f.Name == galaxyContainerName);
             return galaxyContainer;
         }
+
+        public void MoveShip(Guid shipId, int x, int y)
+        {
+            Ship ship = _wrapper.ShipRepository.GetOne<Ship>(f => f.Id == shipId);
+            ship.X = x;
+            ship.Y = y;
+            _wrapper.ShipRepository.UpdateOne<Ship>(ship);
+        }
     }
 }

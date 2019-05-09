@@ -159,5 +159,19 @@ namespace SpacePlanetsMvc.Hubs
             }
         }
 
+        public async Task UpdateShipPosition(AuthorizationTokenContainer tokenContainer, ShipCoordinateContainer shipCoordinateContainer)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, shipCoordinateContainer.ShipId);
+                if (serviceResult.Success)
+                {
+                    _gameService.MoveShip(shipCoordinateContainer.ShipId, shipCoordinateContainer.X, shipCoordinateContainer.Y);
+                }
+            }
+        }
+
     }
+
 }

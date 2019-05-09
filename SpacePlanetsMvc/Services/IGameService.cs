@@ -48,5 +48,6 @@ namespace SpacePlanetsMvc.Services
         /// <param name="characterId">The unique identifier of the character to retrieve.</param>
         /// <returns>A container object</returns>
         GetCharacterByPlayerIdAndCharacterIdResponse GetCharacterByPlayerIdAndCharacter(Guid playerId, Guid characterId);
+        void MoveShip(Guid shipId, int x, int y);
     }
 }
