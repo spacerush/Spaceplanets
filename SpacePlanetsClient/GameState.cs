@@ -17,6 +17,7 @@ using System.IO;
 using SpacePlanets.SharedModels.ServerToClient;
 using SpacePlanets.SharedModels.ClientToServer;
 using Microsoft.Extensions.DependencyInjection;
+using SpacePlanets.SharedModels.Helpers;
 
 namespace SpacePlanetsClient
 {
@@ -117,10 +118,8 @@ namespace SpacePlanetsClient
         {
             if (_gameStatus == GameStatus.LoggedIn)
             {
-                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
-                MoveShipOnClient(selectedShip, cell.CellX, cell.CellY - 1, cell.CellZ, 0 , -1);
-                DrawMapData();
-                UpdateServerWithShipPosition();
+                UpdateServerWithShipPosition(0, -1);
+
             }
         }
 
@@ -128,10 +127,8 @@ namespace SpacePlanetsClient
         {
             if (_gameStatus == GameStatus.LoggedIn)
             {
-                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
-                MoveShipOnClient(selectedShip, cell.CellX, cell.CellY + 1, cell.CellZ, 0, 1);
-                DrawMapData();
-                UpdateServerWithShipPosition();
+                UpdateServerWithShipPosition(0, 1);
+
             }
         }
 
@@ -139,10 +136,7 @@ namespace SpacePlanetsClient
         {
             if (_gameStatus == GameStatus.LoggedIn)
             {
-                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
-                MoveShipOnClient(selectedShip, cell.CellX -1, cell.CellY, cell.CellZ, -1, 0);
-                DrawMapData();
-                UpdateServerWithShipPosition();
+                UpdateServerWithShipPosition(-1, 0);
             }
         }
 
@@ -150,19 +144,16 @@ namespace SpacePlanetsClient
         {
             if (_gameStatus == GameStatus.LoggedIn)
             {
-                MapDataCell cell = FindCellInMapContainingShip(selectedShip);
-                MoveShipOnClient(selectedShip, cell.CellX + 1, cell.CellY, cell.CellZ, 1, 0);
-                DrawMapData();
-                UpdateServerWithShipPosition();
+                UpdateServerWithShipPosition(1, 0);
             }
         }
 
-        public static void UpdateServerWithShipPosition()
+        public static void UpdateServerWithShipPosition(int changeX, int changeY)
         {
             if (_gameStatus == GameStatus.LoggedIn)
             {
-                Ship ship = FindShipInMapById(selectedShip);
-                connection.InvokeAsync("UpdateShipPosition", GetAuthorizationTokenContainer(), new ShipCoordinateContainer() { ShipId = ship.Id, X = ship.X, Y = ship.Y });
+                _shipMovementStatus = ShipMovementStatus.NotReady;
+                connection.InvokeAsync("UpdateShipPosition", GetAuthorizationTokenContainer(), new ShipMovementContainer() { ShipId = selectedShip, ChangeX = changeX, ChangeY = changeY,  ConfirmationId = GenerationHelper.CreateRandomString(true, true, false, 10) });
             }
         }
 
@@ -233,6 +224,11 @@ namespace SpacePlanetsClient
             BindEventHandlersForconnection();
         }
 
+        enum ShipMovementStatus
+        {
+            NotReady,
+            Ready
+        }
 
         enum GameStatus
         {
@@ -272,6 +268,7 @@ namespace SpacePlanetsClient
 
         private static LoginWindow _loginWindow;
         private static GameStatus _gameStatus;
+        private static ShipMovementStatus _shipMovementStatus;
         private static MessageLogConsole _messageLogConsole;
         private static ServerStatusConsole _serverStatusConsole;
         private static MenuBarConsole _menuBarConsole;
@@ -447,6 +444,12 @@ namespace SpacePlanetsClient
         internal static void SetSelectedShip(Guid shipId)
         {
             selectedShip = shipId;
+            _shipMovementStatus = ShipMovementStatus.Ready;
+        }
+
+        internal static void UnselectShip()
+        {
+            selectedShip = Guid.Empty;
         }
 
         internal static void DownloadMapAtShip(Guid shipId)
@@ -594,11 +597,13 @@ namespace SpacePlanetsClient
             {
                 if (!result.Success)
                 {
+                    _shipMovementStatus = ShipMovementStatus.NotReady;
                     _gameStatus = GameStatus.Startup;
                     CreateErrorWindow(result.Error, _loginWindow.Children.First());
                 }
                 else
                 {
+                    _shipMovementStatus = ShipMovementStatus.NotReady;
                     _gameStatus = GameStatus.LoggedIn;
                     _accessToken = result.Token;
                     RequestCameraCoordinates();
@@ -692,6 +697,12 @@ namespace SpacePlanetsClient
                 _messageLogConsole.Write("Receive map data.");
                 SetMapData(param);
                 DrawMapData();
+            });
+
+            connection.On<ShipMovementConfirmation>("ReceiveShipMovementConfirmation", (param) =>
+            {
+                _shipMovementStatus = ShipMovementStatus.Ready;
+                DownloadMapAtShip(selectedShip);
             });
 
             connection.Closed += async (error) =>

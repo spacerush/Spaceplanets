@@ -4,16 +4,17 @@ using System.Text;
 
 namespace SpacePlanets.SharedModels.ClientToServer
 {
-    public class ShipCoordinateContainer
+    public class ShipMovementContainer
     {
 
         public Guid ShipId { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-
-        public ShipCoordinateContainer()
+        public int ChangeX { get; set; }
+        public int ChangeY { get; set; }
+        public string ConfirmationId { get; set; }
+        public ShipMovementContainer()
         {
 
         }
+
     }
 }

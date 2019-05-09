@@ -49,5 +49,7 @@ namespace SpacePlanetsMvc.Services
         /// <returns>A container object</returns>
         GetCharacterByPlayerIdAndCharacterIdResponse GetCharacterByPlayerIdAndCharacter(Guid playerId, Guid characterId);
         void MoveShip(Guid shipId, int x, int y);
+
+        void MoveShipRelative(Guid shipId, int changeX, int changeY);
     }
 }

@@ -108,5 +108,13 @@ namespace SpacePlanetsMvc.Services
             ship.Y = y;
             _wrapper.ShipRepository.UpdateOne<Ship>(ship);
         }
+
+        public void MoveShipRelative(Guid shipId, int changeX, int changeY)
+        {
+            Ship ship = _wrapper.ShipRepository.GetOne<Ship>(f => f.Id == shipId);
+            ship.X = ship.X + changeX;
+            ship.Y = ship.Y + changeY;
+            _wrapper.ShipRepository.UpdateOne<Ship>(ship);
+        }
     }
 }

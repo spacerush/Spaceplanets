@@ -159,15 +159,18 @@ namespace SpacePlanetsMvc.Hubs
             }
         }
 
-        public async Task UpdateShipPosition(AuthorizationTokenContainer tokenContainer, ShipCoordinateContainer shipCoordinateContainer)
+        public async Task UpdateShipPosition(AuthorizationTokenContainer tokenContainer, ShipMovementContainer shipMovementContainer)
         {
             GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
             if (playerByAccessTokenResponse.Success)
             {
-                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, shipCoordinateContainer.ShipId);
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, shipMovementContainer.ShipId);
                 if (serviceResult.Success)
                 {
-                    _gameService.MoveShip(shipCoordinateContainer.ShipId, shipCoordinateContainer.X, shipCoordinateContainer.Y);
+                    _gameService.MoveShipRelative(shipMovementContainer.ShipId, shipMovementContainer.ChangeX, shipMovementContainer.ChangeY);
+                    ShipMovementConfirmation confirmation = new ShipMovementConfirmation();
+                    confirmation.ConfirmationId = shipMovementContainer.ConfirmationId;
+                    await Clients.Caller.ReceiveShipMovementConfirmation(confirmation);
                 }
             }
         }
