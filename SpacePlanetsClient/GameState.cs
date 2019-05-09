@@ -77,6 +77,10 @@ namespace SpacePlanetsClient
                 newLocation.Ships.Add(ship);
             }
             cachedMapData.MapDataCells = newCells;
+            if (shipCellX <= 0 || shipCellX >= _spaceMap.Width || shipCellY <= 0 || shipCellY >= _spaceMap.Height)
+            {
+                DownloadMapAtShip(ship.Id);
+            }
         }
 
         private static Ship FindShipInMapById(Guid shipId)
