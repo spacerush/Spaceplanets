@@ -174,6 +174,7 @@ namespace SpacePlanetsClient
                     foreach (Ship ship in item.Ships)
                     {
                         _spaceMap.Print(item.CellX, item.CellY, "+", Color.Turquoise, Color.Black);
+                        _messageLogConsole.Write("shipX:" + ship.X + " shipY:" + ship.Y);
                     }
 
                 }
