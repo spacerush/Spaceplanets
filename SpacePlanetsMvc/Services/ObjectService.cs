@@ -380,8 +380,11 @@ namespace SpacePlanetsMvc.Services
                             planetObject.X = planetX;
                             planetObject.Y = planetY;
                             planetObject.Z = (int)planetZ;
-                            planetObject.PlanetMetadata = planet;
                             _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(planetObject);
+                            PlanetMetadata planetMetadata = new PlanetMetadata();
+                            planetMetadata.SpaceObjectId = planetObject.Id;
+                            planetMetadata.Metadata = planet;
+                            _wrapper.PlanetMetadataRepository.AddOne<PlanetMetadata>(planetMetadata);
                         }
                     }
                 }

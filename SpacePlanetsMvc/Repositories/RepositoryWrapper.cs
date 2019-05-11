@@ -14,6 +14,8 @@ namespace SpacePlanetsMvc.Repositories
 
         private IRepositoryBase<GalaxyContainer> _galaxyContainerRepository;
         private IRepositoryBase<SpaceObject> _spaceObjectRepository;
+        private IRepositoryBase<PlanetMetadata> _planetMetadataRepository;
+
         private IRepositoryBase<WebSession> _webSessionRepository;
         private IPlayerRepository _playerRepository;
         private IRepositoryBase<AccessToken> _accessTokenRepository;
@@ -56,6 +58,19 @@ namespace SpacePlanetsMvc.Repositories
                 return _spaceObjectRepository;
             }
         }
+
+        public IRepositoryBase<PlanetMetadata> PlanetMetadataRepository
+        {
+            get
+            {
+                if (_planetMetadataRepository == null)
+                {
+                    _planetMetadataRepository = new RepositoryBase<PlanetMetadata>(_mongoClient);
+                }
+                return _planetMetadataRepository;
+            }
+        }
+
 
         public IRepositoryBase<WebSession> WebSessionRepository
         {

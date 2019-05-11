@@ -12,6 +12,7 @@ namespace SpacePlanetsMvc.Repositories
         #region Map
         IRepositoryBase<GalaxyContainer> GalaxyContainerRepository { get; }
         IRepositoryBase<SpaceObject> SpaceObjectRepository { get; }
+        IRepositoryBase<PlanetMetadata> PlanetMetadataRepository { get; }
         #endregion
 
         #region Accounts
