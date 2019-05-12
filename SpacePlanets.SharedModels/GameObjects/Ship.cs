@@ -7,6 +7,12 @@ namespace SpacePlanets.SharedModels.GameObjects
 {
     public class Ship : Document
     {
+
+        /// <summary>
+        /// The last time the ship moved.
+        /// </summary>
+        public DateTimeOffset LastMovementUtc { get; set; }
+
         public string Name { get; set; }
 
         /// <summary>
@@ -46,6 +52,7 @@ namespace SpacePlanets.SharedModels.GameObjects
         {
             Name = name;
             Type = type;
+            LastMovementUtc = DateTime.UtcNow;
         }
 
         public Ship()
@@ -53,5 +60,6 @@ namespace SpacePlanets.SharedModels.GameObjects
 
         }
 
+        
     }
 }

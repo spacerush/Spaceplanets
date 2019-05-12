@@ -106,6 +106,7 @@ namespace SpacePlanetsMvc.Services
             Ship ship = _wrapper.ShipRepository.GetOne<Ship>(f => f.Id == shipId);
             ship.X = x;
             ship.Y = y;
+            ship.LastMovementUtc = DateTime.UtcNow;
             _wrapper.ShipRepository.UpdateOne<Ship>(ship);
         }
 
@@ -114,6 +115,7 @@ namespace SpacePlanetsMvc.Services
             Ship ship = _wrapper.ShipRepository.GetOne<Ship>(f => f.Id == shipId);
             ship.X = ship.X + changeX;
             ship.Y = ship.Y + changeY;
+            ship.LastMovementUtc = DateTime.UtcNow;
             _wrapper.ShipRepository.UpdateOne<Ship>(ship);
         }
     }

@@ -167,10 +167,20 @@ namespace SpacePlanetsMvc.Hubs
                 GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, shipMovementContainer.ShipId);
                 if (serviceResult.Success)
                 {
-                    _gameService.MoveShipRelative(shipMovementContainer.ShipId, shipMovementContainer.ChangeX, shipMovementContainer.ChangeY);
-                    ShipMovementConfirmation confirmation = new ShipMovementConfirmation();
-                    confirmation.ConfirmationId = shipMovementContainer.ConfirmationId;
-                    await Clients.Caller.ReceiveShipMovementConfirmation(confirmation);
+                    var timeSpan = (DateTime.UtcNow - serviceResult.Ships.First().LastMovementUtc);
+                    // if the player is an administrator, don't apply a speed limit to them.
+                    if ((playerByAccessTokenResponse.Player.IsAdmin == true) || timeSpan.TotalMilliseconds > 500 && shipMovementContainer.ChangeX < 2 && shipMovementContainer.ChangeY < 2)
+                    {
+                        _gameService.MoveShipRelative(shipMovementContainer.ShipId, shipMovementContainer.ChangeX, shipMovementContainer.ChangeY);
+                        ShipMovementConfirmation confirmation = new ShipMovementConfirmation();
+                        confirmation.ConfirmationId = shipMovementContainer.ConfirmationId;
+                        await Clients.Caller.ReceiveShipMovementConfirmation(confirmation);
+                    }
+                    else
+                    {
+                        /// TODO: display error for exceeding speed limit.
+                        await Clients.Caller.ReceiveMessage("Exceeded speed limit.");
+                    }
                 }
             }
         }
