@@ -577,6 +577,7 @@ namespace SpacePlanetsClient
             menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Spawn: ship", "AddShip"));
             menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Spawn: asteroid", "AddAsteroid"));
             menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Spawn: moon", "AddMoon"));
+            menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Spawn: shipmodule", "AddShipModule"));
             menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Move: specify destination", "MoveToSpecificCoordinates"));
             ShipMenu.SetElements(menuItems);
             _mainConsole.Children.Add(ShipMenu);
