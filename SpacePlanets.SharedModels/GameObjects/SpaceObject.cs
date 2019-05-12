@@ -15,11 +15,13 @@ namespace SpacePlanets.SharedModels.GameObjects
         public int Y { get; set; }
         public int Z { get; set;  }
         public string Name { get; set; }
+        Guid? DestinationSpaceObjectId { get; set; }
         public SpaceObject(string objectType, string name = "Unnamed")
         {
             ObjectType = objectType;
             Version = 1;
             Name = name;
+            DestinationSpaceObjectId = null;
         }
 
         public SpaceObject()

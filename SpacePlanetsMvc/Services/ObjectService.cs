@@ -6,6 +6,8 @@ using System.Linq;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.ServiceResponses;
 using System.Numerics;
+using MongoDB.Bson;
+using System.Linq.Expressions;
 
 namespace SpacePlanetsMvc.Services
 {
@@ -333,6 +335,11 @@ namespace SpacePlanetsMvc.Services
 
         public void CreateDefaultSpaceObjectsForAllStarsInDefaultGalaxyIfNecessary()
         {
+
+            Expression<Func<SpaceObject, object>> indexColumn1 = o => o.X;
+            Expression<Func<SpaceObject, object>> indexColumn2 = o => o.Y;
+            _wrapper.SpaceObjectRepository.CreateCombinedTextIndexAsync<SpaceObject, Guid>(new[] { indexColumn1, indexColumn2 }, null, null);
+            
             long count = _wrapper.SpaceObjectRepository.Count<SpaceObject>(f => f.ObjectType == "Planet");
             if (count == 0)
             {

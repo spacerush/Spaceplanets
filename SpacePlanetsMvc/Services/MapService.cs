@@ -43,7 +43,11 @@ namespace SpacePlanetsMvc.Services
             result.MapDataResult = new GetMapDataResult();
             result.MapDataResult.MapDataCells = new List<MapDataCell>();
             Ship ship = _wrapper.ShipRepository.GetOne<Ship>(f => f.Id == shipId);
-            int scanDistance = 25; // hardcoded value for now, the distance from the ship the player and the ship is aware of.           
+
+            // TODO: use a valid scan distance.
+            int scanDistance = 25; // hardcoded value for now, the distance from the ship the player and the ship is aware of.     
+            
+
             int minX = ship.X - scanDistance;
             int maxX = ship.X + scanDistance;
             int minY = ship.Y - scanDistance;
