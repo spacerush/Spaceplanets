@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Marten;
+using MongoDB.Driver;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanets.SharedModels.Helpers;
 using SpacePlanetsMvc.ServiceResponses;
@@ -14,13 +15,13 @@ namespace SpacePlanetsMvc.Services
     {
 
         private readonly Repositories.IRepositoryWrapper _wrapper;
-        private readonly IMongoClient _mongoClient;
+        private readonly IDocumentStore _documentStore;
         private readonly Random _random;
 
-        public AuthenticationService(IMongoClient client)
+        public AuthenticationService(IDocumentStore client)
         {
-            _mongoClient = client;
-            _wrapper = new Repositories.RepositoryWrapper(_mongoClient);
+            _documentStore = client;
+            _wrapper = new Repositories.RepositoryWrapper(_documentStore);
             _random = new Random();
         }
 
@@ -63,7 +64,7 @@ namespace SpacePlanetsMvc.Services
             accessToken.RefreshToken = new RefreshToken();
             accessToken.RefreshToken.Content = GenerationHelper.CreateRandomString(true, true, false, 20);
             accessToken.RefreshToken.Expiry = DateTime.UtcNow.AddMinutes(10);
-            Player player = _wrapper.PlayerRepository.GetOne<Player>(f => f.Username == username);
+            Player player = _wrapper.PlayerRepository.GetOne<Player>(p => p.Username == username);
             accessToken.PlayerId = player.Id;
             _wrapper.AccessTokenRepository.AddOne<AccessToken>(accessToken);
             return accessToken;

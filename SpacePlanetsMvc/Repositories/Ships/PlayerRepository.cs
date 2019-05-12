@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Marten;
+using MongoDB.Driver;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.Repositories;
 using System;
@@ -11,7 +12,7 @@ namespace SpacePlanetsMvc.Repositories.Ships
     public class PlayerRepository : RepositoryBase<Player>, IPlayerRepository
     {
 
-        public PlayerRepository(IMongoClient mongoClient) : base(mongoClient)
+        public PlayerRepository(IDocumentStore documentStore) : base(documentStore)
         {
 
             
@@ -19,11 +20,11 @@ namespace SpacePlanetsMvc.Repositories.Ships
 
         public void CenterPlayerCamera(Guid playerId, int x, int y, int z)
         {
-            Player player = this.GetOne<Player>(f => f.Id == playerId);
+            Player player = Session.Load<Player>(playerId);
             player.CameraX = x;
             player.CameraY = y;
             player.CameraZ = z;
-            this.UpdateOne<Player>(player);
+            Session.Update<Player>(player);
         }
 
     }

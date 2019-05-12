@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Marten;
+using MongoDB.Driver;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.Repositories.Ships;
 using System;
@@ -10,7 +11,7 @@ namespace SpacePlanetsMvc.Repositories
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
-        private readonly IMongoClient _mongoClient;
+        private readonly IDocumentStore _databaseClient;
 
         private IRepositoryBase<GalaxyContainer> _galaxyContainerRepository;
         private IRepositoryBase<SpaceObject> _spaceObjectRepository;
@@ -30,9 +31,9 @@ namespace SpacePlanetsMvc.Repositories
         private IRepositoryBase<MicroclusterTemplate> _microclusterTemplateRepository;
         #endregion
 
-        public RepositoryWrapper(IMongoClient mongoClient)
+        public RepositoryWrapper(IDocumentStore documentStore)
         {
-            _mongoClient = mongoClient;
+            _databaseClient = documentStore;
         }
 
         public IRepositoryBase<GalaxyContainer> GalaxyContainerRepository
@@ -41,7 +42,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_galaxyContainerRepository == null)
                 {
-                    _galaxyContainerRepository = new RepositoryBase<GalaxyContainer>(_mongoClient);
+                    _galaxyContainerRepository = new RepositoryBase<GalaxyContainer>(_databaseClient);
                 }
                 return _galaxyContainerRepository;
             }
@@ -53,7 +54,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_spaceObjectRepository == null)
                 {
-                    _spaceObjectRepository = new RepositoryBase<SpaceObject>(_mongoClient);
+                    _spaceObjectRepository = new RepositoryBase<SpaceObject>(_databaseClient);
                 }
                 return _spaceObjectRepository;
             }
@@ -65,7 +66,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_planetMetadataRepository == null)
                 {
-                    _planetMetadataRepository = new RepositoryBase<PlanetMetadata>(_mongoClient);
+                    _planetMetadataRepository = new RepositoryBase<PlanetMetadata>(_databaseClient);
                 }
                 return _planetMetadataRepository;
             }
@@ -78,7 +79,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_webSessionRepository == null)
                 {
-                    _webSessionRepository = new RepositoryBase<WebSession>(_mongoClient);
+                    _webSessionRepository = new RepositoryBase<WebSession>(_databaseClient);
                 }
                 return _webSessionRepository;
             }
@@ -91,7 +92,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_playerRepository == null)
                 {
-                    _playerRepository = new PlayerRepository(_mongoClient);
+                    _playerRepository = new PlayerRepository(_databaseClient);
                 }
                 return _playerRepository;
             }
@@ -103,7 +104,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_accessTokenRepository == null)
                 {
-                    _accessTokenRepository = new RepositoryBase<AccessToken>(_mongoClient);
+                    _accessTokenRepository = new RepositoryBase<AccessToken>(_databaseClient);
                 }
                 return _accessTokenRepository;
             }
@@ -115,7 +116,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_characterRepository == null)
                 {
-                    _characterRepository = new RepositoryBase<Character>(_mongoClient);
+                    _characterRepository = new RepositoryBase<Character>(_databaseClient);
                 }
                 return _characterRepository;
             }
@@ -126,7 +127,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_shipRepository == null)
                 {
-                    _shipRepository = new ShipRepository(_mongoClient);
+                    _shipRepository = new ShipRepository(_databaseClient);
                 }
                 return _shipRepository;
             }
@@ -138,7 +139,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_shipTemplateRepository == null)
                 {
-                    _shipTemplateRepository = new RepositoryBase<ShipTemplate>(_mongoClient);
+                    _shipTemplateRepository = new RepositoryBase<ShipTemplate>(_databaseClient);
                 }
                 return _shipTemplateRepository;
             }
@@ -150,7 +151,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_shipModuleRepository == null)
                 {
-                    _shipModuleRepository = new RepositoryBase<ShipModule>(_mongoClient);
+                    _shipModuleRepository = new RepositoryBase<ShipModule>(_databaseClient);
                 }
                 return _shipModuleRepository;
             }
@@ -162,7 +163,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_implantTemplateRepository == null)
                 {
-                    _implantTemplateRepository = new RepositoryBase<ImplantTemplate>(_mongoClient);
+                    _implantTemplateRepository = new RepositoryBase<ImplantTemplate>(_databaseClient);
                 }
                 return _implantTemplateRepository;
             }
@@ -174,7 +175,7 @@ namespace SpacePlanetsMvc.Repositories
             {
                 if (_microclusterTemplateRepository == null)
                 {
-                    _microclusterTemplateRepository = new RepositoryBase<MicroclusterTemplate>(_mongoClient);
+                    _microclusterTemplateRepository = new RepositoryBase<MicroclusterTemplate>(_databaseClient);
                 }
                 return _microclusterTemplateRepository;
             }

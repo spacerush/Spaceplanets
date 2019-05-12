@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Marten;
+using MongoDB.Driver;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.ServiceResponses;
 using System;
@@ -10,10 +11,10 @@ namespace SpacePlanetsMvc.Services
     public class GameService : IGameService
     {
         private readonly Repositories.IRepositoryWrapper _wrapper;
-        private readonly IMongoClient _mongoClient;
+        private readonly IDocumentStore _mongoClient;
         private readonly Random _random;
 
-        public GameService(IMongoClient client)
+        public GameService(IDocumentStore client)
         {
             _mongoClient = client;
             _wrapper = new Repositories.RepositoryWrapper(_mongoClient);

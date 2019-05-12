@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Marten;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,12 +30,9 @@ namespace SpacePlanetsMvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connstring = Configuration["MongoDb:Storage"];
-            if (string.IsNullOrEmpty(connstring)) {
-                connstring = "mongodb://localhost:27017/SpacePlanets";
-            }
-            var client = new MongoClient(connstring);
-            services.AddSingleton<IMongoClient>(c => client);
+            string connstring = Configuration["Postgresql:Storage"];
+            var store = DocumentStore.For(connstring);
+            services.AddSingleton<IDocumentStore>(c => store);
 
             services.Configure<CookiePolicyOptions>(options =>
             {

@@ -10,5 +10,6 @@ namespace SpacePlanetsMvc.Repositories.Ships
     public interface IPlayerRepository : IRepositoryBase<Player>
     {
         void CenterPlayerCamera(Guid playerId, int x, int y, int z);
+
     }
 }
