@@ -15,5 +15,9 @@ namespace SpacePlanetsMvc.Repositories
         void UpdateOne<T1>(T1 entity);
 
         List<T> GetAll<T1>(System.Linq.Expressions.Expression<Func<T, bool>> whereCondition);
+
+        void AddMany<T1>(List<T1> entities);
+
+        int Count<T>(System.Linq.Expressions.Expression<Func<T, bool>> whereCondition);
     }
 }

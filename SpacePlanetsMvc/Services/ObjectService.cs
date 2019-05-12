@@ -7,6 +7,7 @@ using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.ServiceResponses;
 using System.Numerics;
 using MongoDB.Bson;
+using Marten;
 
 namespace SpacePlanetsMvc.Services
 {
@@ -17,13 +18,13 @@ namespace SpacePlanetsMvc.Services
     public class ObjectService : IObjectService
     {
         private readonly Repositories.IRepositoryWrapper _wrapper;
-        private readonly IMongoClient _mongoClient;
+        private readonly IDocumentStore _documentStore;
         private readonly Random _random;
 
-        public ObjectService(IMongoClient client)
+        public ObjectService(IDocumentStore client)
         {
-            _mongoClient = client;
-            _wrapper = new Repositories.RepositoryWrapper(_mongoClient);
+            _documentStore = client;
+            _wrapper = new Repositories.RepositoryWrapper(_documentStore);
             _random = new Random();
         }
         
@@ -342,8 +343,8 @@ namespace SpacePlanetsMvc.Services
                     Builders<SpaceObject>.IndexKeys.Ascending(f => f.X),
                     Builders<SpaceObject>.IndexKeys.Ascending(f => f.Y));
 
-                var model = new CreateIndexModel<SpaceObject>(indexDefinition, null);
-                _mongoClient.GetDatabase("SpacePlanets").GetCollection<SpaceObject>("spaceObjects", null).Indexes.CreateOne(model);
+                //var model = new CreateIndexModel<SpaceObject>(indexDefinition, null);
+                //_mongoClient.GetDatabase("SpacePlanets").GetCollection<SpaceObject>("spaceObjects", null).Indexes.CreateOne(model);
 
                 GetGalaxyResponse galaxyResponse = this.GetDefaultGalaxy();
                 if (galaxyResponse.Success)

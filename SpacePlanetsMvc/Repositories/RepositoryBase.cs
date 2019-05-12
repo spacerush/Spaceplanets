@@ -24,11 +24,12 @@ namespace SpacePlanetsMvc.Repositories
         public void AddOne<T1>(T1 entity)
         {
             Session.Insert<T1>(entity);
+            Session.SaveChanges();
         }
 
         public T GetOne<T1>(System.Linq.Expressions.Expression<Func<T, bool>> whereCondition)
         {
-            return Session.Query<T>().Where<T>(whereCondition).Single();
+            return Session.Query<T>().Where<T>(whereCondition).SingleOrDefault();
         }
 
         public List<T> GetAll<T1>(System.Linq.Expressions.Expression<Func<T, bool>> whereCondition)
@@ -39,6 +40,21 @@ namespace SpacePlanetsMvc.Repositories
         public void UpdateOne<T1>(T1 entity)
         {
             Session.Update<T1>(entity);
+            Session.SaveChanges();
+        }
+
+        public void AddMany<T1>(List<T1> entities)
+        {
+            foreach (var item in entities)
+            {
+                Session.Insert<T1>(item);
+            }
+            Session.SaveChanges();
+        }
+
+        public int Count<T>(System.Linq.Expressions.Expression<Func<T, bool>> whereCondition)
+        {
+            return Session.Query<T>().Where<T>(whereCondition).Count();
         }
     }
 }

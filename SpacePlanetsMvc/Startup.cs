@@ -31,7 +31,12 @@ namespace SpacePlanetsMvc
         public void ConfigureServices(IServiceCollection services)
         {
             string connstring = Configuration["Postgresql:Storage"];
-            var store = DocumentStore.For(connstring);
+            var store = DocumentStore.For(_ =>
+            {
+                _.Connection(connstring);
+                _.AutoCreateSchemaObjects = AutoCreate.All;
+                // other Marten configuration options
+            });
             services.AddSingleton<IDocumentStore>(c => store);
 
             services.Configure<CookiePolicyOptions>(options =>

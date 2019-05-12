@@ -7,6 +7,7 @@ using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.ServiceResponses;
 using SpacePlanetsMvc.Models.ServiceResponses.Map;
 using SpacePlanets.SharedModels.ServerToClient;
+using Marten;
 
 namespace SpacePlanetsMvc.Services
 {
@@ -18,12 +19,12 @@ namespace SpacePlanetsMvc.Services
     {
         private readonly List<Star> defaultStars;
         private readonly Repositories.IRepositoryWrapper _wrapper;
-        private readonly IMongoClient _mongoClient;
+        private readonly IDocumentStore _documentStore;
 
-        public MapService(IMongoClient client)
+        public MapService(IDocumentStore client)
         {
-            _mongoClient = client;
-            _wrapper = new Repositories.RepositoryWrapper(_mongoClient);
+            _documentStore = client;
+            _wrapper = new Repositories.RepositoryWrapper(_documentStore);
             defaultStars = _wrapper.GalaxyContainerRepository.GetOne<GalaxyContainer>(f => f.Name == "Default").Galaxy.Stars.ToList();
         }
 
