@@ -174,7 +174,7 @@ namespace SpacePlanetsClient
                     foreach (Ship ship in item.Ships)
                     {
                         _spaceMap.Print(item.CellX, item.CellY, "+", Color.Turquoise, Color.Black);
-                        _messageLogConsole.Write("shipX:" + ship.X + " shipY:" + ship.Y);
+                        //_messageLogConsole.Write("shipX:" + ship.X + " shipY:" + ship.Y);
                     }
 
                 }
@@ -301,6 +301,18 @@ namespace SpacePlanetsClient
             }
         }
 
+        public static bool DisplayingAdminMenu
+        {
+            get
+            {
+                return _displayingAdminMenu;
+            }
+            set
+            {
+                _displayingAdminMenu = DisplayingAdminMenu;
+            }
+        }
+
         /// <summary>
         /// Whether or not the character selection menu is being displayed.
         /// </summary>
@@ -311,8 +323,15 @@ namespace SpacePlanetsClient
         /// </summary>
         private static bool _displayingShipMenu = false;
 
+        /// <summary>
+        /// Whether or not the admin menu is shown
+        /// </summary>
+        private static bool _displayingAdminMenu = false;
+
         public static MenuConsole CharacterMenu { get; set; }
         public static MenuConsole ShipMenu { get; set; }
+        public static MenuConsole AdminMenu { get; set; }
+
 
         /// <summary>
         /// This is the first method in this static class that will be called by Initiation
@@ -337,6 +356,7 @@ namespace SpacePlanetsClient
         {
             RemoveCharacterMenu();
             RemoveShipMenu();
+            RemoveAdminMenu();
         }
 
         public static void RemoveCharacterMenu()
@@ -351,6 +371,14 @@ namespace SpacePlanetsClient
             _mainConsole.Children.Remove(ShipMenu);
             GameState.ShipMenu.IsVisible = false;
             _displayingShipMenu = false;
+        }
+
+
+        public static void RemoveAdminMenu()
+        {
+            _mainConsole.Children.Remove(AdminMenu);
+            GameState.AdminMenu.IsVisible = false;
+            _displayingAdminMenu = false;
         }
 
         /// <summary>
@@ -538,6 +566,32 @@ namespace SpacePlanetsClient
             }
         }
 
+
+        public static void ActivateAdminMenu()
+        {
+            _displayingAdminMenu = true;
+            List<MenuButtonMetadataItem> menuItems = new List<MenuButtonMetadataItem>();
+            menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Warp: select starting point", "SelectWarpStart"));
+            menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Warp: new starting point", "AddWarpStart"));
+            menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Warp: new ending point", "AddWarpEnd"));
+            menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Spawn: ship", "AddShip"));
+            menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Spawn: asteroid", "AddAsteroid"));
+            menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Spawn: moon", "AddMoon"));
+            menuItems.Add(new MenuButtonMetadataItem(Guid.Empty, "Move: specify destination", "MoveToSpecificCoordinates"));
+            ShipMenu.SetElements(menuItems);
+            _mainConsole.Children.Add(ShipMenu);
+            _mainConsole.Children.MoveToTop(ShipMenu);
+            string menuTitle = "Do administrative action";
+            ShipMenu.ShowMenu(menuTitle);
+            int cellX = 0;
+            while (cellX < menuTitle.Length)
+            {
+                cellX++;
+                ShipMenu.SetEffect(cellX, 0, ShipMenu.menuFade);
+            }
+        }
+
+
         private static void RequestCameraCoordinates()
         {
             connection.SendAsync("GetPlayerCameraCoordinates", new AuthorizationTokenContainer() { Token = _accessToken.Content });
@@ -559,21 +613,20 @@ namespace SpacePlanetsClient
                     pingStopWatch.Stop();
                     // Get the elapsed time as a TimeSpan value.
                     TimeSpan ts = pingStopWatch.Elapsed;
-                    if (ts.TotalMilliseconds < 100)
+                    if (ts.TotalMilliseconds < 250)
                     {
                         _serverStatusConsole.Write("Scanner responsiveness: " + Math.Floor(ts.TotalMilliseconds) + " ms", ServerStatusConsole.MessageTypes.Ok);
                     }
                     else
                     {
                         _serverStatusConsole.Write("Scanner responsiveness degraded: " + Math.Floor(ts.TotalMilliseconds) + " ms", ServerStatusConsole.MessageTypes.Danger);
-                        _messageLogConsole.Write("Scanner responsiveness degraded: " + Math.Floor(ts.TotalMilliseconds) + " ms", MessageLogConsole.MessageTypes.Warning);
                     }
                 }
                 else
                 {
                     pingStopWatch.Stop();
-                    _serverStatusConsole.Write("Scanner responsiveness probe error (data received out of order).", ServerStatusConsole.MessageTypes.Danger);
-                    _messageLogConsole.Write("Scanner responsiveness probe error (data received out of order).", MessageLogConsole.MessageTypes.Warning);
+                    _serverStatusConsole.Write("Scanner responsiveness probe error.", ServerStatusConsole.MessageTypes.Danger);
+                    _messageLogConsole.Write("Scanner responsiveness probe error.", MessageLogConsole.MessageTypes.Warning);
                 }
             });
 
@@ -631,8 +684,11 @@ namespace SpacePlanetsClient
 
                     GameState.ShipMenu = new MenuConsole(_mainConsole.Width, _mainConsole.Height - 1);
                     GameState.CharacterMenu = new MenuConsole(_mainConsole.Width, _mainConsole.Height - 1);
+                    GameState.AdminMenu = new MenuConsole(_mainConsole.Width / 2, _mainConsole.Height - 1);
+
                     ShipMenu.Position = new Point(0, 1);
                     CharacterMenu.Position = new Point(0, 1);
+                    AdminMenu.Position = new Point(_mainConsole.Width / 2, 1);
 
                     _loginWindow.IsVisible = false;
                     _loginWindow.Controls.RemoveAll();
