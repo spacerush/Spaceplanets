@@ -27,5 +27,7 @@ namespace SpacePlanets.SharedModels.Interface
         Task ReceiveMapData(GetMapDataResult result);
 
         Task ReceiveShipMovementConfirmation(ShipMovementConfirmation result);
+
+        Task ReceiveError(ErrorFromServer error);
     }
 }

@@ -3,6 +3,7 @@ using SpacePlanets.SharedModels.ClientToServer;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanets.SharedModels.Interface;
 using SpacePlanets.SharedModels.ServerToClient;
+using SpacePlanetsMvc.Models.ServiceResponses;
 using SpacePlanetsMvc.Models.ServiceResponses.Map;
 using SpacePlanetsMvc.ServiceResponses;
 using SpacePlanetsMvc.Services;
@@ -184,6 +185,79 @@ namespace SpacePlanetsMvc.Hubs
                 }
             }
         }
+
+        public async Task AddWarpStart(AuthorizationTokenContainer tokenContainer, SelectedShipContainer selectedShipContainer)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success && playerByAccessTokenResponse.Player.IsAdmin == true)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, selectedShipContainer.ShipId);
+                if (serviceResult.Success)
+                {
+
+                }
+                else
+                {
+                    await Clients.Caller.ReceiveError(new ErrorFromServer("Could not retrieve the ship you are piloting for object placement or selection purposes."));
+                }
+            }
+            else
+            {
+                await Clients.Caller.ReceiveError(new ErrorFromServer("Warp start creation is only available to administrators."));
+            }
+        }
+
+        public async Task AddWarpEnd(AuthorizationTokenContainer tokenContainer, SelectedShipContainer selectedShipContainer)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success && playerByAccessTokenResponse.Player.IsAdmin == true)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, selectedShipContainer.ShipId);
+                if (serviceResult.Success)
+                {
+
+                }
+                else
+                {
+                    await Clients.Caller.ReceiveError(new ErrorFromServer("Could not retrieve the ship you are piloting for object placement or selection purposes."));
+                }
+            }
+            else
+            {
+                await Clients.Caller.ReceiveError(new ErrorFromServer("Warp ending spot creation is only available to administrators."));
+            }
+        }
+
+        public async Task SelectWarpStart(AuthorizationTokenContainer tokenContainer, SelectedShipContainer selectedShipContainer)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success && playerByAccessTokenResponse.Player.IsAdmin == true)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, selectedShipContainer.ShipId);
+                if (serviceResult.Success)
+                {
+                    Ship ship = serviceResult.Ships.First();
+                    CreateSpaceObjectResult spaceObjectResult = _objectService.SpawnWarpGate(ship.X, ship.Y, ship.Z);
+                    if (spaceObjectResult.Success == true)
+                    {
+                        await Clients.Caller.ReceiveMessage("Space object #" + spaceObjectResult.SpaceObject.Id + " created.");
+                    }
+                    else
+                    {
+                        await Clients.Caller.ReceiveMessage("Space object could not be created.");
+                    }
+                }
+                else
+                {
+                    await Clients.Caller.ReceiveError(new ErrorFromServer("Could not retrieve the ship you are piloting for object placement or selection purposes."));
+                }
+            }
+            else
+            {
+                await Clients.Caller.ReceiveError(new ErrorFromServer("Warp start selection is only available to administrators."));
+            }
+        }
+
 
     }
 

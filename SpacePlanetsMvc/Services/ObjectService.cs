@@ -7,6 +7,7 @@ using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.ServiceResponses;
 using System.Numerics;
 using MongoDB.Bson;
+using SpacePlanetsMvc.Models.ServiceResponses;
 
 namespace SpacePlanetsMvc.Services
 {
@@ -398,6 +399,28 @@ namespace SpacePlanetsMvc.Services
                     }
                 }
             }
+        }
+
+        public CreateSpaceObjectResult SpawnWarpGate(int x, int y, int z)
+        {
+            var result = new CreateSpaceObjectResult();
+            int count = _wrapper.SpaceObjectRepository.GetAll<SpaceObject>(f => f.X == x && f.Y == y && f.Z == z && f.ObjectType == "Warpgate").Count;
+            if (count == 0)
+            {
+                var newObject = new SpaceObject("Warpgate", "Unnamed warpgate");
+                newObject.X = x;
+                newObject.Y = y;
+                newObject.Z = z;
+                newObject.DestinationSpaceObjectId = Guid.Empty;
+                _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(newObject);
+                result.Success = true;
+                result.SpaceObject = newObject;
+            }
+            else
+            {
+                result.Success = false;
+            }
+            return result;
         }
     }
 }

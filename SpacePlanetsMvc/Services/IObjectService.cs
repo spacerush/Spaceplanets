@@ -1,4 +1,5 @@
 ﻿using SpacePlanets.SharedModels.GameObjects;
+using SpacePlanetsMvc.Models.ServiceResponses;
 using SpacePlanetsMvc.ServiceResponses;
 using System;
 using System.Collections.Generic;
@@ -86,5 +87,14 @@ namespace SpacePlanetsMvc.Services
         /// Creates planets if none exist already.
         /// </summary>
         void CreateDefaultSpaceObjectsForAllStarsInDefaultGalaxyIfNecessary();
+
+        /// <summary>
+        /// Adds a new warp gate at a certain location, if there are no other warpgates there yet.
+        /// </summary>
+        /// <param name="x">Chosen X</param>
+        /// <param name="y">Chosen Y</param>
+        /// <param name="z">Chosen Z</param>
+        /// <returns>The created SpaceObject</returns>
+        CreateSpaceObjectResult SpawnWarpGate(int x, int y, int z);
     }
 }

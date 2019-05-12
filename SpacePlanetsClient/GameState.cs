@@ -157,6 +157,22 @@ namespace SpacePlanetsClient
             }
         }
 
+        public static void AddWarpStart()
+        {
+            connection.InvokeAsync("AddWarpStart", GetAuthorizationTokenContainer(), new SelectedShipContainer() { ShipId = selectedShip });
+        }
+
+        public static void SelectWarpStart()
+        {
+            connection.InvokeAsync("SelectWarpStart", GetAuthorizationTokenContainer(), new SelectedShipContainer() { ShipId = selectedShip });
+        }
+
+        public static void AddWarpEnd()
+        {
+            connection.InvokeAsync("AddWarpEnd", GetAuthorizationTokenContainer(), new SelectedShipContainer() { ShipId = selectedShip });
+        }
+
+
         private static void DrawMapData()
         {
             _spaceMap.Clear();
@@ -166,7 +182,9 @@ namespace SpacePlanetsClient
                 {
                     foreach (Star star in item.Stars)
                     {
-                        _spaceMap.Print(item.CellX, item.CellY, "*", Color.OrangeRed, Color.Black);
+                        // To draw a star that is larger than the cell:
+                        //_spaceMap.DrawCircle(new Rectangle(new Point(item.CellX -2, item.CellY -2), new Point(5, 5)), new Cell(Color.Red, Color.Red, 7));
+                        _spaceMap.SetGlyph(item.CellX, item.CellY, 7, Color.OrangeRed, Color.Black);
                     }
                 }
                 if (item.Ships != null && item.Ships.Count > 0)
@@ -192,7 +210,7 @@ namespace SpacePlanetsClient
                         }
                         if (spaceObject.ObjectType == "Planet")
                         {
-                            _spaceMap.Print(item.CellX, item.CellY, "O", Color.CornflowerBlue, Color.Black);
+                            _spaceMap.SetGlyph(item.CellX, item.CellY, 7, Color.CornflowerBlue, Color.Black);
                         }
 
                     }
@@ -732,6 +750,11 @@ namespace SpacePlanetsClient
                 {
                     CreateErrorWindow(result.Error, _mainConsole);
                 }
+            });
+
+            connection.On<ErrorFromServer>("ReceiveError", (result) =>
+            {
+                CreateErrorWindow(result, _mainConsole);
             });
 
             // retrieval of characters for menu.
