@@ -422,5 +422,34 @@ namespace SpacePlanetsMvc.Services
             }
             return result;
         }
+
+        public ConnectWarpgateResult ConnectWarpGate(int x, int y, int z, Guid startWarpgateId)
+        {
+            var result = new ConnectWarpgateResult();
+            int count = _wrapper.SpaceObjectRepository.GetAll<SpaceObject>(f => f.X == x && f.Y == y && f.Z == z && f.ObjectType == "Warpgate").Count;
+            SpaceObject destinationObject;
+            if (count == 0)
+            {
+                destinationObject = new SpaceObject("Warpgate", "Unnamed warpgate");
+                destinationObject.X = x;
+                destinationObject.Y = y;
+                destinationObject.Z = z;
+                destinationObject.DestinationSpaceObjectId = Guid.Empty;
+                _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(destinationObject);
+            }
+            else
+            {
+                destinationObject = _wrapper.SpaceObjectRepository.GetOne<SpaceObject>(f => f.X == x && f.Y == y && f.Z == z && f.ObjectType == "Warpgate");
+            }
+            destinationObject.DestinationSpaceObjectId = startWarpgateId;
+            SpaceObject startingObject = _wrapper.SpaceObjectRepository.GetOne<SpaceObject>(f => f.Id == startWarpgateId);
+            startingObject.DestinationSpaceObjectId = destinationObject.Id;
+            _wrapper.SpaceObjectRepository.UpdateOne<SpaceObject>(destinationObject);
+            _wrapper.SpaceObjectRepository.UpdateOne<SpaceObject>(startingObject);
+            result.Success = true;
+            result.SourceObjectId = startingObject.Id;
+            result.DestinationObjectId = destinationObject.Id;
+            return result;
+        }
     }
 }

@@ -164,12 +164,13 @@ namespace SpacePlanetsClient
 
         public static void SelectWarpStart()
         {
-            connection.InvokeAsync("SelectWarpStart", GetAuthorizationTokenContainer(), new SelectedShipContainer() { ShipId = selectedShip });
+            MapDataCell cell = FindCellInMapContainingShip(selectedShip);
+            selectedwarpGate = cell.SpaceObjects.Where(x => x.ObjectType == "Warpgate").First().Id;
         }
 
         public static void AddWarpEnd()
         {
-            connection.InvokeAsync("AddWarpEnd", GetAuthorizationTokenContainer(), new SelectedShipContainer() { ShipId = selectedShip });
+            connection.InvokeAsync("AddWarpEnd", GetAuthorizationTokenContainer(), new SelectedShipContainer() { ShipId = selectedShip }, new SelectedWarpStartContainer() { WarpStartId = selectedwarpGate });
         }
 
 
@@ -212,12 +213,17 @@ namespace SpacePlanetsClient
                         {
                             _spaceMap.SetGlyph(item.CellX, item.CellY, 7, Color.CornflowerBlue, Color.Black);
                         }
+                        if (spaceObject.ObjectType == "Warpgate")
+                        {
+                            _spaceMap.Print(item.CellX, item.CellY, "0", Color.GreenYellow, Color.Black);
+                        }
 
                     }
                 }
             }
         }
         internal static Guid selectedShip;
+        internal static Guid selectedwarpGate;
 
         internal static CancellationToken CancelHeartbeat;
         internal static HubConnection connection;

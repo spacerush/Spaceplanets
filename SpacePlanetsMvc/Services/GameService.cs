@@ -3,6 +3,7 @@ using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.ServiceResponses;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SpacePlanetsMvc.Services
@@ -111,6 +112,20 @@ namespace SpacePlanetsMvc.Services
             Ship ship = _wrapper.ShipRepository.GetOne<Ship>(f => f.Id == shipId);
             ship.X = x;
             ship.Y = y;
+            // check for warpgate at the new location of the ship, if there are a warpgate move the ship again!
+            // TODO: extract this into a method of its own (keep it dry). See line ~139 and ~140 for repeated code.
+            List<SpaceObject> warpgates = _wrapper.SpaceObjectRepository.GetAll<SpaceObject>(f => f.X == ship.X && f.Y == ship.Y && f.Z == ship.Z && f.ObjectType == "Warpgate").ToList();
+            if (warpgates.Count == 1)
+            {
+                Guid destinationId = warpgates.First().DestinationSpaceObjectId;
+                if (destinationId != Guid.Empty)
+                {
+                    SpaceObject destinationObject = _wrapper.SpaceObjectRepository.GetById<SpaceObject>(destinationId);
+                    ship.X = destinationObject.X;
+                    ship.Y = destinationObject.Y;
+                    ship.Z = destinationObject.Z;
+                }
+            }
             ship.LastMovementUtc = DateTime.UtcNow;
             _wrapper.ShipRepository.UpdateOne<Ship>(ship);
         }
@@ -120,6 +135,20 @@ namespace SpacePlanetsMvc.Services
             Ship ship = _wrapper.ShipRepository.GetOne<Ship>(f => f.Id == shipId);
             ship.X = ship.X + changeX;
             ship.Y = ship.Y + changeY;
+            // check for warpgate at the new location of the ship, if there are a warpgate move the ship again!
+            // TODO: extract this into a method of its own (keep it dry). See line ~139 and ~140 for repeated code.
+            List<SpaceObject> warpgates = _wrapper.SpaceObjectRepository.GetAll<SpaceObject>(f => f.X == ship.X && f.Y == ship.Y && f.Z == ship.Z && f.ObjectType == "Warpgate").ToList();
+            if (warpgates.Count == 1)
+            {
+                Guid destinationId = warpgates.First().DestinationSpaceObjectId;
+                if (destinationId != Guid.Empty)
+                {
+                    SpaceObject destinationObject = _wrapper.SpaceObjectRepository.GetById<SpaceObject>(destinationId);
+                    ship.X = destinationObject.X;
+                    ship.Y = destinationObject.Y;
+                    ship.Z = destinationObject.Z;
+                }
+            }
             ship.LastMovementUtc = DateTime.UtcNow;
             _wrapper.ShipRepository.UpdateOne<Ship>(ship);
         }

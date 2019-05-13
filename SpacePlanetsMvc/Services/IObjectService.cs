@@ -96,5 +96,15 @@ namespace SpacePlanetsMvc.Services
         /// <param name="z">Chosen Z</param>
         /// <returns>The created SpaceObject</returns>
         CreateSpaceObjectResult SpawnWarpGate(int x, int y, int z);
+
+        /// <summary>
+        /// Connects a starting warpgate to a destination point in space.
+        /// </summary>
+        /// <param name="x">Chosen X</param>
+        /// <param name="y">Chosen Y</param>
+        /// <param name="z">Chosen Z</param>
+        /// <param name="startWarpgateId">Guid of starting warpgate</param>
+        /// <returns>A ConnectWarpgateResuilt</returns>
+        ConnectWarpgateResult ConnectWarpGate(int x, int y, int z, Guid startWarpgateId);
     }
 }
