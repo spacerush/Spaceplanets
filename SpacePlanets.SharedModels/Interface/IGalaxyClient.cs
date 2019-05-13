@@ -29,5 +29,7 @@ namespace SpacePlanets.SharedModels.Interface
         Task ReceiveShipMovementConfirmation(ShipMovementConfirmation result);
 
         Task ReceiveError(ErrorFromServer error);
+
+        Task ReceiveLootScanResponse(LootScanResponse result);
     }
 }

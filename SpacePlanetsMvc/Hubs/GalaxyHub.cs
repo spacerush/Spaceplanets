@@ -20,9 +20,11 @@ namespace SpacePlanetsMvc.Hubs
         private readonly IGameService _gameService;
         private readonly IObjectService _objectService;
         private readonly IMapService _mapService;
+        private readonly ILootService _lootService;
 
-        public GalaxyHub(IAuthenticationService authService, IObjectService objectService, IGameService gameService, IMapService mapService)
+        public GalaxyHub(IAuthenticationService authService, IObjectService objectService, IGameService gameService, IMapService mapService, ILootService lootService)
         {
+            _lootService = lootService;
             _authService = authService;
             _gameService = gameService;
             _objectService = objectService;
@@ -246,6 +248,63 @@ namespace SpacePlanetsMvc.Hubs
             }
         }
 
+        public async Task AddShipModule(AuthorizationTokenContainer tokenContainer, SelectedShipContainer selectedShipContainer)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success && playerByAccessTokenResponse.Player.IsAdmin == true)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, selectedShipContainer.ShipId);
+                if (serviceResult.Success)
+                {
+                    Ship ship = serviceResult.Ships.First();
+                    _lootService.SpawnRandomModule(ship.X, ship.Y, ship.Z);
+                    Clients.Caller.ReceiveMessage("Random module spawned!");
+                }
+                else
+                {
+                    await Clients.Caller.ReceiveError(new ErrorFromServer("Could not retrieve the ship you are piloting for object placement or selection purposes."));
+                }
+            }
+            else
+            {
+                await Clients.Caller.ReceiveError(new ErrorFromServer("Loot spawning is is only available to administrators."));
+            }
+        }
+
+        public async Task ScanShipLocationForLoot(AuthorizationTokenContainer tokenContainer, SelectedShipContainer selectedShipContainer)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success && playerByAccessTokenResponse.Player.IsAdmin == true)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, selectedShipContainer.ShipId);
+                if (serviceResult.Success)
+                {
+                    Ship ship = serviceResult.Ships.First();
+                    List<SpaceLoot> loot = _lootService.GetAllSpaceLoot(ship.X, ship.Y, ship.Z);
+                    LootScanResponse scanResponse = new LootScanResponse();
+                    scanResponse.X = ship.X;
+                    scanResponse.Y = ship.Y;
+                    scanResponse.Z = ship.Z;
+                    if (loot.Count > 0)
+                    {
+                        scanResponse.SpaceLoots = loot;
+                    }
+                    else
+                    {
+                        scanResponse.SpaceLoots = null;
+                    }
+                    Clients.Caller.ReceiveLootScanResponse(scanResponse);
+                }
+                else
+                {
+                    await Clients.Caller.ReceiveError(new ErrorFromServer("Could not retrieve the ship you are piloting for object placement or selection purposes."));
+                }
+            }
+            else
+            {
+                await Clients.Caller.ReceiveError(new ErrorFromServer("Loot spawning is is only available to administrators."));
+            }
+        }
 
     }
 

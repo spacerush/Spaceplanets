@@ -91,10 +91,14 @@ namespace SpacePlanetsClient.Consoles
             {
                 GameState.AddWarpEnd();
             }
-
             if (buttonNameParts.First() == "SelectWarpStart")
             {
                 GameState.SelectWarpStart();
+            }
+
+            if (buttonNameParts.First() == "AddShipModule")
+            {
+                GameState.AddShipModule();
             }
 
             GameState.SetMenusHidden();

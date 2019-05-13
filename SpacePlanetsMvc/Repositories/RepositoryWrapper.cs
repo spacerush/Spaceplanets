@@ -24,6 +24,7 @@ namespace SpacePlanetsMvc.Repositories
         private IShipRepository _shipRepository;
         private IRepositoryBase<ShipTemplate> _shipTemplateRepository;
         private IRepositoryBase<ShipModule> _shipModuleRepository;
+        private IRepositoryBase<SpaceLoot> _spaceLootRepository;
 
         #region character augmentation
         private IRepositoryBase<ImplantTemplate> _implantTemplateRepository;
@@ -177,6 +178,18 @@ namespace SpacePlanetsMvc.Repositories
                     _microclusterTemplateRepository = new RepositoryBase<MicroclusterTemplate>(_mongoClient);
                 }
                 return _microclusterTemplateRepository;
+            }
+        }
+
+        public IRepositoryBase<SpaceLoot> SpaceLootRepository
+        {
+            get
+            {
+                if (_spaceLootRepository == null)
+                {
+                    _spaceLootRepository = new RepositoryBase<SpaceLoot>(_mongoClient);
+                }
+                return _spaceLootRepository;
             }
         }
 

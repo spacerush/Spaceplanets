@@ -148,6 +148,14 @@ namespace SpacePlanetsClient
             }
         }
 
+        public static void ScanWithSelectedShip()
+        {
+            if (_gameStatus == GameStatus.LoggedIn)
+            {
+                connection.InvokeAsync("ScanShipLocationForLoot", GetAuthorizationTokenContainer(), new SelectedShipContainer() { ShipId = selectedShip });
+            }
+        }
+
         public static void UpdateServerWithShipPosition(int changeX, int changeY)
         {
             if (_gameStatus == GameStatus.LoggedIn)
@@ -173,6 +181,10 @@ namespace SpacePlanetsClient
             connection.InvokeAsync("AddWarpEnd", GetAuthorizationTokenContainer(), new SelectedShipContainer() { ShipId = selectedShip }, new SelectedWarpStartContainer() { WarpStartId = selectedwarpGate });
         }
 
+        public static void AddShipModule()
+        {
+            connection.InvokeAsync("AddShipModule", GetAuthorizationTokenContainer(), new SelectedShipContainer() { ShipId = selectedShip });
+        }
 
         private static void DrawMapData()
         {
@@ -474,6 +486,19 @@ namespace SpacePlanetsClient
             characterWindow.IsVisible = true;
             characterWindow.UseKeyboard = true;
             characterWindow.CenterWithinParent();
+        }
+
+        private static void DisplayLootScanResults(LootScanResponse lootScanResponse)
+        {
+            var scanResultWindow = new ScanResultWindow(MainConsole.Width / 2, MainConsole.Height / 2, MainConsole);
+            MainConsole.Children.Add(scanResultWindow);
+            scanResultWindow.TitleAlignment = HorizontalAlignment.Center;
+            scanResultWindow.Title = "Loot scan results";
+            scanResultWindow.CanDrag = true;
+            scanResultWindow.IsVisible = true;
+            scanResultWindow.UseKeyboard = true;
+            scanResultWindow.CenterWithinParent();
+            scanResultWindow.SetLoot(lootScanResponse);
         }
 
         internal static void RetrieveGalaxyAndDisplay()
@@ -781,7 +806,6 @@ namespace SpacePlanetsClient
 
             connection.On<GetMapDataResult>("ReceiveMapData", (param) =>
             {
-                _messageLogConsole.Write("Receive map data.");
                 SetMapData(param);
                 DrawMapData();
             });
@@ -790,6 +814,11 @@ namespace SpacePlanetsClient
             {
                 _shipMovementStatus = ShipMovementStatus.Ready;
                 DownloadMapAtShip(selectedShip);
+            });
+
+            connection.On<LootScanResponse>("ReceiveLootScanResponse", (param) =>
+            {
+                DisplayLootScanResults(param);
             });
 
             connection.Closed += async (error) =>
