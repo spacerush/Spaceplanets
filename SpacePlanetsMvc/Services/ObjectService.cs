@@ -335,7 +335,6 @@ namespace SpacePlanetsMvc.Services
 
         public void CreateDefaultSpaceObjectsForAllStarsInDefaultGalaxyIfNecessary()
         {
-            
             long count = _wrapper.SpaceObjectRepository.Count<SpaceObject>(f => f.ObjectType == "Planet");
             if (count == 0)
             {
@@ -350,8 +349,43 @@ namespace SpacePlanetsMvc.Services
                 if (galaxyResponse.Success)
                 {
                     List<Star> stars = galaxyResponse.GalaxyContainer.Galaxy.Stars;
+
+                    /// Create a variable to store how many warpgates
+                    Guid firstGateId = Guid.Empty;
+                    Guid lastGateOutId = Guid.Empty;
+                    Guid nextGateId = Guid.NewGuid();
+                    int gateIteration = 0;
+
                     foreach (var star in stars)
                     {
+                        SpaceObject warpGateIn = new SpaceObject("Warpgate");
+                        warpGateIn.Id = nextGateId;
+                        nextGateId = Guid.NewGuid();
+                        SpaceObject warpGateOut = new SpaceObject("Warpgate");
+                        warpGateOut.DestinationSpaceObjectId = nextGateId;
+                        if (gateIteration == 0)
+                        {
+                            firstGateId = warpGateIn.Id;
+                        }
+                        else
+                        {
+                            warpGateIn.DestinationSpaceObjectId = lastGateOutId;
+                        }
+                        warpGateIn.X = star.X;
+                        warpGateIn.Y = star.Y + 1;
+                        warpGateIn.Z = star.Z;
+                        warpGateOut.X = star.X;
+                        warpGateOut.Y = star.Y - 1;
+                        warpGateOut.Z = star.Z;
+                        lastGateOutId = warpGateOut.Id;
+                        gateIteration++;
+                        if (gateIteration == stars.Count)
+                        {
+                            warpGateOut.DestinationSpaceObjectId = firstGateId;
+                        }
+                        _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(warpGateIn);
+                        _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(warpGateOut);
+
 
                         var generationOptions = StarformCore.SystemGenerationOptions.DefaultOptions;
                         var accrete = new StarformCore.Accrete(generationOptions.CloudEccentricity, generationOptions.GasDensityRatio);
@@ -376,12 +410,12 @@ namespace SpacePlanetsMvc.Services
                         foreach (var planet in stellarSystem.Planets)
                         {
 
-                            int minX = star.X - 20;
-                            int maxX = star.X + 20;
-                            int minY = star.Y - 20;
-                            int maxY = star.Y + 20;
-                            int minZ = star.Z - 20;
-                            int maxZ = star.Z + 20;
+                            int minX = star.X - 25;
+                            int maxX = star.X + 25;
+                            int minY = star.Y - 25;
+                            int maxY = star.Y + 25;
+                            int minZ = star.Z - 25;
+                            int maxZ = star.Z + 25;
                             int planetX = random.Next(minX, maxX);
                             int planetY = random.Next(minY, maxY);
                             int planetZ = random.Next(minZ, maxZ);

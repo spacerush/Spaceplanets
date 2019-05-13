@@ -112,6 +112,10 @@ namespace SpacePlanetsClient.Consoles
                     {
                         tooltip.Print(0, lineCounter, item, Color.GhostWhite, Color.Black);
                     }
+                    if (item.StartsWith("Warpgate"))
+                    {
+                        tooltip.Print(0, lineCounter, item, Color.GreenYellow, Color.Black);
+                    }
                     lineCounter++;
                 }
                 tooltip.Position = state.ConsoleCellPosition + new Point(1, 1);
