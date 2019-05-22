@@ -19,10 +19,14 @@ namespace SpacePlanetsMvc
 {
     public class Program
     {
-        public static void Main(string[] args)
+        private static IHostingEnvironment _hostingEnvironment;
+
+        public static void Main(string[] args, IHostingEnvironment hostingEnvironment)
         {
+            _hostingEnvironment = hostingEnvironment;
             using (var eventFlow = CreateEventFlow(args))
             {
+                _hostingEnvironment.
                 BuildWebHost(args, eventFlow).Run();
             }
         }
@@ -52,7 +56,7 @@ namespace SpacePlanetsMvc
             }
             else
             {
-                configBuilder.SetBasePath(Directory.GetCurrentDirectory());
+                configBuilder.SetBasePath(_hostingEnvironment.ContentRootPath);
                 configBuilder.AddJsonFile("appsettings.json", false, false);
             }
 
