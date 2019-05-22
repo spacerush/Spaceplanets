@@ -48,7 +48,13 @@ namespace SpacePlanetsMvc.Controllers
             var viewModel = new GalaxyIndexViewModel(_authenticationService, _objectService, seed.Value, saveSeed, galaxyName, sessionId);
             return View(viewModel);
         }
-        
+
+        public IActionResult Draw()
+        {
+            var viewModel = new GalaxyDrawViewModel(_objectService);
+            return View(viewModel);
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

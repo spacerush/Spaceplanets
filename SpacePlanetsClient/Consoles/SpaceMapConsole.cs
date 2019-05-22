@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Text;
 using SadConsole.Input;
 using SpacePlanetsClient.Extensions;
+using System.Linq;
+using SpacePlanets.SharedModels.ServerToClient;
 
 namespace SpacePlanetsClient.Consoles
 {
@@ -45,19 +47,75 @@ namespace SpacePlanetsClient.Consoles
             base.OnMouseLeftClicked(state);
         }
 
+        public static List<string> GetToolTipItems(int cellX, int cellY) {
+            var results = new List<string>();
+            if (GameState.cachedMapData != null && GameState.cachedMapData.MapDataCells != null)
+            {
+                List<MapDataCell> cells = GameState.cachedMapData.MapDataCells.Where(w => w.CellX == cellX && w.CellY == cellY).ToList();
+                foreach (var item in cells)
+                {
+                    if (item.Stars != null && item.Stars.Count > 0)
+                    {
+                        foreach (var star in item.Stars)
+                        {
+                            results.Add("Star - " + star.Name);
+                        }
+                    }
+                    if (item.SpaceObjects != null && item.SpaceObjects.Count > 0)
+                    {
+                        foreach (var spaceobj in item.SpaceObjects.OrderBy(o => o.ObjectType))
+                        {
+                            results.Add(spaceobj.ObjectType + " - " + spaceobj.Name);
+                        }
+                    }
+                    if (item.Ships != null && item.Ships.Count > 0)
+                    {
+                        foreach (var ship in item.Ships.OrderBy(o => o.Name))
+                        {
+                            results.Add("Ship - " + ship.Type + " - " + ship.Name);
+                        }
+                    }
+                }
+
+            }
+            return results;
+        }
 
         public override bool ProcessMouse(MouseConsoleState state)
         {
             mouseCursor.IsVisible = state.IsOnConsole;
             mouseCursor.Position = state.ConsoleCellPosition;
-            List<string> tooltipItems = new List<string>();// formerly GameState.GetToolTipItems(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y);
+            List<string> tooltipItems = GetToolTipItems(state.ConsoleCellPosition.X, state.ConsoleCellPosition.Y);
             if (tooltipItems.Count > 0)
             {
                 tooltip.Resize(tooltipItems.GetLengthOfLongestItem(), tooltipItems.Count, true);
                 int lineCounter = 0;
                 foreach (var item in tooltipItems)
                 {
-                    tooltip.Print(0, lineCounter, item, Color.White, Color.Black);
+                    if (item.StartsWith("Ship"))
+                    {
+                        tooltip.Print(0, lineCounter, item, Color.White, Color.Black);
+                    }
+                    if (item.StartsWith("Star"))
+                    {
+                        tooltip.Print(0, lineCounter, item, Color.Yellow, Color.Black);
+                    }
+                    if (item.StartsWith("Planet"))
+                    {
+                        tooltip.Print(0, lineCounter, item, Color.CornflowerBlue, Color.Black);
+                    }
+                    if (item.StartsWith("Asteroid"))
+                    {
+                        tooltip.Print(0, lineCounter, item, Color.SandyBrown, Color.Black);
+                    }
+                    if (item.StartsWith("Moon"))
+                    {
+                        tooltip.Print(0, lineCounter, item, Color.GhostWhite, Color.Black);
+                    }
+                    if (item.StartsWith("Warpgate"))
+                    {
+                        tooltip.Print(0, lineCounter, item, Color.GreenYellow, Color.Black);
+                    }
                     lineCounter++;
                 }
                 tooltip.Position = state.ConsoleCellPosition + new Point(1, 1);

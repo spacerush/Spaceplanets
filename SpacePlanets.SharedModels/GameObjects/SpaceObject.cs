@@ -15,12 +15,13 @@ namespace SpacePlanets.SharedModels.GameObjects
         public int Y { get; set; }
         public int Z { get; set;  }
         public string Name { get; set; }
-        public StarformCore.Data.Planet PlanetMetadata { get; set; }
+        public Guid DestinationSpaceObjectId { get; set; }
         public SpaceObject(string objectType, string name = "Unnamed")
         {
             ObjectType = objectType;
             Version = 1;
             Name = name;
+            DestinationSpaceObjectId = Guid.Empty;
         }
 
         public SpaceObject()

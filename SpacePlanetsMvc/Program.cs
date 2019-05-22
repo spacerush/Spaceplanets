@@ -21,8 +21,10 @@ namespace SpacePlanetsMvc
     {
         public static void Main(string[] args)
         {
+            CurrentDirectoryHelpers.SetCurrentDirectory();
             using (var eventFlow = CreateEventFlow(args))
             {
+                CurrentDirectoryHelpers.SetCurrentDirectory();
                 BuildWebHost(args, eventFlow).Run();
             }
         }
@@ -52,7 +54,7 @@ namespace SpacePlanetsMvc
             }
             else
             {
-                configBuilder.SetBasePath(Directory.GetCurrentDirectory());
+                CurrentDirectoryHelpers.SetCurrentDirectory();
                 configBuilder.AddJsonFile("appsettings.json", false, false);
             }
 

@@ -83,6 +83,24 @@ namespace SpacePlanetsClient.Consoles
                 GameState.DownloadMapAtShip(Guid.Parse(buttonNameParts.Last()));
                 GameState.SetSelectedShip(Guid.Parse(buttonNameParts.Last()));
             }
+            if (buttonNameParts.First() == "AddWarpStart")
+            {
+                GameState.AddWarpStart();
+            }
+            if (buttonNameParts.First() == "AddWarpEnd")
+            {
+                GameState.AddWarpEnd();
+            }
+            if (buttonNameParts.First() == "SelectWarpStart")
+            {
+                GameState.SelectWarpStart();
+            }
+
+            if (buttonNameParts.First() == "AddShipModule")
+            {
+                GameState.AddShipModule();
+            }
+
             GameState.SetMenusHidden();
         }
 

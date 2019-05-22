@@ -48,9 +48,9 @@ namespace SpacePlanets.SharedModels.GameObjects
                  */
                 newStar.Mass = system.Star.Mass;
                 newStar.SemiMajorAxisAU = system.Star.SemiMajorAxisAU;
-                newStar.X = (int)Math.Round(star.Position.X*1000);
-                newStar.Y = (int)Math.Round(star.Position.Y*1000);
-                newStar.Z = (int)Math.Round(star.Position.Z*1000);
+                newStar.X = (int)Math.Round(star.Position.X*10);
+                newStar.Y = (int)Math.Round(star.Position.Y*10);
+                newStar.Z = (int)Math.Round(star.Position.Z*10);
                 spGalaxy.Stars.Add(newStar);
             }
             Galaxy = spGalaxy;

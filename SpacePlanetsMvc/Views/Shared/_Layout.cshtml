@@ -9,6 +9,8 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/signalr.min.js"></script>
+    <script src="~/lib/three/three.js"></script>
 </head>
 <body>
     <header>
@@ -28,7 +30,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Items" asp-action="Index">Item Database</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Galaxy" asp-action="Index">Galaxy Generator</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Galaxy" asp-action="Draw">Draw Galaxy</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

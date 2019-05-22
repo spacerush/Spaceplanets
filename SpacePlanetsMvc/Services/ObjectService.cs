@@ -6,6 +6,8 @@ using System.Linq;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanetsMvc.ServiceResponses;
 using System.Numerics;
+using MongoDB.Bson;
+using SpacePlanetsMvc.Models.ServiceResponses;
 
 namespace SpacePlanetsMvc.Services
 {
@@ -336,12 +338,54 @@ namespace SpacePlanetsMvc.Services
             long count = _wrapper.SpaceObjectRepository.Count<SpaceObject>(f => f.ObjectType == "Planet");
             if (count == 0)
             {
+                var indexDefinition = Builders<SpaceObject>.IndexKeys.Combine(
+                    Builders<SpaceObject>.IndexKeys.Ascending(f => f.X),
+                    Builders<SpaceObject>.IndexKeys.Ascending(f => f.Y));
+
+                var model = new CreateIndexModel<SpaceObject>(indexDefinition, null);
+                _mongoClient.GetDatabase("SpacePlanets").GetCollection<SpaceObject>("spaceObjects", null).Indexes.CreateOne(model);
+
                 GetGalaxyResponse galaxyResponse = this.GetDefaultGalaxy();
                 if (galaxyResponse.Success)
                 {
                     List<Star> stars = galaxyResponse.GalaxyContainer.Galaxy.Stars;
+
+                    /// Create a variable to store how many warpgates
+                    Guid firstGateId = Guid.Empty;
+                    Guid lastGateOutId = Guid.Empty;
+                    Guid nextGateId = Guid.NewGuid();
+                    int gateIteration = 0;
+
                     foreach (var star in stars)
                     {
+                        SpaceObject warpGateIn = new SpaceObject("Warpgate");
+                        warpGateIn.Id = nextGateId;
+                        nextGateId = Guid.NewGuid();
+                        SpaceObject warpGateOut = new SpaceObject("Warpgate");
+                        warpGateOut.DestinationSpaceObjectId = nextGateId;
+                        if (gateIteration == 0)
+                        {
+                            firstGateId = warpGateIn.Id;
+                        }
+                        else
+                        {
+                            warpGateIn.DestinationSpaceObjectId = lastGateOutId;
+                        }
+                        warpGateIn.X = star.X;
+                        warpGateIn.Y = star.Y + 1;
+                        warpGateIn.Z = star.Z;
+                        warpGateOut.X = star.X;
+                        warpGateOut.Y = star.Y - 1;
+                        warpGateOut.Z = star.Z;
+                        lastGateOutId = warpGateOut.Id;
+                        gateIteration++;
+                        if (gateIteration == stars.Count)
+                        {
+                            warpGateOut.DestinationSpaceObjectId = firstGateId;
+                        }
+                        _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(warpGateIn);
+                        _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(warpGateOut);
+
 
                         var generationOptions = StarformCore.SystemGenerationOptions.DefaultOptions;
                         var accrete = new StarformCore.Accrete(generationOptions.CloudEccentricity, generationOptions.GasDensityRatio);
@@ -366,12 +410,12 @@ namespace SpacePlanetsMvc.Services
                         foreach (var planet in stellarSystem.Planets)
                         {
 
-                            int minX = star.X - 20;
-                            int maxX = star.X + 20;
-                            int minY = star.Y - 20;
-                            int maxY = star.Y + 20;
-                            int minZ = star.Z - 20;
-                            int maxZ = star.Z + 20;
+                            int minX = star.X - 25;
+                            int maxX = star.X + 25;
+                            int minY = star.Y - 25;
+                            int maxY = star.Y + 25;
+                            int minZ = star.Z - 25;
+                            int maxZ = star.Z + 25;
                             int planetX = random.Next(minX, maxX);
                             int planetY = random.Next(minY, maxY);
                             int planetZ = random.Next(minZ, maxZ);
@@ -380,12 +424,66 @@ namespace SpacePlanetsMvc.Services
                             planetObject.X = planetX;
                             planetObject.Y = planetY;
                             planetObject.Z = (int)planetZ;
-                            planetObject.PlanetMetadata = planet;
                             _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(planetObject);
+                            PlanetMetadata planetMetadata = new PlanetMetadata();
+                            planetMetadata.SpaceObjectId = planetObject.Id;
+                            planetMetadata.Metadata = planet;
+                            _wrapper.PlanetMetadataRepository.AddOne<PlanetMetadata>(planetMetadata);
                         }
                     }
                 }
             }
+        }
+
+        public CreateSpaceObjectResult SpawnWarpGate(int x, int y, int z)
+        {
+            var result = new CreateSpaceObjectResult();
+            int count = _wrapper.SpaceObjectRepository.GetAll<SpaceObject>(f => f.X == x && f.Y == y && f.Z == z && f.ObjectType == "Warpgate").Count;
+            if (count == 0)
+            {
+                var newObject = new SpaceObject("Warpgate", "Unnamed warpgate");
+                newObject.X = x;
+                newObject.Y = y;
+                newObject.Z = z;
+                newObject.DestinationSpaceObjectId = Guid.Empty;
+                _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(newObject);
+                result.Success = true;
+                result.SpaceObject = newObject;
+            }
+            else
+            {
+                result.Success = false;
+            }
+            return result;
+        }
+
+        public ConnectWarpgateResult ConnectWarpGate(int x, int y, int z, Guid startWarpgateId)
+        {
+            var result = new ConnectWarpgateResult();
+            int count = _wrapper.SpaceObjectRepository.GetAll<SpaceObject>(f => f.X == x && f.Y == y && f.Z == z && f.ObjectType == "Warpgate").Count;
+            SpaceObject destinationObject;
+            if (count == 0)
+            {
+                destinationObject = new SpaceObject("Warpgate", "Unnamed warpgate");
+                destinationObject.X = x;
+                destinationObject.Y = y;
+                destinationObject.Z = z;
+                destinationObject.DestinationSpaceObjectId = Guid.Empty;
+                _wrapper.SpaceObjectRepository.AddOne<SpaceObject>(destinationObject);
+            }
+            else
+            {
+                destinationObject = _wrapper.SpaceObjectRepository.GetOne<SpaceObject>(f => f.X == x && f.Y == y && f.Z == z && f.ObjectType == "Warpgate");
+            }
+            destinationObject.DestinationSpaceObjectId = startWarpgateId;
+            SpaceObject startingObject = _wrapper.SpaceObjectRepository.GetOne<SpaceObject>(f => f.Id == startWarpgateId);
+            startingObject.DestinationSpaceObjectId = destinationObject.Id;
+            _wrapper.SpaceObjectRepository.UpdateOne<SpaceObject>(destinationObject);
+            _wrapper.SpaceObjectRepository.UpdateOne<SpaceObject>(startingObject);
+            result.Success = true;
+            result.SourceObjectId = startingObject.Id;
+            result.DestinationObjectId = destinationObject.Id;
+            return result;
         }
     }
 }

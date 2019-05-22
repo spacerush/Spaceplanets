@@ -18,10 +18,9 @@ namespace SpacePlanetsMvc.Models.WebViewModels
         private readonly IObjectService _objectService;
         private readonly Player _player;
         private readonly CasualGodComplex.Galaxy _galaxy;
-        private readonly CasualGodComplex.Galaxy _output;
         private readonly int _seed;
         public int Seed { get { return _seed; } }
-        private List<string> _usedNames;
+
         private readonly bool _success;
         public bool Success { get { return _success; } }
         public CasualGodComplex.Galaxy Galaxy { get { return _galaxy; } }

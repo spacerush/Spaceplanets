@@ -42,19 +42,28 @@ namespace SpacePlanetsClient.Consoles
             organization.CanFocus = false;
             this.Add(organization);
 
-            Button plot = new Button(10, 1);
-            plot.Text = "Plot";
-            plot.Position = new Point(this.Width - 12, 0);
-            plot.Click += Plot_Click;
-            plot.IsVisible = true;
-            plot.CanFocus = true;
-            this.Add(plot);
+            Button btnAdmin = new Button(10, 1);
+            btnAdmin.Text = "Admin";
+            btnAdmin.Position = new Point(this.Width - 12, 0);
+            btnAdmin.Click += BtnAdmin_Click;
+            btnAdmin.IsVisible = true;
+            btnAdmin.CanFocus = true;
+            this.Add(btnAdmin);
 
         }
 
-        private void Plot_Click(object sender, EventArgs e)
+        private void BtnAdmin_Click(object sender, EventArgs e)
         {
-            GameState.RetrieveGalaxyAndDisplay();
+            if (GameState.DisplayingAdminMenu)
+            {
+                GameState.SetMenusHidden();
+            }
+            else
+            {
+                GameState.SetMenusHidden();
+                GameState.ActivateAdminMenu();
+            }
+            GameState.WriteGeneralMessageToLog("Admin button clicked!");
         }
 
         private void Organization_Click(object sender, EventArgs e)

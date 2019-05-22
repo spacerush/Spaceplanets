@@ -14,6 +14,8 @@ namespace SpacePlanetsMvc.Repositories
 
         private IRepositoryBase<GalaxyContainer> _galaxyContainerRepository;
         private IRepositoryBase<SpaceObject> _spaceObjectRepository;
+        private IRepositoryBase<PlanetMetadata> _planetMetadataRepository;
+
         private IRepositoryBase<WebSession> _webSessionRepository;
         private IPlayerRepository _playerRepository;
         private IRepositoryBase<AccessToken> _accessTokenRepository;
@@ -22,6 +24,7 @@ namespace SpacePlanetsMvc.Repositories
         private IShipRepository _shipRepository;
         private IRepositoryBase<ShipTemplate> _shipTemplateRepository;
         private IRepositoryBase<ShipModule> _shipModuleRepository;
+        private IRepositoryBase<SpaceLoot> _spaceLootRepository;
 
         #region character augmentation
         private IRepositoryBase<ImplantTemplate> _implantTemplateRepository;
@@ -56,6 +59,19 @@ namespace SpacePlanetsMvc.Repositories
                 return _spaceObjectRepository;
             }
         }
+
+        public IRepositoryBase<PlanetMetadata> PlanetMetadataRepository
+        {
+            get
+            {
+                if (_planetMetadataRepository == null)
+                {
+                    _planetMetadataRepository = new RepositoryBase<PlanetMetadata>(_mongoClient);
+                }
+                return _planetMetadataRepository;
+            }
+        }
+
 
         public IRepositoryBase<WebSession> WebSessionRepository
         {
@@ -162,6 +178,18 @@ namespace SpacePlanetsMvc.Repositories
                     _microclusterTemplateRepository = new RepositoryBase<MicroclusterTemplate>(_mongoClient);
                 }
                 return _microclusterTemplateRepository;
+            }
+        }
+
+        public IRepositoryBase<SpaceLoot> SpaceLootRepository
+        {
+            get
+            {
+                if (_spaceLootRepository == null)
+                {
+                    _spaceLootRepository = new RepositoryBase<SpaceLoot>(_mongoClient);
+                }
+                return _spaceLootRepository;
             }
         }
 

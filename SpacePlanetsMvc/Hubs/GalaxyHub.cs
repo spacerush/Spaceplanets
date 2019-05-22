@@ -3,6 +3,7 @@ using SpacePlanets.SharedModels.ClientToServer;
 using SpacePlanets.SharedModels.GameObjects;
 using SpacePlanets.SharedModels.Interface;
 using SpacePlanets.SharedModels.ServerToClient;
+using SpacePlanetsMvc.Models.ServiceResponses;
 using SpacePlanetsMvc.Models.ServiceResponses.Map;
 using SpacePlanetsMvc.ServiceResponses;
 using SpacePlanetsMvc.Services;
@@ -19,9 +20,11 @@ namespace SpacePlanetsMvc.Hubs
         private readonly IGameService _gameService;
         private readonly IObjectService _objectService;
         private readonly IMapService _mapService;
+        private readonly ILootService _lootService;
 
-        public GalaxyHub(IAuthenticationService authService, IObjectService objectService, IGameService gameService, IMapService mapService)
+        public GalaxyHub(IAuthenticationService authService, IObjectService objectService, IGameService gameService, IMapService mapService, ILootService lootService)
         {
+            _lootService = lootService;
             _authService = authService;
             _gameService = gameService;
             _objectService = objectService;
@@ -159,16 +162,147 @@ namespace SpacePlanetsMvc.Hubs
             }
         }
 
-        public async Task UpdateShipPosition(AuthorizationTokenContainer tokenContainer, ShipCoordinateContainer shipCoordinateContainer)
+        public async Task UpdateShipPosition(AuthorizationTokenContainer tokenContainer, ShipMovementContainer shipMovementContainer)
         {
             GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
             if (playerByAccessTokenResponse.Success)
             {
-                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, shipCoordinateContainer.ShipId);
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, shipMovementContainer.ShipId);
                 if (serviceResult.Success)
                 {
-                    _gameService.MoveShip(shipCoordinateContainer.ShipId, shipCoordinateContainer.X, shipCoordinateContainer.Y);
+                    var timeSpan = (DateTime.UtcNow - serviceResult.Ships.First().LastMovementUtc);
+                    // if the player is an administrator, don't apply a speed limit to them.
+                    if ((playerByAccessTokenResponse.Player.IsAdmin == true) || timeSpan.TotalMilliseconds > 500 && shipMovementContainer.ChangeX < 2 && shipMovementContainer.ChangeY < 2)
+                    {
+                        _gameService.MoveShipRelative(shipMovementContainer.ShipId, shipMovementContainer.ChangeX, shipMovementContainer.ChangeY);
+                        ShipMovementConfirmation confirmation = new ShipMovementConfirmation();
+                        confirmation.ConfirmationId = shipMovementContainer.ConfirmationId;
+                        await Clients.Caller.ReceiveShipMovementConfirmation(confirmation);
+                    }
+                    else
+                    {
+                        /// TODO: display error for exceeding speed limit.
+                        await Clients.Caller.ReceiveMessage("Exceeded speed limit.");
+                    }
                 }
+            }
+        }
+
+        public async Task AddWarpStart(AuthorizationTokenContainer tokenContainer, SelectedShipContainer selectedShipContainer)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success && playerByAccessTokenResponse.Player.IsAdmin == true)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, selectedShipContainer.ShipId);
+                if (serviceResult.Success)
+                {
+                    Ship ship = serviceResult.Ships.First();
+                    CreateSpaceObjectResult spaceObjectResult = _objectService.SpawnWarpGate(ship.X, ship.Y, ship.Z);
+                    if (spaceObjectResult.Success == true)
+                    {
+                        await Clients.Caller.ReceiveMessage("Space object #" + spaceObjectResult.SpaceObject.Id + " created.");
+                    }
+                    else
+                    {
+                        await Clients.Caller.ReceiveMessage("Space object could not be created.");
+                    }
+                }
+                else
+                {
+                    await Clients.Caller.ReceiveError(new ErrorFromServer("Could not retrieve the ship you are piloting for object placement or selection purposes."));
+                }
+            }
+            else
+            {
+                await Clients.Caller.ReceiveError(new ErrorFromServer("Warp start selection is only available to administrators."));
+            }
+        }
+
+        public async Task AddWarpEnd(AuthorizationTokenContainer tokenContainer, SelectedShipContainer selectedShipContainer, SelectedWarpStartContainer selectedWarpStart)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success && playerByAccessTokenResponse.Player.IsAdmin == true)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, selectedShipContainer.ShipId);
+                if (serviceResult.Success)
+                {
+                    Ship ship = serviceResult.Ships.First();
+                    ConnectWarpgateResult connectResult = _objectService.ConnectWarpGate(ship.X, ship.Y, ship.Z, selectedWarpStart.WarpStartId);
+                    if (connectResult.Success == true)
+                    {
+                        await Clients.Caller.ReceiveMessage("Connected warpgates together: " + connectResult.SourceObjectId + " --> " + connectResult.DestinationObjectId);
+                    }
+                    else
+                    {
+                        await Clients.Caller.ReceiveMessage("Space object could not be created.");
+                    }
+                }
+                else
+                {
+                    await Clients.Caller.ReceiveError(new ErrorFromServer("Could not retrieve the ship you are piloting for object placement or selection purposes."));
+                }
+            }
+            else
+            {
+                await Clients.Caller.ReceiveError(new ErrorFromServer("Warp ending spot creation is only available to administrators."));
+            }
+        }
+
+        public async Task AddShipModule(AuthorizationTokenContainer tokenContainer, SelectedShipContainer selectedShipContainer)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success && playerByAccessTokenResponse.Player.IsAdmin == true)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, selectedShipContainer.ShipId);
+                if (serviceResult.Success)
+                {
+                    Ship ship = serviceResult.Ships.First();
+                    _lootService.SpawnRandomModule(ship.X, ship.Y, ship.Z);
+                    Clients.Caller.ReceiveMessage("Random module spawned!");
+                }
+                else
+                {
+                    await Clients.Caller.ReceiveError(new ErrorFromServer("Could not retrieve the ship you are piloting for object placement or selection purposes."));
+                }
+            }
+            else
+            {
+                await Clients.Caller.ReceiveError(new ErrorFromServer("Loot spawning is is only available to administrators."));
+            }
+        }
+
+        public async Task ScanShipLocationForLoot(AuthorizationTokenContainer tokenContainer, SelectedShipContainer selectedShipContainer)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(tokenContainer.Token);
+            if (playerByAccessTokenResponse.Success && playerByAccessTokenResponse.Player.IsAdmin == true)
+            {
+                GetShipsByPlayerIdResponse serviceResult = _gameService.GetShipByPlayerId(playerByAccessTokenResponse.Player.Id, selectedShipContainer.ShipId);
+                if (serviceResult.Success)
+                {
+                    Ship ship = serviceResult.Ships.First();
+                    List<SpaceLoot> loot = _lootService.GetAllSpaceLoot(ship.X, ship.Y, ship.Z);
+                    LootScanResponse scanResponse = new LootScanResponse();
+                    scanResponse.X = ship.X;
+                    scanResponse.Y = ship.Y;
+                    scanResponse.Z = ship.Z;
+                    if (loot.Count > 0)
+                    {
+                        scanResponse.SpaceLoots = loot;
+                    }
+                    else
+                    {
+                        scanResponse.SpaceLoots = null;
+                    }
+                    Clients.Caller.ReceiveLootScanResponse(scanResponse);
+                }
+                else
+                {
+                    await Clients.Caller.ReceiveError(new ErrorFromServer("Could not retrieve the ship you are piloting for object placement or selection purposes."));
+                }
+            }
+            else
+            {
+                await Clients.Caller.ReceiveError(new ErrorFromServer("Loot spawning is is only available to administrators."));
             }
         }
 

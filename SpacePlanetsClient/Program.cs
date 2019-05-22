@@ -64,7 +64,10 @@ namespace MyProject
             {
                 GameState.MoveSelectedShipRight();
             }
-
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.OemPeriod))
+            {
+                GameState.ScanWithSelectedShip();
+            }
         }
 
 
