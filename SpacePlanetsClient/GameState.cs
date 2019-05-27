@@ -54,6 +54,7 @@ namespace SpacePlanetsClient
                     cellWithoutShip.CellY = item.CellY;
                     cellWithoutShip.CellZ = item.CellZ;
                     cellWithoutShip.Stars = item.Stars;
+                    cellWithoutShip.SpaceLoots = item.SpaceLoots;
                     cellWithoutShip.SpaceObjects = item.SpaceObjects;
                     cellWithoutShip.Ships = new List<Ship>();
                     cellWithoutShip.Ships.AddRange(item.Ships.Where(x => x.Id != shipId));
@@ -68,6 +69,7 @@ namespace SpacePlanetsClient
                 cellWithoutShip.CellY = shipCellY;
                 cellWithoutShip.CellZ = shipCellZ;
                 cellWithoutShip.SpaceObjects = new List<SpaceObject>();
+                cellWithoutShip.SpaceLoots = new List<SpaceLoot>();
                 cellWithoutShip.Ships = new List<Ship>();
                 cellWithoutShip.Stars = new List<Star>();
                 cellWithoutShip.Ships.Add(ship);
@@ -200,15 +202,6 @@ namespace SpacePlanetsClient
                         _spaceMap.SetGlyph(item.CellX, item.CellY, 7, Color.OrangeRed, Color.Black);
                     }
                 }
-                if (item.Ships != null && item.Ships.Count > 0)
-                {
-                    foreach (Ship ship in item.Ships)
-                    {
-                        _spaceMap.Print(item.CellX, item.CellY, "+", Color.Turquoise, Color.Black);
-                        //_messageLogConsole.Write("shipX:" + ship.X + " shipY:" + ship.Y);
-                    }
-
-                }
                 if (item.SpaceObjects != null && item.SpaceObjects.Count > 0)
                 {
                     foreach (SpaceObject spaceObject in item.SpaceObjects)
@@ -232,6 +225,29 @@ namespace SpacePlanetsClient
 
                     }
                 }
+
+                if (item.SpaceLoots != null && item.SpaceLoots.Count > 0)
+                {
+                    _spaceMap.Print(item.CellX, item.CellY, ":", Color.Red, Color.Black);
+
+                    // TODO: iterate through loot and print different characters or colors for each kind.
+                    //foreach (SpaceLoot spaceLoot in item.SpaceLoots)
+                    //{
+                    //    _spaceMap.Print(item.CellX, item.CellY, spaceLoot.ShipModules.Count(), Color.Red, Color.Black);
+                    //}
+                }
+
+                if (item.Ships != null && item.Ships.Count > 0)
+                {
+                    foreach (Ship ship in item.Ships)
+                    {
+                        _spaceMap.Print(item.CellX, item.CellY, "+", Color.Turquoise, Color.Black);
+                        //_messageLogConsole.Write("shipX:" + ship.X + " shipY:" + ship.Y);
+                    }
+
+                }
+
+
             }
         }
         internal static Guid selectedShip;
@@ -693,7 +709,7 @@ namespace SpacePlanetsClient
                 if (_gameStatus == GameStatus.LoggedIn)
                 {
                     // TODO: REMOVE THIS
-                    //_messageLogConsole.Write("Receive server time: " + serverTime);
+                    _messageLogConsole.Write("Time received: " + serverTime);
                 }
             });
 

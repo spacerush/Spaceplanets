@@ -13,5 +13,6 @@ namespace SpacePlanets.SharedModels.ServerToClient
         public List<Ship> Ships { get; set; }
         public List<SpaceObject> SpaceObjects { get; set; }
         public List<Star> Stars { get; set; }
+        public List<SpaceLoot> SpaceLoots { get; set; }
     }
 }
