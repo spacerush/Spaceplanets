@@ -445,6 +445,24 @@ namespace SpacePlanetsClient
             connection.SendAsync("GetAccessToken", ctr);
         }
 
+        public static void TakeAllLoot()
+        {
+            var takeAllLootRequest = new TakeAllLootRequest();
+            takeAllLootRequest.ShipId = selectedShip;
+            connection.InvokeAsync("TakeAllLoot", GetAuthorizationTokenContainer(), takeAllLootRequest);
+        }
+
+        public static void TakeSpecificLoot(Guid itemId, string itemType)
+        {
+            var takeSpecificLootRequest = new TakeSpecificLootRequest();
+            takeSpecificLootRequest.ShipId = selectedShip;
+            if (itemType == "ShipModule")
+            {
+                takeSpecificLootRequest.ShipModules.Add(itemId);
+            }
+            connection.InvokeAsync("TakeSpecificLoot", GetAuthorizationTokenContainer(), takeSpecificLootRequest);
+        }
+
         private static async Task StartHeartbeat(TimeSpan interval, CancellationToken cancellationToken)
         {
             while (true)

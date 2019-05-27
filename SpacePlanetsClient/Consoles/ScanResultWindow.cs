@@ -56,7 +56,7 @@ namespace SpacePlanetsClient.Consoles
                 var exemplar = new SpacePlanets.SharedModels.GameObjects.ShipModule();
                 if (box.SelectedItem.GetType() == exemplar.GetType())
                 {
-                    GameState.WriteGeneralMessageToLog("Ship module :" + box.SelectedItem.ToString());
+                    GameState.TakeSpecificLoot(((ShipModule)box.SelectedItem).Id, "ShipModule");
                 }
             }
         }

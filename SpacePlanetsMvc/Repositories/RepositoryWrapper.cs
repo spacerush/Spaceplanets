@@ -26,6 +26,8 @@ namespace SpacePlanetsMvc.Repositories
         private IRepositoryBase<ShipModule> _shipModuleRepository;
         private IRepositoryBase<SpaceLoot> _spaceLootRepository;
 
+        private IRepositoryBase<BankedShipModule> _bankedShipModuleRepository;
+
         #region character augmentation
         private IRepositoryBase<ImplantTemplate> _implantTemplateRepository;
         private IRepositoryBase<MicroclusterTemplate> _microclusterTemplateRepository;
@@ -192,6 +194,20 @@ namespace SpacePlanetsMvc.Repositories
                 return _spaceLootRepository;
             }
         }
+
+        public IRepositoryBase<BankedShipModule> BankedShipModuleRepository
+        {
+            get
+            {
+                if (_bankedShipModuleRepository == null)
+                {
+                    _bankedShipModuleRepository = new RepositoryBase<BankedShipModule>(_mongoClient);
+                }
+                return _bankedShipModuleRepository;
+            }
+        }
+
+
 
     }
 }

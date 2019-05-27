@@ -51,6 +51,7 @@ namespace SpacePlanetsClient.Consoles
             {
                 _toReturnTo.IsFocused = true;
                 this.Parent.Parent.Children.Remove(this.Parent);
+                GameState.TakeAllLoot();
             };
             this.Add(btnTakeAll);
         }
