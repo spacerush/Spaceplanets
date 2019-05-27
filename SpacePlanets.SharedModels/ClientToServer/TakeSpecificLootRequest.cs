@@ -7,19 +7,20 @@ namespace SpacePlanets.SharedModels.ClientToServer
     public class TakeSpecificLootRequest
     {
         public Guid ShipId { get; set; }
-        public List<Guid> ShipModules { get; set; }
+        public Guid ItemId { get; set; }
+        public string ItemType { get; set; }
 
         /// <summary>
         /// Construct a request to take specific loot,
-        /// with the ship id and a single module populated into the list
         /// </summary>
         /// <param name="shipId"></param>
-        /// <param name="moduleId"></param>
-        public TakeSpecificLootRequest(Guid shipId, Guid moduleId)
+        /// <param name="itemId"></param>
+        /// <param name="itemType"></param>
+        public TakeSpecificLootRequest(Guid shipId, Guid itemId, string itemType)
         {
             this.ShipId = shipId;
-            this.ShipModules = new List<Guid>();
-            this.ShipModules.Add(moduleId);
+            this.ItemId = itemId;
+            this.ItemType = itemType;
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace SpacePlanets.SharedModels.ClientToServer
         public TakeSpecificLootRequest()
         {
             this.ShipId = Guid.Empty;
-            this.ShipModules = new List<Guid>();
+            this.ItemId = Guid.Empty;
         }
     }
 }

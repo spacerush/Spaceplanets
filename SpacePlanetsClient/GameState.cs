@@ -456,10 +456,8 @@ namespace SpacePlanetsClient
         {
             var takeSpecificLootRequest = new TakeSpecificLootRequest();
             takeSpecificLootRequest.ShipId = selectedShip;
-            if (itemType == "ShipModule")
-            {
-                takeSpecificLootRequest.ShipModules.Add(itemId);
-            }
+            takeSpecificLootRequest.ItemId = itemId;
+            takeSpecificLootRequest.ItemType = itemType;
             connection.InvokeAsync("TakeSpecificLoot", GetAuthorizationTokenContainer(), takeSpecificLootRequest);
         }
 

@@ -71,5 +71,32 @@ namespace SpacePlanetsMvc.Services
             }
         }
 
+        public bool TractorSpecificLoot(Ship ship, string itemType, Guid itemId)
+        {
+            int itemsLooted = 0;
+            var result = _wrapper.SpaceLootRepository.GetAll<SpaceLoot>(f => f.Id == itemId && f.X == ship.X && f.Y == ship.Y && f.Z == ship.Z);
+            foreach (var item in result)
+            {
+                foreach (var module in item.ShipModules)
+                {
+                    BankedShipModule lootedModule = new BankedShipModule();
+                    lootedModule.PlayerId = ship.PlayerId;
+                    lootedModule.ShipId = ship.Id;
+                    lootedModule.ShipModule = module;
+                    _wrapper.SpaceLootRepository.AddOneAsync<BankedShipModule>(lootedModule);
+                    itemsLooted++;
+                }
+            }
+            if (itemsLooted > 0)
+            {
+                _wrapper.SpaceLootRepository.DeleteMany<SpaceLoot>(result);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
     }
 }

@@ -24,5 +24,8 @@ namespace SpacePlanetsMvc.Services
         /// </summary>
         /// <param name="ship"></param>
         bool TractorAllLoot(Ship ship);
+
+
+        bool TractorSpecificLoot(Ship ship, string itemType, Guid itemId);
     }
 }
