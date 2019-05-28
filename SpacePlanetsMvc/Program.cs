@@ -21,10 +21,8 @@ namespace SpacePlanetsMvc
     {
         public static void Main(string[] args)
         {
-            CurrentDirectoryHelpers.SetCurrentDirectory();
             using (var eventFlow = CreateEventFlow(args))
             {
-                CurrentDirectoryHelpers.SetCurrentDirectory();
                 BuildWebHost(args, eventFlow).Run();
             }
         }
@@ -43,7 +41,6 @@ namespace SpacePlanetsMvc
             // To learn about common configuration sources take a peek at https://github.com/aspnet/MetaPackages/blob/master/src/Microsoft.AspNetCore/WebHost.cs (CreateDefaultBuilder method). 
             var configBuilder = new ConfigurationBuilder()
                 .AddEnvironmentVariables();
-
             var devEnvironmentVariable = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var isDevelopment = string.IsNullOrEmpty(devEnvironmentVariable) ||
                     devEnvironmentVariable.ToLower() == "development";
@@ -54,7 +51,6 @@ namespace SpacePlanetsMvc
             }
             else
             {
-                CurrentDirectoryHelpers.SetCurrentDirectory();
                 configBuilder.AddJsonFile("appsettings.json", false, false);
             }
 
