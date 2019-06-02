@@ -141,8 +141,14 @@ namespace SpacePlanetsMvc.Hubs
                 if (getShipsByPlayerIdResponse.Success)
                 {
                     Ship ship = getShipsByPlayerIdResponse.Ships.Where(x => x.Id == req.ShipId).SingleOrDefault();
-                    _lootService.TractorSpecificLoot(ship, req.ItemType, req.ItemId);
-                    await Clients.Caller.ReceiveMessage("Looted specific item.");
+                    if (_lootService.TractorSpecificLoot(ship, req.ItemType, req.ItemId))
+                    {
+                        await Clients.Caller.ReceiveMessage("Looted specific item.");
+                    }
+                    else
+                    {
+                        await Clients.Caller.ReceiveMessage("Could not loot item there.");
+                    }
                 }
             }
         }

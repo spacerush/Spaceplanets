@@ -11,7 +11,6 @@ namespace SpacePlanets.SharedModels.GameObjects
         public int Y { get; set; }
         public int Z { get; set; }
         public List<ShipModule> ShipModules { get; set; }
-
         public SpaceLoot()
         {
             ShipModules = new List<ShipModule>();

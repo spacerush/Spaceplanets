@@ -17,7 +17,7 @@ namespace MyProject
         static void Main()
         {
             // Setup the engine and create the main window.
-            SadConsole.Game.Create("fonts/curses_vector_16x24.font", Width, Height);
+            SadConsole.Game.Create("fonts/curses_vector_12x18.font", Width, Height);
 
             // Hook the start event so we can add consoles to the system.
             SadConsole.Game.OnInitialize = Init;

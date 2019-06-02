@@ -74,29 +74,43 @@ namespace SpacePlanetsMvc.Services
         public bool TractorSpecificLoot(Ship ship, string itemType, Guid itemId)
         {
             int itemsLooted = 0;
-            var result = _wrapper.SpaceLootRepository.GetAll<SpaceLoot>(f => f.Id == itemId && f.X == ship.X && f.Y == ship.Y && f.Z == ship.Z);
+            var result = _wrapper.SpaceLootRepository.GetAll<SpaceLoot>(f => f.X == ship.X && f.Y == ship.Y && f.Z == ship.Z);
+            _wrapper.SpaceLootRepository.DeleteMany<SpaceLoot>(result);
+            List<SpaceLoot> spaceLootsToWrite = new List<SpaceLoot>();
             foreach (var item in result)
             {
+                SpaceLoot spaceLoot = new SpaceLoot();
+                spaceLoot.X = item.X;
+                spaceLoot.Y = item.Y;
+                spaceLoot.Z = item.Z;
+                spaceLoot.ShipModules = new List<ShipModule>();
                 foreach (var module in item.ShipModules)
                 {
-                    BankedShipModule lootedModule = new BankedShipModule();
-                    lootedModule.PlayerId = ship.PlayerId;
-                    lootedModule.ShipId = ship.Id;
-                    lootedModule.ShipModule = module;
-                    _wrapper.SpaceLootRepository.AddOneAsync<BankedShipModule>(lootedModule);
-                    itemsLooted++;
+                    if (module.Id == itemId)
+                    {
+                        BankedShipModule lootedModule = new BankedShipModule();
+                        lootedModule.PlayerId = ship.PlayerId;
+                        lootedModule.ShipId = ship.Id;
+                        lootedModule.ShipModule = module;
+                        _wrapper.SpaceLootRepository.AddOneAsync<BankedShipModule>(lootedModule);
+                        itemsLooted++;
+                    }
+                    else
+                    {
+                        spaceLoot.ShipModules.Add(module);
+                    }
                 }
+                spaceLootsToWrite.Add(spaceLoot);
             }
+            _wrapper.SpaceLootRepository.AddMany<SpaceLoot>(spaceLootsToWrite);
             if (itemsLooted > 0)
             {
-                _wrapper.SpaceLootRepository.DeleteMany<SpaceLoot>(result);
                 return true;
             }
             else
             {
                 return false;
             }
-
         }
     }
 }
