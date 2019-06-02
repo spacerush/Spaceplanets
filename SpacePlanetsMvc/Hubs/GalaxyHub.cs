@@ -104,6 +104,22 @@ namespace SpacePlanetsMvc.Hubs
             }
         }
 
+        public async Task GetShipForConsole(AuthorizationTokenContainer ctr, ShipForConsoleRequest req)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(ctr.Token);
+            if (playerByAccessTokenResponse.Success == true)
+            {
+                GetShipsByPlayerIdResponse getShipsByPlayerIdResponse = _gameService.GetShipsByPlayerId(playerByAccessTokenResponse.Player.Id);
+                if (getShipsByPlayerIdResponse.Success)
+                {
+                    Ship ship = getShipsByPlayerIdResponse.Ships.Where(x => x.Id == req.ShipId).SingleOrDefault();
+                    if (ship != null)
+                    {
+                        await Clients.Caller.ReceiveShipForConsole(ship);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Given a specific ship contained within the req object and owned by the player,

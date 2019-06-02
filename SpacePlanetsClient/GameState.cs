@@ -18,6 +18,7 @@ using SpacePlanets.SharedModels.ServerToClient;
 using SpacePlanets.SharedModels.ClientToServer;
 using Microsoft.Extensions.DependencyInjection;
 using SpacePlanets.SharedModels.Helpers;
+using SadConsole.Controls;
 
 namespace SpacePlanetsClient
 {
@@ -326,7 +327,7 @@ namespace SpacePlanetsClient
         private static ServerStatusConsole _serverStatusConsole;
         private static MenuBarConsole _menuBarConsole;
         private static SpaceMapConsole _spaceMap;
-
+        private static SelectedShipConsole _shipConsole;
         private static AccessToken _accessToken;
 
         public static bool DisplayingCharacterMenu
@@ -557,6 +558,12 @@ namespace SpacePlanetsClient
             _shipMovementStatus = ShipMovementStatus.Ready;
         }
 
+        internal static void RefreshShipConsole()
+        {
+            var request = new ShipForConsoleRequest(selectedShip);
+            connection.InvokeAsync("GetShipForConsole", GetAuthorizationTokenContainer(), request);
+        }
+
         internal static void UnselectShip()
         {
             selectedShip = Guid.Empty;
@@ -612,6 +619,17 @@ namespace SpacePlanetsClient
             {
                 CreateErrorWindow(characterresult.Error, _mainConsole);
             }
+        }
+
+        /// <summary>
+        /// Given a single ship, display controls on the shipConsole (usually located on right edge of screen)
+        /// For installing modules, viewing readouts, etc.
+        /// </summary>
+        /// <param name="ship">The ship object in question</param>
+        private static void DisplayShipControlsOnConsole(Ship ship)
+        {
+            var btn = _shipConsole.Controls.Where(x => x.Name == "HeaderButton").Single() as Button;
+            btn.Text = ship.Name;
         }
 
         /// <summary>
@@ -754,10 +772,15 @@ namespace SpacePlanetsClient
                     _serverStatusConsole.IsVisible = true;
                     _mainConsole.Children.Add(_serverStatusConsole);
 
-                    _spaceMap = new SpaceMapConsole(_mainConsole.Width, _mainConsole.Height - _messageLogConsole.Height - 2);
+                    _spaceMap = new SpaceMapConsole(_mainConsole.Width - 20, _mainConsole.Height - _messageLogConsole.Height - 2);
                     _spaceMap.Position = new Point(0, 1);
                     _spaceMap.IsVisible = true;
                     _mainConsole.Children.Add(_spaceMap);
+
+                    _shipConsole = new SelectedShipConsole(20, _mainConsole.Height - _messageLogConsole.Height - 2);
+                    _shipConsole.Position = new Point(_spaceMap.Width, 1);
+                    _shipConsole.IsVisible = true;
+                    _mainConsole.Children.Add(_shipConsole);
 
                     _menuBarConsole = new MenuBarConsole(_mainConsole.Width, 1);
                     _menuBarConsole.Position = new Point(0, 0);
@@ -851,6 +874,11 @@ namespace SpacePlanetsClient
             connection.On<LootScanResponse>("ReceiveLootScanResponse", (param) =>
             {
                 DisplayLootScanResults(param);
+            });
+
+            connection.On<Ship>("ReceiveShipForConsole", (param) =>
+            {
+                DisplayShipControlsOnConsole(param);
             });
 
             connection.Closed += async (error) =>
