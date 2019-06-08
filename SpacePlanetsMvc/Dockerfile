@@ -2,16 +2,20 @@
 WORKDIR /app
 EXPOSE 5000
  
-# Copy csproj and restore as distinct layers
-COPY *.csproj ./
+WORKDIR /src
+COPY *.sln ./
+COPY SpacePlanetsMvc/SpacePlanetsMvc.csproj SpacePlanetsMvc/
+COPY SpacePlanets.SharedModels/SpacePlanets.SharedModels.csproj SpacePlanets.SharedModels/
 RUN dotnet restore
- 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
- 
-# Build runtime image
-FROM microsoft/dotnet:aspnetcore-runtime
+COPY . .
+WORKDIR /src/SpacePlanetsMvc
+RUN dotnet build -c $Configuration -o /app
+
+FROM builder AS publish
+ARG Configuration=Release
+RUN dotnet publish -c $Configuration -o /app
+
+FROM base AS final
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "SpacePlanetsMvc.dll"]
