@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spaceplanets
+  labels:
+    app: spaceplanets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spaceplanets
+  template:
+    metadata:
+      labels:
+        app: spaceplanets
+    spec:
+      containers:
+      - name: spaceplanets
+        image: registryhostname:5000/imagename:tag
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+        - name: regcred

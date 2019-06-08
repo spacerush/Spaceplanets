@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spaceplanets-service
+  labels:
+    run: spaceplanets-service
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      nodePort: 30032
+  selector:
+    app: spaceplanets
