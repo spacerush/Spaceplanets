@@ -1,0 +1,27 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "Sentry": {
+    "Dsn": "https://xxxxxxxxxx@sentry.io/YYYYYY",
+    "IncludeRequestPayload": true,
+    "SendDefaultPii": true,
+    "MinimumBreadcrumbLevel": "Debug",
+    "MinimumEventLevel": "Warning",
+    "AttachStackTrace": true,
+    "Debug": true,
+    "DiagnosticsLevel": "Error"
+  },
+  "HttpEventSinkConfig": {
+    "type": "Http",
+    "serviceUri": "https://example.com/api/Collect",
+    "format": "Json",
+    "headers": {
+      "appId": "SpacePlanetsInsideKubernetes",
+      "appKey": "place-key-here"
+    }
+  }
+}
