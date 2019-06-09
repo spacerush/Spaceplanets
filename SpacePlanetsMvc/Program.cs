@@ -51,7 +51,7 @@ namespace SpacePlanetsMvc
             }
             else
             {
-                configBuilder.AddJsonFile("appsettings.json");
+                configBuilder.AddJsonFile("/app/spaceplanets-appsettings.json");
             }
 
             if (args != null)
