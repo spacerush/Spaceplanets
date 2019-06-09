@@ -39,8 +39,7 @@ namespace SpacePlanetsMvc
         {
             // Create configuration instance to access configuration information for EventFlow pipeline
             // To learn about common configuration sources take a peek at https://github.com/aspnet/MetaPackages/blob/master/src/Microsoft.AspNetCore/WebHost.cs (CreateDefaultBuilder method). 
-            var configBuilder = new ConfigurationBuilder()
-                .AddEnvironmentVariables();
+            var configBuilder = new ConfigurationBuilder();
             var devEnvironmentVariable = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var isDevelopment = string.IsNullOrEmpty(devEnvironmentVariable) ||
                     devEnvironmentVariable.ToLower() == "development";
@@ -51,7 +50,7 @@ namespace SpacePlanetsMvc
             }
             else
             {
-                configBuilder.AddJsonFile("appsettings.json", false, false);
+                configBuilder.AddEnvironmentVariables();
             }
 
             if (args != null)
