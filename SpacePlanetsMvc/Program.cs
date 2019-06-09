@@ -14,6 +14,7 @@ using Sentry;
 using System.Collections.Generic;
 using System.IO;
 using SpacePlanetsMvc.Insights;
+using System.Diagnostics;
 
 namespace SpacePlanetsMvc
 {
@@ -50,6 +51,8 @@ namespace SpacePlanetsMvc
             }
             else
             {
+                Debug.WriteLine("Loading /app/appsettings.json");
+                Console.WriteLine("Loading /app/appsettings.json");
                 configBuilder.AddJsonFile("/app/appsettings.json");
             }
 
