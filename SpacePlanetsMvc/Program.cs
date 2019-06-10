@@ -14,6 +14,7 @@ using Sentry;
 using System.Collections.Generic;
 using System.IO;
 using SpacePlanetsMvc.Insights;
+using System.Diagnostics;
 
 namespace SpacePlanetsMvc
 {
@@ -21,10 +22,8 @@ namespace SpacePlanetsMvc
     {
         public static void Main(string[] args)
         {
-            CurrentDirectoryHelpers.SetCurrentDirectory();
             using (var eventFlow = CreateEventFlow(args))
             {
-                CurrentDirectoryHelpers.SetCurrentDirectory();
                 BuildWebHost(args, eventFlow).Run();
             }
         }
@@ -41,22 +40,10 @@ namespace SpacePlanetsMvc
         {
             // Create configuration instance to access configuration information for EventFlow pipeline
             // To learn about common configuration sources take a peek at https://github.com/aspnet/MetaPackages/blob/master/src/Microsoft.AspNetCore/WebHost.cs (CreateDefaultBuilder method). 
-            var configBuilder = new ConfigurationBuilder()
-                .AddEnvironmentVariables();
+            var configBuilder = new ConfigurationBuilder().AddEnvironmentVariables();
+            configBuilder.AddUserSecrets<Program>();
+            configBuilder.AddJsonFile("/settings/spaceplanets-appsettings.json", true);
 
-            var devEnvironmentVariable = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            var isDevelopment = string.IsNullOrEmpty(devEnvironmentVariable) ||
-                    devEnvironmentVariable.ToLower() == "development";
-
-            if (isDevelopment)
-            {
-                configBuilder.AddUserSecrets<Program>();
-            }
-            else
-            {
-                CurrentDirectoryHelpers.SetCurrentDirectory();
-                configBuilder.AddJsonFile("appsettings.json", false, false);
-            }
 
             if (args != null)
             {
@@ -67,6 +54,7 @@ namespace SpacePlanetsMvc
             // SEE https://github.com/Azure/diagnostics-eventflow#http
             var httpConfig = config.GetSection("HttpEventSinkConfig");
             var filterConfig = config.GetSection("FilterConfig");
+
             var pipelineConfig = new DiagnosticPipelineConfiguration()
             {
                 MaxBatchDelayMsec = 5000, // Specifies the maximum time that events are held in a batch before the batch gets pushed through the pipeline to filters and outputs. The batch is pushed down when it reaches the maxEventBatchSize, or its oldest event has been in the batch for more than maxBatchDelayMsec milliseconds.

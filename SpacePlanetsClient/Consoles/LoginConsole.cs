@@ -55,7 +55,7 @@ namespace SpacePlanetsClient.Consoles
             btnLocalNoTls.Position = new Point(width - 26, height - 5);
             btnLocalNoTls.Click += (s, a) =>
             {
-                GameState.SetApiEndpoint("https://localhost:5001/");
+                GameState.SetApiEndpoint("http://localhost:5000/");
                 this.Remove(btnLocalNoTls);
             };
             this.Add(btnLocalNoTls);

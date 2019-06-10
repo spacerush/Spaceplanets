@@ -20,6 +20,7 @@ namespace SpacePlanetsMvc.Repositories
         IRepositoryBase<WebSession> WebSessionRepository { get; }
         IPlayerRepository PlayerRepository { get; }
         IRepositoryBase<AccessToken> AccessTokenRepository { get; }
+        IRepositoryBase<BankedShipModule> BankedShipModuleRepository { get; }
         #endregion
 
         #region OtherObjects

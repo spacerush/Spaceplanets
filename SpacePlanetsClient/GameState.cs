@@ -18,6 +18,7 @@ using SpacePlanets.SharedModels.ServerToClient;
 using SpacePlanets.SharedModels.ClientToServer;
 using Microsoft.Extensions.DependencyInjection;
 using SpacePlanets.SharedModels.Helpers;
+using SadConsole.Controls;
 
 namespace SpacePlanetsClient
 {
@@ -54,6 +55,7 @@ namespace SpacePlanetsClient
                     cellWithoutShip.CellY = item.CellY;
                     cellWithoutShip.CellZ = item.CellZ;
                     cellWithoutShip.Stars = item.Stars;
+                    cellWithoutShip.SpaceLoots = item.SpaceLoots;
                     cellWithoutShip.SpaceObjects = item.SpaceObjects;
                     cellWithoutShip.Ships = new List<Ship>();
                     cellWithoutShip.Ships.AddRange(item.Ships.Where(x => x.Id != shipId));
@@ -68,6 +70,7 @@ namespace SpacePlanetsClient
                 cellWithoutShip.CellY = shipCellY;
                 cellWithoutShip.CellZ = shipCellZ;
                 cellWithoutShip.SpaceObjects = new List<SpaceObject>();
+                cellWithoutShip.SpaceLoots = new List<SpaceLoot>();
                 cellWithoutShip.Ships = new List<Ship>();
                 cellWithoutShip.Stars = new List<Star>();
                 cellWithoutShip.Ships.Add(ship);
@@ -200,15 +203,6 @@ namespace SpacePlanetsClient
                         _spaceMap.SetGlyph(item.CellX, item.CellY, 7, Color.OrangeRed, Color.Black);
                     }
                 }
-                if (item.Ships != null && item.Ships.Count > 0)
-                {
-                    foreach (Ship ship in item.Ships)
-                    {
-                        _spaceMap.Print(item.CellX, item.CellY, "+", Color.Turquoise, Color.Black);
-                        //_messageLogConsole.Write("shipX:" + ship.X + " shipY:" + ship.Y);
-                    }
-
-                }
                 if (item.SpaceObjects != null && item.SpaceObjects.Count > 0)
                 {
                     foreach (SpaceObject spaceObject in item.SpaceObjects)
@@ -232,6 +226,29 @@ namespace SpacePlanetsClient
 
                     }
                 }
+
+                if (item.SpaceLoots != null && item.SpaceLoots.Count > 0)
+                {
+                    _spaceMap.Print(item.CellX, item.CellY, ":", Color.Red, Color.Black);
+
+                    // TODO: iterate through loot and print different characters or colors for each kind.
+                    //foreach (SpaceLoot spaceLoot in item.SpaceLoots)
+                    //{
+                    //    _spaceMap.Print(item.CellX, item.CellY, spaceLoot.ShipModules.Count(), Color.Red, Color.Black);
+                    //}
+                }
+
+                if (item.Ships != null && item.Ships.Count > 0)
+                {
+                    foreach (Ship ship in item.Ships)
+                    {
+                        _spaceMap.Print(item.CellX, item.CellY, "+", Color.Turquoise, Color.Black);
+                        //_messageLogConsole.Write("shipX:" + ship.X + " shipY:" + ship.Y);
+                    }
+
+                }
+
+
             }
         }
         internal static Guid selectedShip;
@@ -310,7 +327,7 @@ namespace SpacePlanetsClient
         private static ServerStatusConsole _serverStatusConsole;
         private static MenuBarConsole _menuBarConsole;
         private static SpaceMapConsole _spaceMap;
-
+        private static SelectedShipConsole _shipConsole;
         private static AccessToken _accessToken;
 
         public static bool DisplayingCharacterMenu
@@ -429,6 +446,22 @@ namespace SpacePlanetsClient
             connection.SendAsync("GetAccessToken", ctr);
         }
 
+        public static void TakeAllLoot()
+        {
+            var takeAllLootRequest = new TakeAllLootRequest();
+            takeAllLootRequest.ShipId = selectedShip;
+            connection.InvokeAsync("TakeAllLoot", GetAuthorizationTokenContainer(), takeAllLootRequest);
+        }
+
+        public static void TakeSpecificLoot(Guid itemId, string itemType)
+        {
+            var takeSpecificLootRequest = new TakeSpecificLootRequest();
+            takeSpecificLootRequest.ShipId = selectedShip;
+            takeSpecificLootRequest.ItemId = itemId;
+            takeSpecificLootRequest.ItemType = itemType;
+            connection.InvokeAsync("TakeSpecificLoot", GetAuthorizationTokenContainer(), takeSpecificLootRequest);
+        }
+
         private static async Task StartHeartbeat(TimeSpan interval, CancellationToken cancellationToken)
         {
             while (true)
@@ -525,6 +558,12 @@ namespace SpacePlanetsClient
             _shipMovementStatus = ShipMovementStatus.Ready;
         }
 
+        internal static void RefreshShipConsole()
+        {
+            var request = new ShipForConsoleRequest(selectedShip);
+            connection.InvokeAsync("GetShipForConsole", GetAuthorizationTokenContainer(), request);
+        }
+
         internal static void UnselectShip()
         {
             selectedShip = Guid.Empty;
@@ -580,6 +619,17 @@ namespace SpacePlanetsClient
             {
                 CreateErrorWindow(characterresult.Error, _mainConsole);
             }
+        }
+
+        /// <summary>
+        /// Given a single ship, display controls on the shipConsole (usually located on right edge of screen)
+        /// For installing modules, viewing readouts, etc.
+        /// </summary>
+        /// <param name="ship">The ship object in question</param>
+        private static void DisplayShipControlsOnConsole(Ship ship)
+        {
+            var btn = _shipConsole.Controls.Where(x => x.Name == "HeaderButton").Single() as Button;
+            btn.Text = ship.Name;
         }
 
         /// <summary>
@@ -693,7 +743,7 @@ namespace SpacePlanetsClient
                 if (_gameStatus == GameStatus.LoggedIn)
                 {
                     // TODO: REMOVE THIS
-                    //_messageLogConsole.Write("Receive server time: " + serverTime);
+                    _messageLogConsole.Write("Time received: " + serverTime);
                 }
             });
 
@@ -722,10 +772,15 @@ namespace SpacePlanetsClient
                     _serverStatusConsole.IsVisible = true;
                     _mainConsole.Children.Add(_serverStatusConsole);
 
-                    _spaceMap = new SpaceMapConsole(_mainConsole.Width, _mainConsole.Height - _messageLogConsole.Height - 2);
+                    _spaceMap = new SpaceMapConsole(_mainConsole.Width - 20, _mainConsole.Height - _messageLogConsole.Height - 2);
                     _spaceMap.Position = new Point(0, 1);
                     _spaceMap.IsVisible = true;
                     _mainConsole.Children.Add(_spaceMap);
+
+                    _shipConsole = new SelectedShipConsole(20, _mainConsole.Height - _messageLogConsole.Height - 2);
+                    _shipConsole.Position = new Point(_spaceMap.Width, 1);
+                    _shipConsole.IsVisible = true;
+                    _mainConsole.Children.Add(_shipConsole);
 
                     _menuBarConsole = new MenuBarConsole(_mainConsole.Width, 1);
                     _menuBarConsole.Position = new Point(0, 0);
@@ -819,6 +874,11 @@ namespace SpacePlanetsClient
             connection.On<LootScanResponse>("ReceiveLootScanResponse", (param) =>
             {
                 DisplayLootScanResults(param);
+            });
+
+            connection.On<Ship>("ReceiveShipForConsole", (param) =>
+            {
+                DisplayShipControlsOnConsole(param);
             });
 
             connection.Closed += async (error) =>

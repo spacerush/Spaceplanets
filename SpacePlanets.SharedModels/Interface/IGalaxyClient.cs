@@ -1,4 +1,5 @@
-﻿using SpacePlanets.SharedModels.ServerToClient;
+﻿using SpacePlanets.SharedModels.GameObjects;
+using SpacePlanets.SharedModels.ServerToClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +9,10 @@ namespace SpacePlanets.SharedModels.Interface
 {
     public interface IGalaxyClient
     {
+        Task ReceiveShipForConsole(Ship ship);
+
         Task ReceiveMessage(string message);
         Task ReceiveServerTime(string message);
-
         Task ReceiveAccessTokenResult(GetAccessTokenResult result);
         Task ReceiveAccessTokenFromRefreshToken(GetAccessTokenResult result);
 

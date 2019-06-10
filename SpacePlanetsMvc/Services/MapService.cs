@@ -57,7 +57,7 @@ namespace SpacePlanetsMvc.Services
             List<Star> starsForMap = defaultStars.Where(s => s.X >= minX && s.X <= maxX && s.Y >= minY && s.Y <= maxY && s.Z >= minZ && s.Z <= maxZ).ToList();
             List<Ship> shipsForMap = _wrapper.ShipRepository.GetAll<Ship>(s => s.X >= minX && s.X <= maxX && s.Y >= minY && s.Y <= maxY && s.Z >= minZ && s.Z <= maxZ).ToList();
             List<SpaceObject> spaceObjectsForMap = _wrapper.SpaceObjectRepository.GetAll<SpaceObject>(s => s.X >= minX && s.X <= maxX && s.Y >= minY && s.Y <= maxY && s.Z >= minZ && s.Z <= maxZ).ToList();
-
+            List<SpaceLoot> spaceLootsForMap = _wrapper.SpaceLootRepository.GetAll<SpaceLoot>(s => s.X >= minX && s.X <= maxX && s.Y >= minY && s.Y <= maxY && s.Z >= minZ && s.Z <= maxZ).ToList();
             // Take each star that is near the ship and add it to a list of data cells to send to the client.
             foreach (var star in starsForMap)
             {
@@ -72,6 +72,7 @@ namespace SpacePlanetsMvc.Services
                         newDatacell.Stars = new List<Star>();
                         newDatacell.Ships = new List<Ship>();
                         newDatacell.SpaceObjects = new List<SpaceObject>();
+                        newDatacell.SpaceLoots = new List<SpaceLoot>();
                         newDatacell.CellX = displayAtX;
                         newDatacell.CellY = displayAtY;
                         newDatacell.CellZ = star.Z;
@@ -99,6 +100,7 @@ namespace SpacePlanetsMvc.Services
                         newDatacell.Stars = new List<Star>();
                         newDatacell.Ships = new List<Ship>();
                         newDatacell.SpaceObjects = new List<SpaceObject>();
+                        newDatacell.SpaceLoots = new List<SpaceLoot>();
                         newDatacell.CellX = displayAtX;
                         newDatacell.CellY = displayAtY;
                         newDatacell.CellZ = shipForMap.Z;
@@ -136,6 +138,33 @@ namespace SpacePlanetsMvc.Services
                     {
                         existingDataCell.SpaceObjects.Add(spaceObject);
                     }
+                //}
+            }
+
+            // Add space objects near the ship.
+            foreach (var spaceLoot in spaceLootsForMap)
+            {
+                int displayAtX = centerDisplayX - (ship.X - spaceLoot.X);
+                int displayAtY = centerDisplayY - (ship.Y - spaceLoot.Y);
+                //if (displayAtX >= 0 && displayAtY >= 0 && displayAtX < viewWidth && displayAtY < viewHeight)
+                //{
+                MapDataCell existingDataCell = result.MapDataResult.MapDataCells.Where(w => w.CellX == displayAtX && w.CellY == displayAtY).FirstOrDefault();
+                if (existingDataCell == null)
+                {
+                    MapDataCell newDatacell = new MapDataCell();
+                    newDatacell.Stars = new List<Star>();
+                    newDatacell.Ships = new List<Ship>();
+                    newDatacell.SpaceLoots = new List<SpaceLoot>();
+                    newDatacell.CellX = displayAtX;
+                    newDatacell.CellY = displayAtY;
+                    newDatacell.CellZ = spaceLoot.Z;
+                    newDatacell.SpaceLoots.Add(spaceLoot);
+                    result.MapDataResult.MapDataCells.Add(newDatacell);
+                }
+                else
+                {
+                    existingDataCell.SpaceLoots.Add(spaceLoot);
+                }
                 //}
             }
 

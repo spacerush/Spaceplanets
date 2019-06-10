@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace SpacePlanetsMvc.BackgroundServices
 {
-    public class CurrentTimeWorker : BackgroundService
+    public class OtherWorker : BackgroundService
     {
         public IServiceProvider Services { get; }
 
-        public CurrentTimeWorker(IServiceProvider services)
+        public OtherWorker(IServiceProvider services)
         {
             Services = services;
         }
@@ -29,9 +29,9 @@ namespace SpacePlanetsMvc.BackgroundServices
                 {
                     var scopedAuthService = scope.ServiceProvider.GetRequiredService<IAuthenticationService>();
                     IHubContext<GalaxyHub, IGalaxyClient> scopedHubContext = scope.ServiceProvider.GetRequiredService<IHubContext<GalaxyHub, IGalaxyClient>>();
-                    //await scopedHubContext.Clients.All.ReceiveServerTime(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
+                    //await scopedHubContext.Clients.All.ReceiveServerTime("OW: " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
                 }
-                await Task.Delay(10000);
+                await Task.Delay(1000);
             }
         }
     }

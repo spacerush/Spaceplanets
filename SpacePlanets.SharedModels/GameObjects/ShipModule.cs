@@ -23,5 +23,10 @@ namespace SpacePlanets.SharedModels.GameObjects
             SlotType = slotType;
             Name = name;
         }
+
+        public override string ToString()
+        {
+            return "Level " + this.Level + " " + this.Name;
+        }
     }
 }

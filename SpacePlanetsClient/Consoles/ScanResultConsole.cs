@@ -15,7 +15,14 @@ namespace SpacePlanetsClient.Consoles
 
         public override void Update(TimeSpan timeElapsed)
         {
-            base.Update(timeElapsed);
+            try
+            {
+                base.Update(timeElapsed);
+            }
+            catch (Exception ex)
+            {
+                GameState.WriteGeneralMessageToLog("Exception in update method of ScanResultConsole: " + ex.Message);
+            }
         }
 
         public ScanResultConsole(int width, int height, SadConsole.Console toReturnTo) : base(width, height)
@@ -44,6 +51,7 @@ namespace SpacePlanetsClient.Consoles
             {
                 _toReturnTo.IsFocused = true;
                 this.Parent.Parent.Children.Remove(this.Parent);
+                GameState.TakeAllLoot();
             };
             this.Add(btnTakeAll);
         }

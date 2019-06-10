@@ -5,6 +5,7 @@ using System;
 using SpacePlanetsClient.Extensions;
 using Console = SadConsole.Console;
 using SpacePlanets.SharedModels.ServerToClient;
+using SpacePlanets.SharedModels.GameObjects;
 
 namespace SpacePlanetsClient.Consoles
 {
@@ -34,15 +35,29 @@ namespace SpacePlanetsClient.Consoles
                 {
                     foreach (var shipmodule in item.ShipModules)
                     {
-                        lootList.Items.Add("Level " + shipmodule.Level.ToString() + " " + shipmodule.Name);
+                        lootList.Items.Add(shipmodule);
                     }
                 }
                 _scanResultConsole.Add(lootList);
+                lootList.MouseButtonClicked += LootList_MouseButtonClicked;
                 _scanResultConsole.AddTakeAllButton();
             }
             else
             {
                 _scanResultConsole.Print(2, 2, "Scans did not reveal anything useful.");
+            }
+        }
+
+        private void LootList_MouseButtonClicked(object sender, SadConsole.Input.MouseEventArgs e)
+        {
+            var box = (sender as ListBox);
+            if (box.SelectedItem != null)
+            {
+                var exemplar = new SpacePlanets.SharedModels.GameObjects.ShipModule();
+                if (box.SelectedItem.GetType() == exemplar.GetType())
+                {
+                    GameState.TakeSpecificLoot(((ShipModule)box.SelectedItem).Id, "ShipModule");
+                }
             }
         }
 

@@ -104,6 +104,72 @@ namespace SpacePlanetsMvc.Hubs
             }
         }
 
+        public async Task GetShipForConsole(AuthorizationTokenContainer ctr, ShipForConsoleRequest req)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(ctr.Token);
+            if (playerByAccessTokenResponse.Success == true)
+            {
+                GetShipsByPlayerIdResponse getShipsByPlayerIdResponse = _gameService.GetShipsByPlayerId(playerByAccessTokenResponse.Player.Id);
+                if (getShipsByPlayerIdResponse.Success)
+                {
+                    Ship ship = getShipsByPlayerIdResponse.Ships.Where(x => x.Id == req.ShipId).SingleOrDefault();
+                    if (ship != null)
+                    {
+                        await Clients.Caller.ReceiveShipForConsole(ship);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Given a specific ship contained within the req object and owned by the player,
+        /// vacuum up all the loot at the given ship's coordinates.
+        /// </summary>
+        /// <param name="ctr">A container containing authorization information</param>
+        /// <param name="req">A request containing the ship id of the ship grabbing loot</param>
+        public async Task TakeAllLoot(AuthorizationTokenContainer ctr, TakeAllLootRequest req)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(ctr.Token);
+            if (playerByAccessTokenResponse.Success == true)
+            {
+                GetShipsByPlayerIdResponse getShipsByPlayerIdResponse = _gameService.GetShipsByPlayerId(playerByAccessTokenResponse.Player.Id);
+                if (getShipsByPlayerIdResponse.Success)
+                {
+                    Ship ship = getShipsByPlayerIdResponse.Ships.Where(x => x.Id == req.ShipId).SingleOrDefault();
+                    _lootService.TractorAllLoot(ship);
+                    await Clients.Caller.ReceiveMessage("Looted all.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Given a specific ship contained within the req object and owned by the player,
+        /// vacuum up all the loot at the given ship's coordinates.
+        /// </summary>
+        /// <param name="ctr">A container containing authorization information</param>
+        /// <param name="req">A request containing the ship id of the ship grabbing loot and the ID of the loot object such as module being looted</param>
+        public async Task TakeSpecificLoot(AuthorizationTokenContainer ctr, TakeSpecificLootRequest req)
+        {
+            GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(ctr.Token);
+            if (playerByAccessTokenResponse.Success == true)
+            {
+                GetShipsByPlayerIdResponse getShipsByPlayerIdResponse = _gameService.GetShipsByPlayerId(playerByAccessTokenResponse.Player.Id);
+                if (getShipsByPlayerIdResponse.Success)
+                {
+                    Ship ship = getShipsByPlayerIdResponse.Ships.Where(x => x.Id == req.ShipId).SingleOrDefault();
+                    if (_lootService.TractorSpecificLoot(ship, req.ItemType, req.ItemId))
+                    {
+                        await Clients.Caller.ReceiveMessage("Looted specific item.");
+                    }
+                    else
+                    {
+                        await Clients.Caller.ReceiveMessage("Could not loot item there.");
+                    }
+                }
+            }
+        }
+
+
         public async Task Ping(AuthorizationTokenContainer authorizationTokenCtr, PingRequest pingRequest)
         {
             GetPlayerByAccessTokenResponse playerByAccessTokenResponse = _authService.GetPlayerByAccessToken(authorizationTokenCtr.Token);

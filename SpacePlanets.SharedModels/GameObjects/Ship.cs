@@ -43,6 +43,7 @@ namespace SpacePlanets.SharedModels.GameObjects
         /// List of installed ship modules
         /// </summary>
         public List<ShipModule> ShipModules { get; set; }
+
         /// <summary>
         /// Create a ship with the given name and type.
         /// </summary>

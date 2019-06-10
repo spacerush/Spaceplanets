@@ -29,7 +29,7 @@ namespace SpacePlanetsMvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connstring = Configuration["MongoDb:Storage"];
+            string connstring = Environment.GetEnvironmentVariable("SPACEPLANETS_MONGODB_CONNECTIONSTRING");
             if (string.IsNullOrEmpty(connstring)) {
                 connstring = "mongodb://localhost:27017/SpacePlanets";
             }
@@ -72,6 +72,7 @@ namespace SpacePlanetsMvc
             objectService.CreateDefaultGalaxyIfNecessary();
             objectService.CreateDefaultSpaceObjectsForAllStarsInDefaultGalaxyIfNecessary();
             services.AddHostedService<CurrentTimeWorker>();
+            services.AddHostedService<OtherWorker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

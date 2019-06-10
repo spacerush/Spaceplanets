@@ -39,5 +39,78 @@ namespace SpacePlanetsMvc.Services
             return result;
         }
 
+        /// <summary>
+        /// Have a ship bring all loot abord by "banking" it for the player.
+        /// </summary>
+        /// <param name="ship"></param>
+        /// <returns></returns>
+        public bool TractorAllLoot(Ship ship)
+        {
+            int itemsLooted = 0;
+            var result = _wrapper.SpaceLootRepository.GetAll<SpaceLoot>(f => f.X == ship.X && f.Y == ship.Y && f.Z == ship.Z).ToList();
+            foreach (var item in result)
+            {
+                foreach (var module in item.ShipModules)
+                {
+                    BankedShipModule lootedModule = new BankedShipModule();
+                    lootedModule.PlayerId = ship.PlayerId;
+                    lootedModule.ShipId = ship.Id;
+                    lootedModule.ShipModule = module;
+                    _wrapper.SpaceLootRepository.AddOneAsync<BankedShipModule>(lootedModule);
+                    itemsLooted++;
+                }
+            }
+            if (itemsLooted > 0)
+            {
+                _wrapper.SpaceLootRepository.DeleteMany<SpaceLoot>(result);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool TractorSpecificLoot(Ship ship, string itemType, Guid itemId)
+        {
+            int itemsLooted = 0;
+            var result = _wrapper.SpaceLootRepository.GetAll<SpaceLoot>(f => f.X == ship.X && f.Y == ship.Y && f.Z == ship.Z);
+            _wrapper.SpaceLootRepository.DeleteMany<SpaceLoot>(result);
+            List<SpaceLoot> spaceLootsToWrite = new List<SpaceLoot>();
+            foreach (var item in result)
+            {
+                SpaceLoot spaceLoot = new SpaceLoot();
+                spaceLoot.X = item.X;
+                spaceLoot.Y = item.Y;
+                spaceLoot.Z = item.Z;
+                spaceLoot.ShipModules = new List<ShipModule>();
+                foreach (var module in item.ShipModules)
+                {
+                    if (module.Id == itemId)
+                    {
+                        BankedShipModule lootedModule = new BankedShipModule();
+                        lootedModule.PlayerId = ship.PlayerId;
+                        lootedModule.ShipId = ship.Id;
+                        lootedModule.ShipModule = module;
+                        _wrapper.SpaceLootRepository.AddOneAsync<BankedShipModule>(lootedModule);
+                        itemsLooted++;
+                    }
+                    else
+                    {
+                        spaceLoot.ShipModules.Add(module);
+                    }
+                }
+                spaceLootsToWrite.Add(spaceLoot);
+            }
+            _wrapper.SpaceLootRepository.AddMany<SpaceLoot>(spaceLootsToWrite);
+            if (itemsLooted > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
